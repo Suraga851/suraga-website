@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: suraga-website
+    env: docker
+    plan: free
+    region: ohio

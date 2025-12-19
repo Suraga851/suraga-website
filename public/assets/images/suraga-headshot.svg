@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d9488;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#006d77;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c4956a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="200" cy="200" r="200" fill="url(#bgGrad)"/>
+  
+  <!-- Inner lighter circle -->
+  <circle cx="200" cy="200" r="180" fill="#f0f9ff" opacity="0.1"/>
+  
+  <!-- Head/Face -->
+  <ellipse cx="200" cy="160" rx="70" ry="85" fill="url(#faceGrad)"/>
+  
+  <!-- Hair -->
+  <path d="M130 140 Q130 80, 200 70 Q270 80, 270 140 Q265 110, 240 100 Q200 95, 160 100 Q135 110, 130 140" fill="#1a1a1a"/>
+  <ellipse cx="200" cy="75" rx="50" ry="20" fill="#1a1a1a"/>
+  
+  <!-- Eyes -->
+  <ellipse cx="170" cy="150" rx="12" ry="8" fill="white"/>
+  <ellipse cx="230" cy="150" rx="12" ry="8" fill="white"/>
+  <circle cx="172" cy="150" r="5" fill="#3d2314"/>
+  <circle cx="232" cy="150" r="5" fill="#3d2314"/>
+  <circle cx="173" cy="149" r="2" fill="white"/>
+  <circle cx="233" cy="149" r="2" fill="white"/>
+  
+  <!-- Eyebrows -->
+  <path d="M155 135 Q170 130, 185 135" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M215 135 Q230 130, 245 135" stroke="#1a1a1a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Nose -->
+  <path d="M200 155 Q195 175, 200 185 Q205 185, 210 182" stroke="#b8936a" stroke-width="2" fill="none"/>
+  
+  <!-- Smile -->
+  <path d="M170 200 Q200 225, 230 200" stroke="#9e6b5a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  
+  <!-- Body/Shoulders -->
+  <path d="M100 350 Q100 280, 160 260 Q180 255, 200 255 Q220 255, 240 260 Q300 280, 300 350 L300 400 L100 400 Z" fill="#0d9488"/>
+  
+  <!-- Collar/Shirt -->
+  <path d="M160 260 Q180 280, 200 285 Q220 280, 240 260 L230 270 Q210 285, 200 290 Q190 285, 170 270 Z" fill="white"/>
+  
+  <!-- Neckline -->
+  <ellipse cx="200" cy="245" rx="30" ry="15" fill="url(#faceGrad)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="320" cy="80" r="8" fill="white" opacity="0.2"/>
+  <circle cx="80" cy="320" r="12" fill="white" opacity="0.15"/>
+  <circle cx="350" cy="300" r="6" fill="white" opacity="0.2"/>
+  
+  <!-- Initials overlay -->
+  <text x="200" y="380" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle" opacity="0.3">SE</text>
+</svg>

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "esnext",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "outDir": "./public/js",
+        "rootDir": "./ts",
+        "strict": true,
+        "noImplicitAny": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowJs": true
+    },
+    "include": [
+        "ts/**/*"
+    ]
+}

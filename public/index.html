@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Suraga Elzibaer - Bilingual Learning Assistant in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.">
+    <meta name="keywords"
+        content="Learning Assistant Dubai, SEN support UAE, Bilingual Teacher, Arabic Islamic support, Differentiated Instruction, Inclusive Education">
+    <meta property="og:title" content="Suraga Elzibaer - Learning Assistant">
+    <meta property="og:description"
+        content="Professional Learning Assistant in Dubai with expertise in inclusive education and bilingual support">
+    <title>Suraga Elzibaer - Learning Assistant | Dubai</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Three.js (Optimized via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body class="font-sans bg-gray-50 text-gray-800">
+    <!-- 3D Background Container -->
+    <div id="canvas-container"></div>
+
+    <!-- scripts -->
+    <script src="js/background.js"></script>
+
+    <!-- Language Switcher -->
+    <div class="fixed top-4 right-4 z-50">
+        <a href="ar.html" id="lang-switch"
+            class="bg-teal-600 text-white px-4 py-2 rounded-full hover:bg-teal-700 transition flex items-center gap-2 shadow-lg">
+            <i class="fas fa-globe"></i>العربية
+        </a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-md z-40 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-teal-700">
+                <span class="bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent">SE</span>
+            </div>
+            <ul class="hidden md:flex space-x-8">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <button class="md:hidden text-teal-700" id="mobile-menu-btn">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-white z-30 transform translate-x-full transition-transform duration-300">
+        <button class="absolute top-4 right-4 text-gray-600" id="close-mobile-menu">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="flex flex-col p-8 space-y-6 mt-16">
+            <a href="#home" class="mobile-nav-link text-2xl">Home</a>
+            <a href="#about" class="mobile-nav-link text-2xl">About</a>
+            <a href="#services" class="mobile-nav-link text-2xl">Services</a>
+            <a href="#experience" class="mobile-nav-link text-2xl">Experience</a>
+            <a href="#portfolio" class="mobile-nav-link text-2xl">Portfolio</a>
+            <a href="#contact" class="mobile-nav-link text-2xl">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section min-h-screen flex items-center relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
+        </div>
+
+        <div class="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="animate-fade-in-up">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                    Learning Assistant & <span class="text-teal-700 relative">
+                        Inclusive Education
+                        <svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" preserveAspectRatio="none">
+                            <path d="M0,8 Q50,0 100,8 T200,8" stroke="#0d9488" stroke-width="3" fill="none"
+                                class="underline-path" />
+                        </svg>
+                    </span> Specialist
+                </h1>
+                <p class="text-xl mb-6 text-gray-600">
+                    <i class="fas fa-map-marker-alt text-teal-600 mr-2"></i>Dubai, UAE
+                    <span class="mx-3">|</span>
+                    <i class="fas fa-language text-teal-600 mr-2"></i>Arabic Native • English C2
+                </p>
+                <p class="text-lg mb-8 text-gray-700 leading-relaxed">Bridging cultures and curricula to support every
+                    learner's journey in British, American, and International Baccalaureate systems.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#contact" class="btn-primary">
+                        <i class="fas fa-briefcase mr-2"></i>Hire Me
+                    </a>
+                    <a href="#portfolio" class="btn-secondary">
+                        <i class="fas fa-folder-open mr-2"></i>View Portfolio
+                    </a>
+                </div>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <span class="skill-badge">Differentiated Instruction</span>
+                    <span class="skill-badge">Students of Determination</span>
+                    <span class="skill-badge">Gifted & Talented</span>
+                    <span class="skill-badge">Arabic/Islamic Support</span>
+                </div>
+            </div>
+            <div class="text-center animate-fade-in">
+                <div class="relative inline-block">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full blur-2xl opacity-30 animate-pulse-slow">
+                    </div>
+                    <img src="assets/images/suraga-headshot.jpg" alt="Suraga Elzibaer - Learning Assistant"
+                        class="rounded-full w-64 h-64 md:w-80 md:h-80 mx-auto object-cover shadow-2xl relative z-10 border-4 border-white">
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#about" class="text-teal-600">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">About Me</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-semibold mb-4 text-teal-700">Bilingual Education Professional</h3>
+                    <p class="mb-4 text-gray-700 leading-relaxed">With a strong foundation in Classical Arabic and
+                        Islamic education from Sudan, I bring a unique perspective to Dubai's international school
+                        community. My secondary education in a rigorous Arabic-medium environment equips me to support
+                        students transitioning between Arabic and English curricula.</p>
+                    <p class="mb-4 text-gray-700 leading-relaxed">Currently based in Dubai with active UAE residency, I
+                        specialize in inclusive education practices that honor cultural diversity while meeting
+                        international standards. My experience spans British-style and American curriculum schools,
+                        working with students aged 4-18.</p>
+                    <p class="text-gray-700 leading-relaxed">Fluent in both Arabic and English (C2 level), I serve as a
+                        bridge between home and school cultures, ensuring every student feels valued and understood.</p>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-4 mt-8">
+                        <div class="stat-card">
+                            <span class="stat-number">3+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Students Supported</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">2</span>
+                            <span class="stat-label">Languages</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="quick-facts-card">
+                        <h4 class="font-semibold mb-4 text-lg flex items-center">
+                            <i class="fas fa-info-circle text-teal-600 mr-2"></i>Quick Facts
+                        </h4>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-center">
+                                <i class="fas fa-map-marker-alt text-teal-600 w-6"></i>
+                                <span><strong>Location:</strong> Dubai, UAE</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-flag text-teal-600 w-6"></i>
+                                <span><strong>Nationality:</strong> Sudanese</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-language text-teal-600 w-6"></i>
+                                <span><strong>Languages:</strong> Arabic (Native), English (C2)</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-id-card text-teal-600 w-6"></i>
+                                <span><strong>Visa Status:</strong> UAE Residency</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-clock text-teal-600 w-6"></i>
+                                <span><strong>Availability:</strong> Immediate</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gradient-to-br from-gray-50 to-teal-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Specialized Services</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-universal-access"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Students of Determination Support</h3>
+                    <p class="text-gray-600">Individualized learning plans, behavioral support, and accommodations for
+                        students with special educational needs in inclusive classrooms.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Gifted & Talented Enrichment</h3>
+                    <p class="text-gray-600">Advanced learning strategies, enrichment activities, and differentiated
+                        curriculum support for high-achieving students.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Arabic/Islamic Studies Support</h3>
+                    <p class="text-gray-600">Specialized support for Arabic language acquisition and Islamic Studies
+                        integration within international curriculum frameworks.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Cross-Cultural Bridging</h3>
+                    <p class="text-gray-600">Facilitating communication between Arabic-speaking families and
+                        international school staff, ensuring cultural sensitivity.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Literacy Intervention</h3>
+                    <p class="text-gray-600">Evidence-based reading support using SPIRE and PAST assessment
+                        methodologies for struggling readers.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Curriculum Support</h3>
+                    <p class="text-gray-600">Assistance with British (Cambridge/IPC), American (Common Core), and IB
+                        curriculum delivery across all grade levels.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline">
+                <!-- Dubai Schools -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3 class="text-2xl font-semibold text-teal-700">Learning & Teaching Assistant</h3>
+                            <span class="timeline-badge">Current</span>
+                        </div>
+                        <h4 class="text-lg text-gray-600 mb-2">Dubai Schools Al Khawaneej (Taaleem), Dubai, UAE</h4>
+                        <p class="text-gray-500 mb-3 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>August 2024 – February 2025
+                        </p>
+                        <ul class="experience-list">
+                            <li>Supported grades 6-7 in British-style curriculum delivery</li>
+                            <li>Developed differentiated materials for diverse learning needs</li>
+                            <li>Implemented inclusive strategies for Students of Determination</li>
+                            <li>Collaborated with SENCO and parents on student progress</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Unity High School -->
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <h3 class="text-2xl font-semibold text-teal-700">Teaching Assistant</h3>
+                        </div>
+                        <h4 class="text-lg text-gray-600 mb-2">Unity High School, Khartoum, Sudan</h4>
+                        <p class="text-gray-500 mb-3 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2"></i>September 2022 – July 2023
+                        </p>
+                        <ul class="experience-list">
+                            <li>Delivered SPIRE reading intervention program across multiple year groups</li>
+                            <li>Administered Dr. Kilpatrick's PAST test for phonological assessment</li>
+                            <li>Assumed classroom teacher responsibilities for Humanities, Science, English</li>
+                            <li>Provided one-on-one support for Gifted & Talented students</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 bg-gradient-to-br from-gray-50 to-teal-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Credentials & Portfolio</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="portfolio-item" data-doc="experience-letter-taaleem">
+                    <div class="portfolio-card">
+                        <div class="portfolio-icon pdf">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Taaleem Experience Letter</h3>
+                        <p class="text-sm text-gray-600">Dubai Schools Al Khawaneej</p>
+                        <span class="portfolio-action">
+                            <i class="fas fa-eye mr-1"></i>View Document
+                        </span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-doc="recommendation-unity">
+                    <div class="portfolio-card">
+                        <div class="portfolio-icon pdf">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Unity High School Recommendation</h3>
+                        <p class="text-sm text-gray-600">Head of Primary</p>
+                        <span class="portfolio-action">
+                            <i class="fas fa-eye mr-1"></i>View Document
+                        </span>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-doc="secondary-certificate">
+                    <div class="portfolio-card">
+                        <div class="portfolio-icon cert">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3 class="font-semibold text-lg">Sudanese Secondary Certificate</h3>
+                        <p class="text-sm text-gray-600">Ashariqa Private School</p>
+                        <span class="portfolio-action">
+                            <i class="fas fa-eye mr-1"></i>View Document
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4 text-teal-700">Let's Collaborate</h3>
+                    <p class="mb-6 text-gray-700">I'm currently seeking opportunities with international schools in
+                        Dubai. Available for immediate placement with active UAE residency.</p>
+                    <div class="space-y-4">
+                        <a href="tel:+971557177083" class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <span>+971 55 7177 083</span>
+                        </a>
+                        <a href="mailto:suragaelzibaer@gmail.com" class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <span>suragaelzibaer@gmail.com</span>
+                        </a>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <span>Dubai, United Arab Emirates</span>
+                        </div>
+                        <a href="https://linkedin.com/in/suraga-elzibaer" target="_blank" class="contact-item">
+                            <div class="contact-icon linkedin">
+                                <i class="fab fa-linkedin-in"></i>
+                            </div>
+                            <span>Suraga Elzibaer</span>
+                        </a>
+                    </div>
+
+                    <!-- WhatsApp Button -->
+                    <a href="https://wa.me/971557177083?text=Hello%20Suraga,%20I%20found%20your%20website%20and%20would%20like%20to%20discuss%20opportunities."
+                        class="whatsapp-btn mt-8" target="_blank">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                        Message on WhatsApp
+                    </a>
+                </div>
+                <div>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="inquiry-type">
+                                <option value="job">Job Inquiry</option>
+                                <option value="collaboration">Collaboration</option>
+                                <option value="general">General Question</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">
+                            <i class="fas fa-paper-plane mr-2"></i>Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4
+                        class="text-2xl font-bold mb-4 bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent">
+                        SE</h4>
+                    <p class="text-gray-400">Professional Learning Assistant specializing in inclusive education and
+                        bilingual support for Dubai's international schools.</p>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Quick Links</h5>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#about" class="hover:text-teal-400 transition">About</a></li>
+                        <li><a href="#services" class="hover:text-teal-400 transition">Services</a></li>
+                        <li><a href="#experience" class="hover:text-teal-400 transition">Experience</a></li>
+                        <li><a href="#contact" class="hover:text-teal-400 transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-4">Connect</h5>
+                    <div class="flex space-x-4">
+                        <a href="https://linkedin.com/in/suraga-elzibaer" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:suragaelzibaer@gmail.com" class="social-link">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://wa.me/971557177083" target="_blank" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-400">&copy; <span id="current-year">2025</span> Suraga Elzibaer. All rights
+                    reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">Designed for Dubai's International Education Community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdf-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pdf-title" class="font-semibold text-lg"></h3>
+                <button id="close-modal" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <iframe id="pdf-viewer" class="modal-body" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://suragaelzibaer.com/sitemap.xml
+
+# Disallow development files
+Disallow: /*.json$
+
+# Allow all assets
+Allow: /assets/
+Allow: /css/
+Allow: /js/
