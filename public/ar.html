@@ -10,10 +10,20 @@
         content="مساعد تعليم دبي, دعم ذوي الاحتياجات الخاصة الإمارات, معلم ثنائي اللغة, دعم عربي إسلامي, التدريس المتمايز, التعليم الشامل">
     <meta property="og:title" content="سراجا الزبير - مساعد تعليم | دبي">
     <meta property="og:description" content="مساعد تعليم محترف في دبي متخصص في التعليم الشامل والدعم ثنائي اللغة">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://suraga-website.onrender.com/ar.html">
     <title>سراجا الزبير - مساعد تعليم | دبي</title>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canonical & Hreflang -->
+    <link rel="canonical" href="https://suraga-website.onrender.com/ar.html">
+    <link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/">
+    <link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html">
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -21,36 +31,51 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap"
         rel="stylesheet">
 
-    <!-- Three.js (Optimized via CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/arabic.css">
     <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "سراجا الزبير",
+        "jobTitle": "مساعد تعليم ومتخصص في التعليم الشامل",
+        "url": "https://suraga-website.onrender.com/ar.html",
+        "email": "suragaelzibaer@gmail.com",
+        "telephone": "+971557177083",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "دبي",
+            "addressCountry": "AE"
+        },
+        "knowsLanguage": ["Arabic", "English"],
+        "sameAs": [
+            "https://linkedin.com/in/suraga-elzibaer"
+        ]
+    }
+    </script>
 </head>
 
-<body class="font-arabic bg-gray-50 text-gray-800">
-    <!-- 3D Background Container -->
-    <div id="canvas-container"></div>
-
-    <!-- scripts -->
-    <script src="js/background.js"></script>
+<body class="font-arabic body-default">
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
 
     <!-- Language Switcher -->
-    <div class="fixed top-4 left-4 z-50">
-        <a href="index.html" id="lang-switch"
-            class="bg-teal-600 text-white px-4 py-2 rounded-full hover:bg-teal-700 transition flex items-center gap-2 shadow-lg">
+    <div class="lang-switcher-wrap">
+        <a href="index.html" id="lang-switch" class="lang-switch-btn">
             <i class="fas fa-globe"></i>English
         </a>
     </div>
 
     <!-- Navigation (RTL) -->
-    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-md z-40 transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="text-2xl font-bold text-teal-700">
-                <span class="bg-gradient-to-r from-teal-600 to-teal-800 bg-clip-text text-transparent">سـ</span>
+    <nav class="navbar" id="navbar">
+        <div class="container nav-inner">
+            <div class="logo">
+                <span class="logo-text">سـ</span>
             </div>
-            <ul class="hidden md:flex space-x-reverse space-x-8">
+            <ul class="nav-links nav-links-rtl">
                 <li><a href="#home" class="nav-link">الرئيسية</a></li>
                 <li><a href="#about" class="nav-link">نبذة عني</a></li>
                 <li><a href="#services" class="nav-link">خدماتي</a></li>
@@ -58,103 +83,100 @@
                 <li><a href="#portfolio" class="nav-link">ملفي</a></li>
                 <li><a href="#contact" class="nav-link">تواصل معي</a></li>
             </ul>
-            <button class="md:hidden text-teal-700" id="mobile-menu-btn">
-                <i class="fas fa-bars text-2xl"></i>
+            <button class="mobile-menu-toggle" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu"
-        class="fixed inset-0 bg-white z-30 transform -translate-x-full transition-transform duration-300">
-        <button class="absolute top-4 left-4 text-gray-600" id="close-mobile-menu">
-            <i class="fas fa-times text-2xl"></i>
+    <div id="mobile-menu" class="mobile-menu -translate-x-full">
+        <button class="mobile-close-btn" id="close-mobile-menu">
+            <i class="fas fa-times"></i>
         </button>
-        <div class="flex flex-col p-8 space-y-6 mt-16">
-            <a href="#home" class="mobile-nav-link text-2xl">الرئيسية</a>
-            <a href="#about" class="mobile-nav-link text-2xl">نبذة عني</a>
-            <a href="#services" class="mobile-nav-link text-2xl">خدماتي</a>
-            <a href="#experience" class="mobile-nav-link text-2xl">خبراتي</a>
-            <a href="#portfolio" class="mobile-nav-link text-2xl">ملفي</a>
-            <a href="#contact" class="mobile-nav-link text-2xl">تواصل معي</a>
+        <div class="mobile-menu-inner">
+            <a href="#home" class="mobile-nav-link">الرئيسية</a>
+            <a href="#about" class="mobile-nav-link">نبذة عني</a>
+            <a href="#services" class="mobile-nav-link">خدماتي</a>
+            <a href="#experience" class="mobile-nav-link">خبراتي</a>
+            <a href="#portfolio" class="mobile-nav-link">ملفي</a>
+            <a href="#contact" class="mobile-nav-link">تواصل معي</a>
         </div>
     </div>
 
     <!-- Hero Section (Arabic) -->
-    <section id="home" class="hero-section min-h-screen flex items-center relative overflow-hidden">
+    <section id="home" class="hero-section">
         <!-- Animated Background Elements -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="hero-bg-shapes">
             <div class="floating-shape shape-1"></div>
             <div class="floating-shape shape-2"></div>
             <div class="floating-shape shape-3"></div>
         </div>
 
-        <div class="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <div class="container hero-grid">
             <div class="animate-fade-in-up">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                    مساعد تعليم و<span class="text-teal-700 relative">
+                <h1 class="hero-title">
+                    مساعد تعليم و<span class="text-accent">
                         متخصص في التعليم الشامل
                     </span>
                 </h1>
-                <p class="text-xl mb-6 text-gray-600">
-                    <i class="fas fa-map-marker-alt text-teal-600 ml-2"></i>دبي، الإمارات العربية المتحدة
+                <p class="hero-subtitle">
+                    <i class="fas fa-map-marker-alt icon-accent"></i>دبي، الإمارات العربية المتحدة
                     <span class="mx-3">|</span>
-                    <i class="fas fa-language text-teal-600 ml-2"></i>اللغة الأم العربية • إنجليزي C2
+                    <i class="fas fa-language icon-accent"></i>اللغة الأم العربية • إنجليزي C2
                 </p>
-                <p class="text-lg mb-8 text-gray-700 leading-relaxed">بناء الجسور بين الثقافات والمناهج لدعم رحلة كل
+                <p class="hero-desc">بناء الجسور بين الثقافات والمناهج لدعم رحلة كل
                     متعلم في أنظمة المنهاج البريطاني والأمريكي والبكالوريا الدولية.</p>
-                <div class="flex flex-wrap gap-4">
+                <div class="hero-buttons">
                     <a href="#contact" class="btn-primary">
-                        <i class="fas fa-briefcase ml-2"></i>وظفني
+                        <i class="fas fa-briefcase"></i>وظفني
                     </a>
                     <a href="#portfolio" class="btn-secondary">
-                        <i class="fas fa-folder-open ml-2"></i>عرض الملف
+                        <i class="fas fa-folder-open"></i>عرض الملف
                     </a>
                 </div>
-                <div class="mt-8 flex flex-wrap gap-3">
+                <div class="skill-badges">
                     <span class="skill-badge">التدريس المتمايز</span>
                     <span class="skill-badge">أصحاب الهمم</span>
                     <span class="skill-badge">الموهوبين والمتفوقين</span>
                     <span class="skill-badge">الدعم العربي/الإسلامي</span>
                 </div>
             </div>
-            <div class="text-center animate-fade-in order-first md:order-last">
-                <div class="relative inline-block">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full blur-2xl opacity-30 animate-pulse-slow">
-                    </div>
-                    <img src="assets/images/suraga-headshot.jpg" alt="سراجا الزبير - مساعد تعليم"
-                        class="rounded-full w-64 h-64 md:w-80 md:h-80 mx-auto object-cover shadow-2xl relative z-10 border-4 border-white">
+            <div class="hero-image-wrap animate-fade-in hero-image-rtl">
+                <div class="hero-image-container">
+                    <div class="hero-image-glow"></div>
+                    <img src="assets/images/suraga-headshot.jpg" alt="سراجا الزبير - مساعد تعليم" class="hero-image"
+                        loading="eager">
                 </div>
             </div>
         </div>
 
         <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <a href="#about" class="text-teal-600">
-                <i class="fas fa-chevron-down text-2xl"></i>
+        <div class="scroll-indicator">
+            <a href="#about" class="text-accent">
+                <i class="fas fa-chevron-down"></i>
             </a>
         </div>
     </section>
 
     <!-- About Section (Arabic) -->
-    <section id="about" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
+    <section id="about" class="section-white reveal-section">
+        <div class="container">
             <h2 class="section-title">نبذة عني</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="md:col-span-2">
-                    <h3 class="text-2xl font-semibold mb-4 text-teal-700">متخصص تعليم ثنائي اللغة</h3>
-                    <p class="mb-4 text-gray-700 leading-relaxed">مع أساس قوي في اللغة العربية الفصحى والتعليم الإسلامي
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3 class="subsection-title">متخصص تعليم ثنائي اللغة</h3>
+                    <p class="text-body">مع أساس قوي في اللغة العربية الفصحى والتعليم الإسلامي
                         من السودان، أقدم منظوراً فريداً لمجتمع المدارس الدولية في دبي. تعليمي الثانوي في بيئة عربية
                         صارمة يؤهلني لدعم الطلاب الذين ينتقلون بين المناهج العربية والإنجليزية.</p>
-                    <p class="mb-4 text-gray-700 leading-relaxed">مقيم حالياً في دبي مع إقامة إماراتية سارية، أتخصص في
+                    <p class="text-body">مقيم حالياً في دبي مع إقامة إماراتية سارية، أتخصص في
                         ممارسات التعليم الشامل التي تحترم التنوع الثقافي مع الالتزام بالمعايير الدولية. خبرتي تمتد لتشمل
                         مدارس المنهج البريطاني والأمريكي، مع طلاب تتراوح أعمارهم بين 4 و18 عاماً.</p>
-                    <p class="text-gray-700 leading-relaxed">أتقن كلاً من العربية والإنجليزية (مستوى C2)، وأعمل كجسر بين
+                    <p class="text-body">أتقن كلاً من العربية والإنجليزية (مستوى C2)، وأعمل كجسر بين
                         ثقافة المنزل والمدرسة، مما يضمن شعور كل طالب بالتقدير والفهم.</p>
 
                     <!-- Stats -->
-                    <div class="grid grid-cols-3 gap-4 mt-8">
+                    <div class="stats-grid">
                         <div class="stat-card">
                             <span class="stat-number">+3</span>
                             <span class="stat-label">سنوات خبرة</span>
@@ -171,28 +193,28 @@
                 </div>
                 <div>
                     <div class="quick-facts-card">
-                        <h4 class="font-semibold mb-4 text-lg flex items-center">
-                            <i class="fas fa-info-circle text-teal-600 ml-2"></i>معلومات سريعة
+                        <h4 class="quick-facts-title">
+                            <i class="fas fa-info-circle icon-accent"></i>معلومات سريعة
                         </h4>
-                        <ul class="space-y-3 text-sm">
-                            <li class="flex items-center">
-                                <i class="fas fa-map-marker-alt text-teal-600 w-6"></i>
+                        <ul class="quick-facts-list">
+                            <li class="quick-fact-item">
+                                <i class="fas fa-map-marker-alt icon-accent icon-w6"></i>
                                 <span><strong>الموقع:</strong> دبي، الإمارات</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-flag text-teal-600 w-6"></i>
+                            <li class="quick-fact-item">
+                                <i class="fas fa-flag icon-accent icon-w6"></i>
                                 <span><strong>الجنسية:</strong> سوداني</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-language text-teal-600 w-6"></i>
+                            <li class="quick-fact-item">
+                                <i class="fas fa-language icon-accent icon-w6"></i>
                                 <span><strong>اللغات:</strong> العربية (أم)، الإنجليزية (C2)</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-id-card text-teal-600 w-6"></i>
+                            <li class="quick-fact-item">
+                                <i class="fas fa-id-card icon-accent icon-w6"></i>
                                 <span><strong>التأشيرة:</strong> إقامة إماراتية</span>
                             </li>
-                            <li class="flex items-center">
-                                <i class="fas fa-clock text-teal-600 w-6"></i>
+                            <li class="quick-fact-item">
+                                <i class="fas fa-clock icon-accent icon-w6"></i>
                                 <span><strong>التوفر:</strong> فوري</span>
                             </li>
                         </ul>
@@ -203,56 +225,56 @@
     </section>
 
     <!-- Services Section (Arabic) -->
-    <section id="services" class="py-20 bg-gradient-to-br from-gray-50 to-teal-50">
-        <div class="container mx-auto px-4">
+    <section id="services" class="section-gradient reveal-section">
+        <div class="container">
             <h2 class="section-title">خدماتي المتخصصة</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-universal-access"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">دعم أصحاب الهمم</h3>
-                    <p class="text-gray-600">خطط تعلم فردية، دعم سلوكي، وتسهيلات للطلاب ذوي الاحتياجات التعليمية الخاصة
+                    <h3 class="service-title">دعم أصحاب الهمم</h3>
+                    <p class="service-desc">خطط تعلم فردية، دعم سلوكي، وتسهيلات للطلاب ذوي الاحتياجات التعليمية الخاصة
                         في الفصول الشاملة.</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">إثراء الموهوبين والمتفوقين</h3>
-                    <p class="text-gray-600">استراتيجيات تعلم متقدمة، أنشطة إثرائية، ودعم منهجي متمايز للطلاب المتفوقين.
+                    <h3 class="service-title">إثراء الموهوبين والمتفوقين</h3>
+                    <p class="service-desc">استراتيجيات تعلم متقدمة، أنشطة إثرائية، ودعم منهجي متمايز للطلاب المتفوقين.
                     </p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-language"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">دعم اللغة العربية/الدراسات الإسلامية</h3>
-                    <p class="text-gray-600">دعم متخصص لاكتساب اللغة العربية ودمج الدراسات الإسلامية ضمن أطر المناهج
+                    <h3 class="service-title">دعم اللغة العربية/الدراسات الإسلامية</h3>
+                    <p class="service-desc">دعم متخصص لاكتساب اللغة العربية ودمج الدراسات الإسلامية ضمن أطر المناهج
                         الدولية.</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">التواصل عبر الثقافات</h3>
-                    <p class="text-gray-600">تسهيل التواصل بين الأسر الناطقة بالعربية وموظفي المدارس الدولية، مع ضمان
+                    <h3 class="service-title">التواصل عبر الثقافات</h3>
+                    <p class="service-desc">تسهيل التواصل بين الأسر الناطقة بالعربية وموظفي المدارس الدولية، مع ضمان
                         الحساسية الثقافية.</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">التدخل في القراءة</h3>
-                    <p class="text-gray-600">دعم القراءة القائم على الأدلة باستخدام منهجيات SPIRE وتقييم PAST للقراء
+                    <h3 class="service-title">التدخل في القراءة</h3>
+                    <p class="service-desc">دعم القراءة القائم على الأدلة باستخدام منهجيات SPIRE وتقييم PAST للقراء
                         المتعثرين.</p>
                 </div>
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">دعم المناهج</h3>
-                    <p class="text-gray-600">المساعدة في تقديم المنهج البريطاني (كامبريدج/IPC)، الأمريكي (Common Core)،
+                    <h3 class="service-title">دعم المناهج</h3>
+                    <p class="service-desc">المساعدة في تقديم المنهج البريطاني (كامبريدج/IPC)، الأمريكي (Common Core)،
                         والبكالوريا الدولية لجميع المراحل.</p>
                 </div>
             </div>
@@ -260,20 +282,19 @@
     </section>
 
     <!-- Experience Section (Arabic) -->
-    <section id="experience" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
+    <section id="experience" class="section-white reveal-section">
+        <div class="container">
             <h2 class="section-title">الخبرة المهنية</h2>
             <div class="timeline rtl-timeline">
                 <!-- Dubai Schools -->
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-header">
-                            <h3 class="text-2xl font-semibold text-teal-700">مساعد تعليم وتدريس</h3>
-                            <span class="timeline-badge">حالي</span>
+                            <h3 class="timeline-title">مساعد تعليم وتدريس</h3>
                         </div>
-                        <h4 class="text-lg text-gray-600 mb-2">مدارس دبي الخوانيج (تعليم)، دبي، الإمارات</h4>
-                        <p class="text-gray-500 mb-3 flex items-center">
-                            <i class="fas fa-calendar-alt ml-2"></i>أغسطس 2024 – فبراير 2025
+                        <h4 class="timeline-company">مدارس دبي الخوانيج (تعليم)، دبي، الإمارات</h4>
+                        <p class="timeline-date">
+                            <i class="fas fa-calendar-alt"></i>أغسطس 2024 – فبراير 2025
                         </p>
                         <ul class="experience-list">
                             <li>دعم الصفوف 6-7 في تقديم المنهج البريطاني</li>
@@ -288,11 +309,11 @@
                 <div class="timeline-item">
                     <div class="timeline-content">
                         <div class="timeline-header">
-                            <h3 class="text-2xl font-semibold text-teal-700">مساعد تدريس</h3>
+                            <h3 class="timeline-title">مساعد تدريس</h3>
                         </div>
-                        <h4 class="text-lg text-gray-600 mb-2">مدرسة يونيتي الثانوية، الخرطوم، السودان</h4>
-                        <p class="text-gray-500 mb-3 flex items-center">
-                            <i class="fas fa-calendar-alt ml-2"></i>سبتمبر 2022 – يوليو 2023
+                        <h4 class="timeline-company">مدرسة يونيتي الثانوية، الخرطوم، السودان</h4>
+                        <p class="timeline-date">
+                            <i class="fas fa-calendar-alt"></i>سبتمبر 2022 – يوليو 2023
                         </p>
                         <ul class="experience-list">
                             <li>تقديم برنامج SPIRE للتدخل في القراءة عبر مجموعات سنوية متعددة</li>
@@ -307,19 +328,19 @@
     </section>
 
     <!-- Portfolio Section (Arabic) -->
-    <section id="portfolio" class="py-20 bg-gradient-to-br from-gray-50 to-teal-50">
-        <div class="container mx-auto px-4">
+    <section id="portfolio" class="section-gradient reveal-section">
+        <div class="container">
             <h2 class="section-title">الشهادات والملف</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="portfolio-grid">
                 <div class="portfolio-item" data-doc="experience-letter-taaleem">
                     <div class="portfolio-card">
                         <div class="portfolio-icon pdf">
                             <i class="fas fa-file-pdf"></i>
                         </div>
-                        <h3 class="font-semibold text-lg">خطاب خبرة تعليم</h3>
-                        <p class="text-sm text-gray-600">مدارس دبي الخوانيج</p>
+                        <h3 class="portfolio-name">خطاب خبرة تعليم</h3>
+                        <p class="portfolio-org">مدارس دبي الخوانيج</p>
                         <span class="portfolio-action">
-                            <i class="fas fa-eye ml-1"></i>عرض المستند
+                            <i class="fas fa-eye"></i>عرض المستند
                         </span>
                     </div>
                 </div>
@@ -328,10 +349,10 @@
                         <div class="portfolio-icon pdf">
                             <i class="fas fa-file-pdf"></i>
                         </div>
-                        <h3 class="font-semibold text-lg">توصية مدرسة يونيتي</h3>
-                        <p class="text-sm text-gray-600">رئيس المرحلة الابتدائية</p>
+                        <h3 class="portfolio-name">توصية مدرسة يونيتي</h3>
+                        <p class="portfolio-org">رئيس المرحلة الابتدائية</p>
                         <span class="portfolio-action">
-                            <i class="fas fa-eye ml-1"></i>عرض المستند
+                            <i class="fas fa-eye"></i>عرض المستند
                         </span>
                     </div>
                 </div>
@@ -340,10 +361,10 @@
                         <div class="portfolio-icon cert">
                             <i class="fas fa-certificate"></i>
                         </div>
-                        <h3 class="font-semibold text-lg">الشهادة الثانوية السودانية</h3>
-                        <p class="text-sm text-gray-600">مدرسة الشريقة الخاصة</p>
+                        <h3 class="portfolio-name">الشهادة الثانوية السودانية</h3>
+                        <p class="portfolio-org">مدرسة الشريقة الخاصة</p>
                         <span class="portfolio-action">
-                            <i class="fas fa-eye ml-1"></i>عرض المستند
+                            <i class="fas fa-eye"></i>عرض المستند
                         </span>
                     </div>
                 </div>
@@ -352,15 +373,16 @@
     </section>
 
     <!-- Contact Section (Arabic) -->
-    <section id="contact" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
+    <section id="contact" class="section-white reveal-section">
+        <div class="container">
             <h2 class="section-title">تواصل معي</h2>
-            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
+            <div class="contact-grid">
                 <div>
-                    <h3 class="text-2xl font-semibold mb-4 text-teal-700">لنتعاون معاً</h3>
-                    <p class="mb-6 text-gray-700">أبحث حالياً عن فرص مع المدارس الدولية في دبي. متاح للتعيين الفوري مع
+                    <h3 class="subsection-title">لنتعاون معاً</h3>
+                    <p class="text-body contact-intro">أبحث حالياً عن فرص مع المدارس الدولية في دبي. متاح للتعيين الفوري
+                        مع
                         إقامة إماراتية سارية.</p>
-                    <div class="space-y-4">
+                    <div class="contact-list">
                         <a href="tel:+971557177083" class="contact-item">
                             <div class="contact-icon">
                                 <i class="fas fa-phone"></i>
@@ -389,8 +411,8 @@
 
                     <!-- WhatsApp Button -->
                     <a href="https://wa.me/971557177083?text=مرحباً%20سراجا،%20وجدت%20موقعك%20وأود%20مناقشة%20الفرص."
-                        class="whatsapp-btn mt-8" target="_blank">
-                        <i class="fab fa-whatsapp text-xl"></i>
+                        class="whatsapp-btn" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
                         مراسلة على واتساب
                     </a>
                 </div>
@@ -412,8 +434,8 @@
                         <div class="form-group">
                             <textarea id="message" rows="4" placeholder="رسالتك" required></textarea>
                         </div>
-                        <button type="submit" class="btn-primary w-full">
-                            <i class="fas fa-paper-plane ml-2"></i>إرسال الرسالة
+                        <button type="submit" class="btn-primary btn-full">
+                            <i class="fas fa-paper-plane"></i>إرسال الرسالة
                         </button>
                     </form>
                 </div>
@@ -422,28 +444,26 @@
     </section>
 
     <!-- Footer (Arabic) -->
-    <footer class="bg-gray-900 text-white py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-3 gap-8 mb-8">
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
                 <div>
-                    <h4
-                        class="text-2xl font-bold mb-4 bg-gradient-to-r from-teal-400 to-teal-600 bg-clip-text text-transparent">
-                        سـ</h4>
-                    <p class="text-gray-400">مساعد تعليم محترف متخصص في التعليم الشامل والدعم ثنائي اللغة للمدارس
+                    <h4 class="footer-logo">سـ</h4>
+                    <p class="footer-desc">مساعد تعليم محترف متخصص في التعليم الشامل والدعم ثنائي اللغة للمدارس
                         الدولية في دبي.</p>
                 </div>
                 <div>
-                    <h5 class="font-semibold mb-4">روابط سريعة</h5>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#about" class="hover:text-teal-400 transition">نبذة عني</a></li>
-                        <li><a href="#services" class="hover:text-teal-400 transition">خدماتي</a></li>
-                        <li><a href="#experience" class="hover:text-teal-400 transition">خبراتي</a></li>
-                        <li><a href="#contact" class="hover:text-teal-400 transition">تواصل معي</a></li>
+                    <h5 class="footer-heading">روابط سريعة</h5>
+                    <ul class="footer-links">
+                        <li><a href="#about">نبذة عني</a></li>
+                        <li><a href="#services">خدماتي</a></li>
+                        <li><a href="#experience">خبراتي</a></li>
+                        <li><a href="#contact">تواصل معي</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h5 class="font-semibold mb-4">تواصل</h5>
-                    <div class="flex space-x-reverse space-x-4">
+                    <h5 class="footer-heading">تواصل</h5>
+                    <div class="social-links">
                         <a href="https://linkedin.com/in/suraga-elzibaer" target="_blank" class="social-link">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
@@ -456,10 +476,10 @@
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 text-center">
-                <p class="text-gray-400">&copy; <span id="current-year">2025</span> سراجا الزبير. جميع الحقوق محفوظة.
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; <span id="current-year">2026</span> سراجا الزبير. جميع الحقوق محفوظة.
                 </p>
-                <p class="text-sm text-gray-500 mt-2">مصمم لمجتمع التعليم الدولي في دبي</p>
+                <p class="footer-tagline">مصمم لمجتمع التعليم الدولي في دبي</p>
             </div>
         </div>
     </footer>
@@ -469,7 +489,7 @@
         <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="pdf-title" class="font-semibold text-lg"></h3>
+                <h3 id="pdf-title" class="modal-title"></h3>
                 <button id="close-modal" class="modal-close">
                     <i class="fas fa-times"></i>
                 </button>

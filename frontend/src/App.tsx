@@ -7,8 +7,10 @@ import Experience from './components/Experience';
 import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import usePageTracking from './hooks/usePageTracking';
 
 function App() {
+  usePageTracking();
   return (
     <div className="min-h-screen relative text-white font-inter overflow-x-hidden">
       <ThreeBackground />

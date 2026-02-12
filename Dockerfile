@@ -1,33 +1,17 @@
-# Stage 1: Build Frontend
-FROM node:20-slim as frontend-builder
-WORKDIR /app/frontend
-COPY frontend/package*.json ./
-RUN npm install
-COPY frontend .
-RUN npm run build
-
-# Stage 2: Build Backend
+# Stage 1: Build Backend
 FROM rust:1.83-slim-bookworm as backend-builder
 WORKDIR /app
-COPY . .
+COPY Cargo.toml Cargo.lock* ./
+COPY src/ ./src/
 RUN cargo build --release
 
-# Stage 3: Runtime
+# Stage 2: Runtime
 FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-
-# Copy the binary from builder
 COPY --from=backend-builder /app/target/release/suraga-website /app/suraga-website
-
-# Copy built frontend assets
-COPY --from=frontend-builder /app/frontend/dist ./public
-
-# Set environment variables
+COPY public/ ./public/
 ENV PORT=8080
 ENV RUST_LOG=info
-
-# Expose the port
 EXPOSE 8080
-
-# Run the binary
 CMD ["./suraga-website"]

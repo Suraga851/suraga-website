@@ -4,22 +4,22 @@
     
     <!-- English Homepage -->
     <url>
-        <loc>https://suragaelzibaer.com/</loc>
-        <lastmod>2025-01-01</lastmod>
+        <loc>https://suraga-website.onrender.com/</loc>
+        <lastmod>2026-02-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="en" href="https://suragaelzibaer.com/"/>
-        <xhtml:link rel="alternate" hreflang="ar" href="https://suragaelzibaer.com/ar.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html"/>
     </url>
     
     <!-- Arabic Homepage -->
     <url>
-        <loc>https://suragaelzibaer.com/ar.html</loc>
-        <lastmod>2025-01-01</lastmod>
+        <loc>https://suraga-website.onrender.com/ar.html</loc>
+        <lastmod>2026-02-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="en" href="https://suragaelzibaer.com/"/>
-        <xhtml:link rel="alternate" hreflang="ar" href="https://suragaelzibaer.com/ar.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html"/>
     </url>
     
 </urlset>

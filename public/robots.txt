@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://suragaelzibaer.com/sitemap.xml
+Sitemap: https://suraga-website.onrender.com/sitemap.xml
 
 # Disallow development files
 Disallow: /*.json$
