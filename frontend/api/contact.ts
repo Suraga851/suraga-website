@@ -1,24 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, subject, message } = body;
 
     // Basic validation
     if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: 'All fields are required' },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ error: 'All fields are required' }),
+        { 
+          status: 400, 
+          headers: { 'Content-Type': 'application/json' }
+        }
       );
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ error: 'Invalid email format' }),
+        { 
+          status: 400, 
+          headers: { 'Content-Type': 'application/json' }
+        }
       );
     }
 
@@ -40,16 +44,25 @@ export async function POST(request: NextRequest) {
     // In a real implementation, you would send an email here
     // For free tier, you could use a service like FormSubmit.co or EmailJS
     
-    return NextResponse.json({
-      success: true,
-      message: 'Message sent successfully!'
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Message sent successfully!'
+      }),
+      { 
+        status: 200, 
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
 
   } catch (error) {
     console.error('Contact form error:', error);
-    return NextResponse.json(
-      { error: 'Failed to send message' },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ error: 'Failed to send message' }),
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 }
