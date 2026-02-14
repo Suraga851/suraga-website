@@ -1,6 +1,52 @@
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaLinkedinIn, FaWhatsapp, FaPaperPlane } from 'react-icons/fa';
+import { useState } from 'react';
 
 export default function Contact() {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        subject: 'job',
+        message: ''
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                setSubmitStatus('success');
+                setFormData({ name: '', email: '', subject: 'job', message: '' });
+            } else {
+                setSubmitStatus('error');
+            }
+        } catch (error) {
+            console.error('Form submission error:', error);
+            setSubmitStatus('error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     return (
         <section id="contact" className="py-24 relative">
             <div className="container mx-auto px-4">
@@ -60,23 +106,36 @@ export default function Contact() {
 
                     {/* Contact Form */}
                     <div>
-                        <form className="space-y-6">
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
                                 <input
                                     type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
                                     placeholder="Your Name"
+                                    required
                                     className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors"
                                 />
                             </div>
                             <div>
                                 <input
                                     type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
                                     placeholder="Your Email"
+                                    required
                                     className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors"
                                 />
                             </div>
                             <div>
-                                <select className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-gray-300 focus:outline-none focus:border-teal-500/50 transition-colors">
+                                <select 
+                                    name="subject"
+                                    value={formData.subject}
+                                    onChange={handleChange}
+                                    className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-gray-300 focus:outline-none focus:border-teal-500/50 transition-colors"
+                                >
                                     <option value="job">Job Inquiry</option>
                                     <option value="collaboration">Collaboration</option>
                                     <option value="general">General Question</option>
@@ -84,17 +143,35 @@ export default function Contact() {
                             </div>
                             <div>
                                 <textarea
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
                                     rows={4}
                                     placeholder="Your Message"
+                                    required
                                     className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors resize-none"
                                 ></textarea>
                             </div>
+                            
+                            {submitStatus === 'success' && (
+                                <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-xl text-green-400">
+                                    Thank you! Your message has been sent successfully.
+                                </div>
+                            )}
+                            
+                            {submitStatus === 'error' && (
+                                <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400">
+                                    Sorry, there was an error sending your message. Please try again or contact me directly.
+                                </div>
+                            )}
+
                             <button
                                 type="submit"
-                                className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02]"
+                                disabled={isSubmitting}
+                                className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                             >
                                 <FaPaperPlane />
-                                Send Message
+                                {isSubmitting ? 'Sending...' : 'Send Message'}
                             </button>
                         </form>
                     </div>
