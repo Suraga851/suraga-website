@@ -1,13 +1,9 @@
 {
   "version": 2,
-  "name": "suraga-website",
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "src": "frontend/dist/**",
+      "use": "@vercel/static"
     }
   ],
   "headers": [
@@ -29,8 +25,5 @@
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
-  ],
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/frontend/dist/$1" }
   ]
 }
