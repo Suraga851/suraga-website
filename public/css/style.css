@@ -56,6 +56,40 @@ body {
     font-family: 'Tajawal', 'Amiri', sans-serif;
 }
 
+.skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    transform: translateY(-150%);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: var(--text-charcoal);
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    z-index: 120;
+    transition: transform var(--transition-fast);
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+}
+
+[dir="rtl"] .skip-link {
+    left: auto;
+    right: 0.75rem;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 3px solid var(--accent-coral);
+    outline-offset: 3px;
+}
+
 /* ===== Animated Background (replaces Three.js) ===== */
 .animated-bg {
     position: fixed;
@@ -294,6 +328,10 @@ body {
     color: var(--primary-teal);
 }
 
+.nav-link.active {
+    color: var(--primary-teal);
+}
+
 .nav-link::after {
     content: '';
     position: absolute;
@@ -309,6 +347,16 @@ body {
 .nav-link:hover::after {
     width: 100%;
     left: 0;
+}
+
+.nav-link.active::after {
+    width: 100%;
+    left: 0;
+}
+
+[dir="rtl"] .nav-link.active::after {
+    left: auto;
+    right: 0;
 }
 
 .nav-scrolled {
@@ -382,6 +430,11 @@ body {
 
 .mobile-nav-link:hover {
     color: var(--primary-teal);
+}
+
+.mobile-nav-link.active {
+    color: var(--primary-teal);
+    font-weight: 700;
 }
 
 /* ===== Hero Section ===== */
@@ -942,6 +995,21 @@ section {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
     border-color: rgba(0, 109, 119, 0.2);
+}
+
+.portfolio-item {
+    cursor: pointer;
+    border-radius: 16px;
+}
+
+.portfolio-item:focus-visible {
+    outline: none;
+}
+
+.portfolio-item:focus-visible .portfolio-card {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(0, 109, 119, 0.35);
 }
 
 .portfolio-icon {

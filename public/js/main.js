@@ -3,9 +3,12 @@
 const mobileBtn = document.getElementById("mobile-menu-btn");
 const closeBtn = document.getElementById("close-mobile-menu");
 const mobileMenu = document.getElementById("mobile-menu");
-const navLinks = document.querySelectorAll(".mobile-nav-link");
+const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+const desktopNavLinks = document.querySelectorAll(".nav-link");
 const navbar = document.getElementById("navbar");
 const formStatus = document.getElementById("form-status");
+const isRtl = document.documentElement.dir === "rtl";
+const allNavLinks = [...desktopNavLinks, ...mobileNavLinks];
 
 const MESSAGES = {
     sending: "Sending...",
@@ -28,30 +31,102 @@ const clearFormStatus = () => {
     formStatus.classList.add("hidden");
 };
 
-if (mobileBtn && closeBtn && mobileMenu) {
-    mobileBtn.addEventListener("click", () => {
-        mobileMenu.classList.remove("translate-x-full", "-translate-x-full");
-        document.body.style.overflow = "hidden";
-    });
+let isMobileMenuOpen = false;
 
-    const closeMenu = () => {
-        const isRtl = document.documentElement.dir === "rtl";
+if (mobileBtn && closeBtn && mobileMenu) {
+    const setMobileMenuState = (open) => {
+        isMobileMenuOpen = open;
+
+        if (open) {
+            mobileMenu.classList.remove("translate-x-full", "-translate-x-full");
+            mobileBtn.setAttribute("aria-expanded", "true");
+            mobileMenu.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+            closeBtn.focus();
+            return;
+        }
+
         mobileMenu.classList.add(isRtl ? "-translate-x-full" : "translate-x-full");
+        mobileBtn.setAttribute("aria-expanded", "false");
+        mobileMenu.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "auto";
     };
 
+    mobileBtn.addEventListener("click", () => {
+        setMobileMenuState(true);
+    });
+
+    const closeMenu = () => {
+        setMobileMenuState(false);
+    };
+
     closeBtn.addEventListener("click", closeMenu);
-    navLinks.forEach((link) => link.addEventListener("click", closeMenu));
+    mobileNavLinks.forEach((link) => link.addEventListener("click", closeMenu));
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth >= 768 && isMobileMenuOpen) {
+            closeMenu();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && isMobileMenuOpen) {
+            closeMenu();
+        }
+    });
+
+    setMobileMenuState(false);
 }
 
-window.addEventListener("scroll", () => {
-    if (!navbar) return;
-    if (window.scrollY > 50) {
-        navbar.classList.add("nav-scrolled");
-        return;
-    }
-    navbar.classList.remove("nav-scrolled");
+const navSections = [];
+desktopNavLinks.forEach((link) => {
+    const href = link.getAttribute("href");
+    if (!href || !href.startsWith("#")) return;
+
+    const section = document.querySelector(href);
+    if (!section || navSections.includes(section)) return;
+    navSections.push(section);
 });
+
+const setActiveNav = (sectionId) => {
+    allNavLinks.forEach((link) => {
+        const href = link.getAttribute("href");
+        const isActive = href === `#${sectionId}`;
+        link.classList.toggle("active", isActive);
+        if (isActive) {
+            link.setAttribute("aria-current", "page");
+            return;
+        }
+        link.removeAttribute("aria-current");
+    });
+};
+
+const updateHeaderAndActiveSection = () => {
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add("nav-scrolled");
+        } else {
+            navbar.classList.remove("nav-scrolled");
+        }
+    }
+
+    if (navSections.length === 0) return;
+
+    const scrollMark = window.scrollY + (navbar ? navbar.offsetHeight + 120 : 180);
+    let activeSectionId = navSections[0].id;
+
+    navSections.forEach((section) => {
+        if (scrollMark >= section.offsetTop) {
+            activeSectionId = section.id;
+        }
+    });
+
+    setActiveNav(activeSectionId);
+};
+
+window.addEventListener("scroll", updateHeaderAndActiveSection, { passive: true });
+window.addEventListener("hashchange", updateHeaderAndActiveSection);
+updateHeaderAndActiveSection();
 
 const revealSections = document.querySelectorAll(".reveal-section");
 if (revealSections.length > 0) {
@@ -80,35 +155,67 @@ const pdfViewer = document.getElementById("pdf-viewer");
 const pdfTitle = document.getElementById("pdf-title");
 
 if (modal && closeModal && pdfViewer && pdfTitle) {
+    let lastFocusedElement = null;
+
     const hideModal = () => {
         modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
         pdfViewer.src = "";
-        document.body.style.overflow = "auto";
+        document.body.style.overflow = isMobileMenuOpen ? "hidden" : "auto";
+        if (lastFocusedElement instanceof HTMLElement) {
+            lastFocusedElement.focus();
+        }
+        lastFocusedElement = null;
     };
 
-    modalItems.forEach((item) => {
-        item.addEventListener("click", async () => {
-            const docName = item.dataset.doc;
-            if (!docName) return;
+    const openModalForItem = async (item) => {
+        const docName = item.dataset.doc;
+        if (!docName) return;
 
-            const docPath = `assets/docs/${docName}.pdf`;
-            try {
-                const check = await fetch(docPath, { method: "HEAD" });
-                if (!check.ok && check.status !== 405) {
-                    setFormStatus(MESSAGES.docUnavailable, "error");
-                    return;
-                }
-            } catch (error) {
-                console.error("Document availability check failed:", error);
+        const docPath = `assets/docs/${docName}.pdf`;
+        try {
+            const check = await fetch(docPath, { method: "HEAD" });
+            if (!check.ok && check.status !== 405) {
                 setFormStatus(MESSAGES.docUnavailable, "error");
                 return;
             }
+        } catch (error) {
+            console.error("Document availability check failed:", error);
+            setFormStatus(MESSAGES.docUnavailable, "error");
+            return;
+        }
 
-            const titleNode = item.querySelector("h3");
-            pdfTitle.innerText = titleNode ? titleNode.innerText : "Document";
-            pdfViewer.src = docPath;
-            modal.classList.remove("hidden");
-            document.body.style.overflow = "hidden";
+        const titleNode = item.querySelector("h3");
+        const modalTitle = titleNode ? titleNode.innerText : "Document";
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+        clearFormStatus();
+        pdfTitle.innerText = modalTitle;
+        pdfViewer.src = docPath;
+        modal.classList.remove("hidden");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        closeModal.focus();
+    };
+
+    modalItems.forEach((item) => {
+        if (!(item instanceof HTMLElement)) return;
+
+        const titleNode = item.querySelector("h3");
+        const itemTitle = titleNode ? titleNode.innerText.trim() : "Document";
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("aria-haspopup", "dialog");
+        item.setAttribute("aria-label", `Open document: ${itemTitle}`);
+
+        item.addEventListener("click", async () => {
+            await openModalForItem(item);
+        });
+
+        item.addEventListener("keydown", async (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            await openModalForItem(item);
         });
     });
 

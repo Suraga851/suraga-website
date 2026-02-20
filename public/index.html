@@ -59,6 +59,7 @@
 </head>
 
 <body class="body-default">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <!-- Animated Background -->
     <div class="animated-bg"></div>
 
@@ -70,11 +71,11 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" aria-label="Primary">
         <div class="container nav-inner">
-            <div class="logo">
+            <a href="#home" class="logo" aria-label="Go to home section">
                 <span class="logo-text">SE</span>
-            </div>
+            </a>
             <ul class="nav-links">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
@@ -83,15 +84,16 @@
                 <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <button class="mobile-menu-toggle" id="mobile-menu-btn">
+            <button class="mobile-menu-toggle" id="mobile-menu-btn" aria-label="Open menu" aria-controls="mobile-menu"
+                aria-expanded="false">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="mobile-menu translate-x-full">
-        <button class="mobile-close-btn" id="close-mobile-menu">
+    <div id="mobile-menu" class="mobile-menu translate-x-full" role="dialog" aria-modal="true" aria-hidden="true">
+        <button class="mobile-close-btn" id="close-mobile-menu" aria-label="Close menu">
             <i class="fas fa-times"></i>
         </button>
         <div class="mobile-menu-inner">
@@ -104,6 +106,7 @@
         </div>
     </div>
 
+    <main id="main-content">
     <!-- Hero Section -->
     <section id="home" class="hero-section">
         <!-- Animated Background Elements -->
@@ -461,6 +464,7 @@
         </div>
     </section>
 
+    </main>
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -503,12 +507,13 @@
     </footer>
 
     <!-- PDF Viewer Modal -->
-    <div id="pdf-modal" class="modal hidden">
+    <div id="pdf-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pdf-title"
+        aria-hidden="true">
         <div class="modal-backdrop"></div>
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="pdf-title" class="modal-title"></h3>
-                <button id="close-modal" class="modal-close">
+                <button id="close-modal" class="modal-close" aria-label="Close document viewer">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
