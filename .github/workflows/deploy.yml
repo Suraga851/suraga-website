@@ -31,6 +31,7 @@ jobs:
           npm run build
 
       - name: Deploy to Vercel
+        if: ${{ github.event_name == 'push' && secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != '' }}
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -38,3 +39,7 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           working-directory: ./frontend
           scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      - name: Skip deploy (missing Vercel secrets)
+        if: ${{ github.event_name == 'push' && (secrets.VERCEL_TOKEN == '' || secrets.VERCEL_ORG_ID == '' || secrets.VERCEL_PROJECT_ID == '') }}
+        run: echo "Skipping Vercel deploy because required secrets are not configured."
