@@ -34,10 +34,9 @@ async fn main() -> std::io::Result<()> {
                     .index_file("index.html")
                     .prefer_utf8(true)
                     .default_handler(fn_service(|req: ServiceRequest| async {
-                        let (req, _) = req.into_parts();
                         let file = NamedFile::open_async("./public/index.html").await?;
-                        let res = file.into_response(&req);
-                        Ok(res)
+                        let response = file.into_response(req.request());
+                        Ok(req.into_response(response))
                     }))
             )
     })

@@ -1,5 +1,6 @@
 # Stage 1: Build Backend
 FROM rust:1.83-slim-bookworm as backend-builder
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential pkg-config && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY Cargo.toml Cargo.lock* ./
 COPY src/ ./src/
