@@ -91,6 +91,10 @@ body {
     margin-right: 0.75rem;
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* ===== Animations ===== */
 @keyframes fadeInUp {
     from {
@@ -1113,6 +1117,24 @@ section {
 .form-group textarea {
     resize: vertical;
     min-height: 120px;
+}
+
+.form-status {
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    min-height: 1.25rem;
+}
+
+.form-status.success {
+    color: #047857;
+}
+
+.form-status.error {
+    color: #b91c1c;
+}
+
+.form-status.info {
+    color: var(--text-gray-600);
 }
 
 /* ===== Footer ===== */

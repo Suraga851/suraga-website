@@ -1,6 +1,6 @@
 use actix_files::{Files, NamedFile};
-use actix_web::{middleware, App, HttpServer};
 use actix_web::dev::{fn_service, ServiceRequest};
+use actix_web::{middleware, App, HttpServer};
 use std::env;
 
 #[actix_web::main]
@@ -27,7 +27,7 @@ async fn main() -> std::io::Result<()> {
                     .add(("Referrer-Policy", "strict-origin-when-cross-origin"))
                     .add(("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload"))
                     .add(("Permissions-Policy", "camera=(), microphone=(), geolocation=()"))
-                    .add(("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formsubmit.co;"))
+                    .add(("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-src 'self';"))
             )
             .service(
                 Files::new("/", "./public")
