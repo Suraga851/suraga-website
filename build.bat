@@ -1,7 +1,13 @@
 @echo off
-echo Building Suraga Website...
-cd frontend
-npm install
-npm run build
-echo Build completed!
-pause
+setlocal
+echo ===========================================
+echo   Build Static Pages
+echo ===========================================
+
+call npm run build:pages
+if %ERRORLEVEL% NEQ 0 (
+    echo Build failed.
+    exit /b 1
+)
+
+echo Build complete.

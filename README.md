@@ -1,121 +1,81 @@
-# Suraga Elzibaer - Bilingual Learning Assistant Website
+# Suraga Website
 
-A professional bilingual (English/Arabic) portfolio website for a Learning Assistant specializing in inclusive education in Dubai.
+Render-served bilingual portfolio site (English + Arabic) built as:
+- Rust (`actix-web`) server for static hosting + headers + runtime config.
+- Generated static pages in `public/`.
+- Single content source in `site-src/content.mjs`.
 
-## 🚀 Features
+## Architecture
 
-- **Bilingual Support**: Full English and Arabic (RTL) versions
-- **Modern Design**: Glassmorphism, animations, and responsive layout
-- **Accessibility**: Reduced motion support, semantic HTML, ARIA labels
-- **SEO Optimized**: Meta tags, Open Graph, sitemap, robots.txt
-- **Contact Form**: FormSubmit.co integration for email notifications
-- **Portfolio Modal**: PDF document viewer for credentials
-- **Mobile-First**: Fully responsive design
+- `src/main.rs`: web server, security headers, `/health`, `/config.json`, static file serving.
+- `site-src/content.mjs`: canonical bilingual content and metadata.
+- `scripts/build-pages.mjs`: generates:
+  - `public/index.html`
+  - `public/ar.html`
+  - `public/robots.txt`
+  - `public/sitemap.xml`
+- `public/css/*`: styling.
+- `public/js/main.js` + `public/js/modules/*`: modular front-end behavior.
+- `tests/smoke/site.spec.js`: Playwright smoke coverage.
 
-## 📁 Project Structure
+## Local Development
 
-```
-suraga-website/
-├── index.html          # English version
-├── ar.html             # Arabic (RTL) version
-├── css/
-│   ├── style.css       # Main styles
-│   ├── arabic.css      # RTL-specific styles
-│   └── responsive.css  # Media queries
-├── js/
-│   └── main.js         # Core JavaScript
-├── assets/
-│   ├── images/         # Profile and hero images
-│   │   └── suraga-headshot.jpg
-│   └── docs/           # PDF documents
-│       ├── experience-letter-taaleem.pdf
-│       ├── recommendation-unity.pdf
-│       └── secondary-certificate.pdf
-├── data/
-│   └── content.json    # Bilingual content
-├── robots.txt          # SEO crawling rules
-├── sitemap.xml         # SEO sitemap
-└── README.md           # This file
-```
-
-## 🛠️ Quick Start
-
-### Local Development
-
-1. **Clone or download** the project
-2. **Open with VS Code** (recommended)
-3. **Install Live Server extension** (ritwickdey.LiveServer)
-4. **Right-click `index.html`** → "Open with Live Server"
-
-Or use any local server:
-
+1. Install dependencies:
 ```bash
-# Python
-python -m http.server 3000
-
-# Node.js (install live-server globally)
-npm install -g live-server
-live-server --port=3000
-
-# PHP
-php -S localhost:3000
+npm install
+```
+2. Regenerate pages after content changes:
+```bash
+npm run build:pages
+```
+3. Run the Rust server:
+```bash
+cargo run
+```
+4. Open:
+```text
+http://127.0.0.1:8080
 ```
 
-### Adding Your Content
+## Quality Gates
 
-1. **Profile Photo**: Replace `assets/images/suraga-headshot.jpg` with your photo (recommended: 400x400px, square)
-2. **Documents**: Add your PDF certificates to `assets/docs/`
-3. **Contact Info**: Update phone, email, and LinkedIn in both HTML files
-4. **FormSubmit**: The contact form uses FormSubmit.co - update the email address in `js/main.js`
+Run static checks:
+```bash
+npm run check
+```
 
-## 🌐 Deployment
+Run smoke tests:
+```bash
+npm run test:smoke
+```
 
-### Netlify (Recommended)
+Rust checks:
+```bash
+cargo fmt --all --check
+cargo clippy --all-targets -- -D warnings
+cargo test --all-targets
+```
 
-1. Push code to GitHub
-2. Go to [app.netlify.com](https://app.netlify.com)
-3. "Add new site" → "Import from Git"
-4. Connect GitHub and select repository
-5. Deploy settings:
-   - Build command: (leave empty)
-   - Publish directory: `/`
-6. Click "Deploy"
+## Content Workflow
 
-### GitHub Pages
+Do not hand-edit generated pages (`public/index.html`, `public/ar.html`, `public/robots.txt`, `public/sitemap.xml`) unless debugging.
 
-1. Create repository named `username.github.io` or `suraga-website`
-2. Push all files to `main` branch
-3. Go to Settings → Pages
-4. Source: Deploy from a branch → `main` → `/ (root)`
-5. Save and wait for deployment
+Use this workflow:
+1. Edit `site-src/content.mjs`.
+2. Run `npm run build:pages`.
+3. Commit both source and regenerated output.
 
-### Custom Domain
+## Runtime Config
 
-1. Purchase domain (e.g., suragaelzibaer.com)
-2. In Netlify/GitHub Pages: Add custom domain
-3. Update DNS:
-   - A Record: `@` → Netlify/GitHub IP
-   - CNAME: `www` → `your-site.netlify.app`
+Environment variables:
+- `PORT` (default: `8080`)
+- `CONTACT_FORM_ENDPOINT` (default: `https://formsubmit.co/ajax/suragaelzibaer@gmail.com`)
+- `RUST_LOG` (default: `actix_web=info`)
 
-## 📱 Browser Support
+`/config.json` exposes runtime client config (currently contact endpoint).
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+## Deployment
 
-## ⚡ Performance Tips
+The production target is Render via Docker (`render.yaml`, `Dockerfile`).
 
-1. **Compress images** with [TinyPNG](https://tinypng.com)
-2. **Add lazy loading** to images: `loading="lazy"`
-3. **Minify CSS/JS** for production
-4. **Enable Gzip** (automatic on Netlify/Vercel)
-
-## 📄 License
-
-This project is free for personal use. Attribution appreciated but not required.
-
----
-
-**Created for Suraga Elzibaer** | Dubai, UAE | 2025
+Push to `main` to trigger redeploy.

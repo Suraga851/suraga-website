@@ -108,7 +108,7 @@ select:focus-visible,
     outline-offset: 3px;
 }
 
-/* ===== Animated Background (replaces Three.js) ===== */
+/* ===== Animated Background ===== */
 .animated-bg {
     position: fixed;
     top: 0;

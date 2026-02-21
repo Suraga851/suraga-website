@@ -2,10 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://suraga-website.vercel.app/sitemap.xml
-
-# Disallow development files
-Disallow: /*.json$
+Sitemap: https://suraga-website.onrender.com/sitemap.xml
 
 # Allow all assets
 Allow: /assets/
