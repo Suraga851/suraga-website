@@ -1,4 +1,5 @@
-import { FaCalendarAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaBriefcase } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 interface TimelineItemProps {
     title: string;
@@ -6,78 +7,93 @@ interface TimelineItemProps {
     period: string;
     responsibilities: string[];
     isCurrent?: boolean;
+    index: number;
 }
 
-function TimelineItem({ title, company, period, responsibilities, isCurrent }: TimelineItemProps) {
+function TimelineItem({ title, company, period, responsibilities, isCurrent, index }: TimelineItemProps) {
     return (
-        <div className="relative pl-8 pb-12 border-l-2 border-slate-700 last:pb-0">
+        <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.2, duration: 0.6 }}
+            className="relative pl-12 pb-16 border-l-2 border-white/10 last:pb-0"
+        >
             {/* Timeline dot */}
-            <div className={`absolute left-0 top-0 w-4 h-4 rounded-full -translate-x-1/2 ${isCurrent ? 'bg-teal-400 ring-4 ring-teal-400/20' : 'bg-slate-600'}`}></div>
+            <div className={`absolute left-0 top-0 w-6 h-6 rounded-full -translate-x-1/2 flex items-center justify-center ${isCurrent ? 'bg-primary shadow-[0_0_20px_rgba(45,212,191,0.5)]' : 'bg-slate-800 border-2 border-white/10'}`}>
+                {isCurrent && <div className="w-2 h-2 bg-slate-950 rounded-full animate-ping"></div>}
+            </div>
 
-            <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-teal-500/30 transition-all">
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                    <h3 className="text-2xl font-semibold text-teal-400">{title}</h3>
-                    {isCurrent && (
-                        <span className="px-3 py-1 bg-teal-500/20 text-teal-400 text-sm rounded-full border border-teal-500/30">
-                            Current
-                        </span>
-                    )}
+            <div className="glass-card rounded-[2rem] p-10 hover:border-primary/30 transition-all duration-500 group">
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 className="text-3xl font-black text-white group-hover:text-primary transition-colors mb-2">{title}</h3>
+                        <h4 className="text-xl text-primary/80 font-bold">{company}</h4>
+                    </div>
+                    <div className="px-6 py-2 bg-white/5 border border-white/10 rounded-2xl text-gray-400 font-bold text-sm flex items-center gap-3">
+                        <FaCalendarAlt className="text-primary" />
+                        {period}
+                    </div>
                 </div>
-                <h4 className="text-lg text-gray-300 mb-3">{company}</h4>
-                <p className="text-gray-500 flex items-center gap-2 mb-6">
-                    <FaCalendarAlt className="text-teal-400" />
-                    {period}
-                </p>
-                <ul className="space-y-3">
-                    {responsibilities.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3 text-gray-400">
-                            <span className="w-1.5 h-1.5 bg-teal-400 rounded-full mt-2 flex-shrink-0"></span>
+
+                <ul className="space-y-4">
+                    {responsibilities.map((item, i) => (
+                        <li key={i} className="flex items-start gap-4 text-gray-400 text-lg leading-relaxed">
+                            <span className="w-2 h-2 bg-primary rounded-full mt-2.5 flex-shrink-0 shadow-[0_0_10px_rgba(45,212,191,0.3)]"></span>
                             {item}
                         </li>
                     ))}
                 </ul>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
 const experiences = [
     {
         title: "Learning & Teaching Assistant",
-        company: "Dubai Schools Al Khawaneej (Taaleem), Dubai, UAE",
-        period: "August 2024 – February 2025",
+        company: "Dubai Schools Al Khawaneej (Taaleem)",
+        period: "Aug 2024 – Feb 2025",
         responsibilities: [
-            "Supported grades 6-7 in British-style curriculum delivery",
-            "Developed differentiated materials for diverse learning needs",
-            "Implemented inclusive strategies for Students of Determination",
-            "Collaborated with SENCO and parents on student progress"
+            "Leading differentiated material development for diverse learning needs across grades 6-7.",
+            "Implementing inclusive strategies for Students of Determination in collaboration with SENCO.",
+            "Facilitating seamless communication between Arabic-speaking families and school leadership.",
+            "Delivering specialized support within the British-style curriculum framework."
         ],
         isCurrent: true
     },
     {
         title: "Teaching Assistant",
-        company: "Unity High School, Khartoum, Sudan",
-        period: "September 2022 – July 2023",
+        company: "Unity High School, Khartoum",
+        period: "Sep 2022 – Jul 2023",
         responsibilities: [
-            "Delivered SPIRE reading intervention program across multiple year groups",
-            "Administered Dr. Kilpatrick's PAST test for phonological assessment",
-            "Assumed classroom teacher responsibilities for Humanities, Science, English",
-            "Provided one-on-one support for Gifted & Talented students"
+            "Delivered SPIRE reading intervention and PAST phonological assessments.",
+            "Assumed full classroom responsibilities for Humanities, Science, and English.",
+            "Provided targeted one-on-one enrichment for Gifted & Talented students.",
+            "Contributed to a high-performance educational environment in an international setting."
         ]
     }
 ];
 
 export default function Experience() {
     return (
-        <section id="experience" className="py-24 relative">
-            <div className="container mx-auto px-4">
-                <h2 className="text-4xl font-bold text-center mb-16">
-                    Professional <span className="text-teal-400">Experience</span>
-                </h2>
+        <section id="experience" className="py-32 relative">
+            <div className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-20"
+                >
+                    <h2 className="text-5xl md:text-6xl font-black mb-4">
+                        <span className="text-white/20">03.</span> Professional <span className="premium-gradient-text">Experience</span>
+                    </h2>
+                    <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
+                </motion.div>
 
-                <div className="max-w-3xl mx-auto">
+                <div className="max-w-4xl mx-auto">
                     {experiences.map((exp, index) => (
-                        <TimelineItem key={index} {...exp} />
+                        <TimelineItem key={index} {...exp} index={index} />
                     ))}
                 </div>
             </div>

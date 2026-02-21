@@ -7,13 +7,12 @@ function ParticleField(props: any) {
     const ref = useRef<THREE.Points>(null!);
 
     const sphere = useMemo(() => {
-        const particles = new Float32Array(5000 * 3);
-        for (let i = 0; i < 5000; i++) {
+        const particles = new Float32Array(3000 * 3); // Reduced density for elegance
+        for (let i = 0; i < 3000; i++) {
             const theta = THREE.MathUtils.randFloatSpread(360);
             const phi = THREE.MathUtils.randFloatSpread(360);
-            const r = 1.5 + Math.random() * 2; // Radius variation
+            const r = 1.5 + Math.random() * 2.5;
 
-            // Convert spherical to cartesian
             const x = r * Math.sin(theta) * Math.cos(phi);
             const y = r * Math.sin(theta) * Math.sin(phi);
             const z = r * Math.cos(theta);
@@ -27,8 +26,8 @@ function ParticleField(props: any) {
 
     useFrame((_state, delta) => {
         if (ref.current) {
-            ref.current.rotation.x -= delta / 10;
-            ref.current.rotation.y -= delta / 15;
+            ref.current.rotation.x -= delta / 15;
+            ref.current.rotation.y -= delta / 25;
         }
     });
 
@@ -37,11 +36,11 @@ function ParticleField(props: any) {
             <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
                 <PointMaterial
                     transparent
-                    color="#0d9488" // Teal-600
-                    size={0.005} // Smaller size
+                    color="#2dd4bf" // Primary Primary
+                    size={0.003} // Even smaller particles
                     sizeAttenuation={true}
                     depthWrite={false}
-                    opacity={0.6}
+                    opacity={0.4}
                 />
             </Points>
         </group>
@@ -50,7 +49,8 @@ function ParticleField(props: any) {
 
 export default function ThreeBackground() {
     return (
-        <div className="fixed inset-0 z-0 pointer-events-none bg-gradient-to-b from-slate-900 to-slate-800">
+        <div className="fixed inset-0 z-0 pointer-events-none bg-slate-950">
+            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-slate-950/50"></div>
             <Canvas camera={{ position: [0, 0, 1] }}>
                 <ParticleField />
             </Canvas>

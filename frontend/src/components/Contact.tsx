@@ -1,5 +1,6 @@
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaLinkedinIn, FaWhatsapp, FaPaperPlane } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaLinkedinIn, FaWhatsapp, FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Contact() {
     const [formData, setFormData] = useState({
@@ -48,133 +49,172 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="py-24 relative">
-            <div className="container mx-auto px-4">
-                <h2 className="text-4xl font-bold text-center mb-16">
-                    Get In <span className="text-teal-400">Touch</span>
-                </h2>
+        <section id="contact" className="py-32 relative overflow-hidden">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12">
+            <div className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-24"
+                >
+                    <h2 className="text-5xl md:text-6xl font-black mb-4">
+                        <span className="text-white/20">05.</span> Get In <span className="premium-gradient-text">Touch</span>
+                    </h2>
+                    <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
+                </motion.div>
+
+                <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-start">
                     {/* Contact Info */}
-                    <div>
-                        <h3 className="text-2xl font-semibold text-teal-400 mb-6">Let's Collaborate</h3>
-                        <p className="text-gray-300 mb-8 leading-relaxed">
-                            I'm currently seeking opportunities with international schools in Dubai. Available for immediate placement with active UAE residency.
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h3 className="text-4xl font-black text-white mb-8 leading-tight">
+                            Available for <br />
+                            <span className="text-primary italic">Immediate Placement</span> <br />
+                            in Dubai.
+                        </h3>
+                        <p className="text-xl text-gray-400 mb-12 leading-relaxed">
+                            I'm currently seeking opportunities with international schools in Dubai and the UAE. Available for immediate placement with active UAE residency.
                         </p>
 
-                        <div className="space-y-4">
-                            <a href="tel:+971557177083" className="flex items-center gap-4 p-4 bg-slate-800/30 rounded-xl border border-slate-700/50 hover:border-teal-500/50 transition-all group">
-                                <div className="w-12 h-12 bg-teal-500/20 rounded-lg flex items-center justify-center group-hover:bg-teal-500/30 transition-colors">
-                                    <FaPhone className="text-teal-400" />
-                                </div>
-                                <span className="text-gray-300">+971 55 7177 083</span>
-                            </a>
-
-                            <a href="mailto:suragaelzibaer@gmail.com" className="flex items-center gap-4 p-4 bg-slate-800/30 rounded-xl border border-slate-700/50 hover:border-teal-500/50 transition-all group">
-                                <div className="w-12 h-12 bg-teal-500/20 rounded-lg flex items-center justify-center group-hover:bg-teal-500/30 transition-colors">
-                                    <FaEnvelope className="text-teal-400" />
-                                </div>
-                                <span className="text-gray-300">suragaelzibaer@gmail.com</span>
-                            </a>
-
-                            <div className="flex items-center gap-4 p-4 bg-slate-800/30 rounded-xl border border-slate-700/50">
-                                <div className="w-12 h-12 bg-teal-500/20 rounded-lg flex items-center justify-center">
-                                    <FaMapMarkerAlt className="text-teal-400" />
-                                </div>
-                                <span className="text-gray-300">Dubai, United Arab Emirates</span>
-                            </div>
-
-                            <a href="https://linkedin.com/in/suraga-elzibaer" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 p-4 bg-slate-800/30 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all group">
-                                <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
-                                    <FaLinkedinIn className="text-blue-400" />
-                                </div>
-                                <span className="text-gray-300">Suraga Elzibaer</span>
-                            </a>
+                        <div className="space-y-6">
+                            {[
+                                { icon: FaPhone, value: '+971 55 7177 083', href: 'tel:+971557177083' },
+                                { icon: FaEnvelope, value: 'suragaelzibaer@gmail.com', href: 'mailto:suragaelzibaer@gmail.com' },
+                                { icon: FaMapMarkerAlt, value: 'Dubai, UAE', href: '#' },
+                                { icon: FaLinkedinIn, value: 'Suraga Elzibaer', href: 'https://linkedin.com/in/suraga-elzibaer', isExternal: true }
+                            ].map((item, i) => (
+                                <motion.a
+                                    key={i}
+                                    href={item.href}
+                                    target={item.isExternal ? '_blank' : undefined}
+                                    rel={item.isExternal ? 'noopener noreferrer' : undefined}
+                                    whileHover={{ x: 10 }}
+                                    className="flex items-center gap-6 p-6 glass-card rounded-3xl group transition-all"
+                                >
+                                    <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-primary transition-colors text-primary group-hover:text-slate-950">
+                                        <item.icon className="text-2xl" />
+                                    </div>
+                                    <span className="text-lg font-bold text-gray-300 group-hover:text-white">{item.value}</span>
+                                </motion.a>
+                            ))}
                         </div>
 
-                        {/* WhatsApp Button */}
-                        <a
-                            href="https://wa.me/971557177083?text=Hello%20Suraga,%20I%20found%20your%20website%20and%20would%20like%20to%20discuss%20opportunities."
+                        <motion.a
+                            href="https://wa.me/971557177083"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-8 inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl font-semibold text-white transition-all transform hover:scale-105"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="mt-12 inline-flex items-center gap-4 px-10 py-5 bg-[#25D366] text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-[#25D366]/20 transition-all"
                         >
-                            <FaWhatsapp className="text-xl" />
-                            Message on WhatsApp
-                        </a>
-                    </div>
+                            <FaWhatsapp />
+                            WhatsApp Me
+                        </motion.a>
+                    </motion.div>
 
                     {/* Contact Form */}
-                    <div>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <input
-                                    type="text"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    placeholder="Your Name"
-                                    required
-                                    className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors"
-                                />
-                            </div>
-                            <div>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    placeholder="Your Email"
-                                    required
-                                    className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors"
-                                />
-                            </div>
-                            <div>
-                                <select 
-                                    name="subject"
-                                    value={formData.subject}
-                                    onChange={handleChange}
-                                    className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-gray-300 focus:outline-none focus:border-teal-500/50 transition-colors"
-                                >
-                                    <option value="job">Job Inquiry</option>
-                                    <option value="collaboration">Collaboration</option>
-                                    <option value="general">General Question</option>
-                                </select>
-                            </div>
-                            <div>
-                                <textarea
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    rows={4}
-                                    placeholder="Your Message"
-                                    required
-                                    className="w-full px-6 py-4 bg-slate-800/30 border border-slate-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-teal-500/50 transition-colors resize-none"
-                                ></textarea>
-                            </div>
-                            
-                            {submitStatus === 'success' && (
-                                <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-xl text-green-400">
-                                    Thank you! Your message has been sent successfully.
-                                </div>
-                            )}
-                            
-                            {submitStatus === 'error' && (
-                                <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400">
-                                    Sorry, there was an error sending your message. Please try again or contact me directly.
-                                </div>
-                            )}
+                    <motion.div
+                        initial={{ opacity: 0, x: 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <form onSubmit={handleSubmit} className="glass-card rounded-[3rem] p-12 space-y-8 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
 
-                            <button
+                            <div className="grid gap-8">
+                                <div className="relative group">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        placeholder="Full Name"
+                                        required
+                                        className="w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all text-lg font-medium group-focus-within:bg-white/[0.08]"
+                                    />
+                                </div>
+                                <div className="relative group">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="Email Address"
+                                        required
+                                        className="w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all text-lg font-medium group-focus-within:bg-white/[0.08]"
+                                    />
+                                </div>
+                                <div className="relative group">
+                                    <select
+                                        name="subject"
+                                        value={formData.subject}
+                                        onChange={handleChange}
+                                        className="w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-gray-300 focus:outline-none focus:border-primary/50 transition-all text-lg font-medium appearance-none"
+                                    >
+                                        <option value="job" className="bg-slate-900">Job Inquiry</option>
+                                        <option value="collaboration" className="bg-slate-900">Collaboration</option>
+                                        <option value="other" className="bg-slate-900">Other</option>
+                                    </select>
+                                </div>
+                                <div className="relative group">
+                                    <textarea
+                                        name="message"
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        rows={4}
+                                        placeholder="Your Message..."
+                                        required
+                                        className="w-full px-8 py-5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-primary/50 transition-all text-lg font-medium group-focus-within:bg-white/[0.08] resize-none"
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            <AnimatePresence>
+                                {submitStatus === 'success' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="p-5 bg-green-500/10 border border-green-500/20 rounded-2xl text-green-400 flex items-center gap-4 font-bold"
+                                    >
+                                        <FaCheckCircle />
+                                        Message sent successfully!
+                                    </motion.div>
+                                )}
+
+                                {submitStatus === 'error' && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="p-5 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-400 flex items-center gap-4 font-bold"
+                                    >
+                                        <FaExclamationCircle />
+                                        Error sending message. Try again.
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <motion.button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className="w-full py-5 bg-primary text-slate-950 rounded-2xl font-black text-xl shadow-xl shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                             >
-                                <FaPaperPlane />
+                                <FaPaperPlane className={isSubmitting ? 'animate-bounce' : ''} />
                                 {isSubmitting ? 'Sending...' : 'Send Message'}
-                            </button>
+                            </motion.button>
                         </form>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

@@ -1,29 +1,41 @@
-import { FaFilePdf, FaCertificate, FaEye } from 'react-icons/fa';
+import { FaFilePdf, FaCertificate, FaArrowRight } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 
 interface PortfolioItemProps {
     title: string;
     subtitle: string;
     type: 'pdf' | 'certificate';
+    index: number;
 }
 
-function PortfolioItem({ title, subtitle, type }: PortfolioItemProps) {
+function PortfolioItem({ title, subtitle, type, index }: PortfolioItemProps) {
     const Icon = type === 'pdf' ? FaFilePdf : FaCertificate;
-    const iconBg = type === 'pdf' ? 'from-red-500 to-red-700' : 'from-amber-500 to-amber-700';
+    const iconBg = type === 'pdf' ? 'from-red-500/20 to-red-600/20 text-red-400' : 'from-amber-500/20 to-amber-600/20 text-amber-400';
 
     return (
-        <div className="group cursor-pointer">
-            <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 hover:border-teal-500/50 transition-all duration-300 hover:transform hover:-translate-y-2">
-                <div className={`w-16 h-16 bg-gradient-to-br ${iconBg} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                    <Icon className="text-white text-3xl" />
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1, duration: 0.5 }}
+            className="group cursor-pointer"
+        >
+            <div className="glass-card rounded-[2.5rem] p-10 hover:border-primary/50 transition-all duration-500 relative overflow-hidden h-full flex flex-col">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/[0.02] rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+
+                <div className={`w-20 h-20 bg-gradient-to-br ${iconBg} rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:scale-110 transition-transform shadow-xl`}>
+                    <Icon className="text-4xl" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm mb-4">{subtitle}</p>
-                <span className="inline-flex items-center gap-2 text-teal-400 text-sm group-hover:gap-3 transition-all">
-                    <FaEye />
-                    View Document
-                </span>
+
+                <h3 className="text-2xl font-black text-white mb-2 leading-tight group-hover:text-primary transition-colors">{title}</h3>
+                <p className="text-gray-500 font-bold mb-8 text-lg">{subtitle}</p>
+
+                <div className="mt-auto flex items-center gap-3 text-primary font-black uppercase tracking-widest text-sm group-hover:gap-5 transition-all">
+                    <span>View Document</span>
+                    <FaArrowRight />
+                </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -47,15 +59,23 @@ const documents = [
 
 export default function Portfolio() {
     return (
-        <section id="portfolio" className="py-24 relative">
-            <div className="container mx-auto px-4">
-                <h2 className="text-4xl font-bold text-center mb-16">
-                    Credentials & <span className="text-teal-400">Portfolio</span>
-                </h2>
+        <section id="portfolio" className="py-32 relative">
+            <div className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-20"
+                >
+                    <h2 className="text-5xl md:text-6xl font-black mb-4">
+                        <span className="text-white/20">04.</span> Credentials & <span className="premium-gradient-text">Portfolio</span>
+                    </h2>
+                    <div className="h-1 w-20 bg-primary mx-auto rounded-full"></div>
+                </motion.div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {documents.map((doc, index) => (
-                        <PortfolioItem key={index} {...doc} />
+                        <PortfolioItem key={index} {...doc} index={index} />
                     ))}
                 </div>
             </div>

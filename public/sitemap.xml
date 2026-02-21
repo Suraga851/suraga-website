@@ -4,22 +4,22 @@
     
     <!-- English Homepage -->
     <url>
-        <loc>https://suraga-website.onrender.com/</loc>
+        <loc>https://suraga-website.vercel.app/</loc>
         <lastmod>2026-02-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/"/>
-        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.vercel.app/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.vercel.app/ar.html"/>
     </url>
     
     <!-- Arabic Homepage -->
     <url>
-        <loc>https://suraga-website.onrender.com/ar.html</loc>
+        <loc>https://suraga-website.vercel.app/ar.html</loc>
         <lastmod>2026-02-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
-        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/"/>
-        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://suraga-website.vercel.app/"/>
+        <xhtml:link rel="alternate" hreflang="ar" href="https://suraga-website.vercel.app/ar.html"/>
     </url>
     
 </urlset>
