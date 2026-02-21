@@ -5,7 +5,7 @@
 /* ===== Extra Large Screens (1400px+) ===== */
 @media (min-width: 1400px) {
     .container {
-        max-width: 1320px;
+        max-width: 1280px;
     }
 
     .hero-title {
@@ -27,7 +27,7 @@
 /* ===== Medium Screens (768px - 1023px) ===== */
 @media (max-width: 1023px) {
     .hero-section {
-        padding-top: 100px;
+        padding-top: 112px;
     }
 
     .stats-grid {
@@ -43,13 +43,17 @@
 /* ===== Small Screens (max-width: 767px) ===== */
 @media (max-width: 767px) {
     .hero-section {
-        padding-top: 80px;
+        padding-top: 98px;
         min-height: auto;
-        padding-bottom: 3rem;
+        padding-bottom: 2.8rem;
     }
 
     .hero-grid {
         text-align: center;
+    }
+
+    .hero-grid > div:first-child {
+        padding: 1.35rem 1.05rem;
     }
 
     .hero-title {
@@ -73,8 +77,8 @@
     }
 
     .hero-image {
-        width: 12rem;
-        height: 12rem;
+        width: 13.5rem;
+        height: 13.5rem;
     }
 
     .section-title {
@@ -84,6 +88,12 @@
     .section-white,
     .section-gradient {
         padding: 3rem 0;
+    }
+
+    .section-white .container,
+    .section-gradient .container {
+        border-radius: 20px;
+        padding: 1.45rem 1rem;
     }
 
     .stats-grid {
@@ -110,6 +120,13 @@
 
     .timeline-title {
         font-size: 1.25rem;
+    }
+
+    .service-card,
+    .timeline-content,
+    .portfolio-card,
+    .contact-form {
+        padding: 1.2rem;
     }
 
     .contact-grid {
@@ -143,6 +160,10 @@
         font-size: 1.75rem;
     }
 
+    .hero-kicker {
+        font-size: 0.72rem;
+    }
+
     .btn-primary,
     .btn-secondary {
         padding: 12px 24px;
@@ -150,11 +171,11 @@
     }
 
     .service-card {
-        padding: 1.5rem;
+        padding: 1.1rem;
     }
 
     .timeline-content {
-        padding: 1rem 1.25rem;
+        padding: 1rem;
     }
 }
 

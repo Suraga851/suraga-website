@@ -62,6 +62,11 @@ if (mobileBtn && closeBtn && mobileMenu) {
 
     closeBtn.addEventListener("click", closeMenu);
     mobileNavLinks.forEach((link) => link.addEventListener("click", closeMenu));
+    mobileMenu.addEventListener("click", (event) => {
+        if (event.target === mobileMenu) {
+            closeMenu();
+        }
+    });
 
     window.addEventListener("resize", () => {
         if (window.innerWidth >= 768 && isMobileMenuOpen) {

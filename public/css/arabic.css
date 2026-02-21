@@ -13,17 +13,6 @@
     text-align: right;
 }
 
-/* ===== Navigation RTL ===== */
-[dir="rtl"] .nav-link::after {
-    left: auto;
-    right: 50%;
-}
-
-[dir="rtl"] .nav-link:hover::after {
-    left: auto;
-    right: 0;
-}
-
 /* ===== Hero Section RTL ===== */
 [dir="rtl"] .hero-grid {
     direction: rtl;
@@ -127,8 +116,32 @@
 [dir="rtl"] h4,
 [dir="rtl"] h5,
 [dir="rtl"] h6 {
+    font-family: 'Tajawal', 'Amiri', 'Arial', sans-serif;
     font-weight: 700;
     line-height: 1.4;
+}
+
+[dir="rtl"] .hero-kicker {
+    letter-spacing: 0;
+}
+
+[dir="rtl"] .service-card,
+[dir="rtl"] .portfolio-card,
+[dir="rtl"] .timeline-content {
+    text-align: right;
+}
+
+[dir="rtl"] .service-icon,
+[dir="rtl"] .portfolio-icon {
+    margin: 0 0 1rem auto;
+}
+
+[dir="rtl"] .portfolio-action {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .nav-links-rtl {
+    direction: rtl;
 }
 
 [dir="rtl"] p {
