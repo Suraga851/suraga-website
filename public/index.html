@@ -12,13 +12,13 @@
     <meta property="og:description"
         content="Professional Learning Assistant in Dubai with expertise in inclusive education and bilingual support">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://suraga-website.vercel.app/">
+    <meta property="og:url" content="https://suraga-website.onrender.com/">
     <title>Suraga Elzibaer - Learning Assistant | Dubai</title>
 
     <!-- Canonical & Hreflang -->
-    <link rel="canonical" href="https://suraga-website.vercel.app/">
-    <link rel="alternate" hreflang="en" href="https://suraga-website.vercel.app/">
-    <link rel="alternate" hreflang="ar" href="https://suraga-website.vercel.app/ar.html">
+    <link rel="canonical" href="https://suraga-website.onrender.com/">
+    <link rel="alternate" hreflang="en" href="https://suraga-website.onrender.com/">
+    <link rel="alternate" hreflang="ar" href="https://suraga-website.onrender.com/ar.html">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +42,7 @@
         "@type": "Person",
         "name": "Suraga Elzibaer",
         "jobTitle": "Learning Assistant & Inclusive Education Specialist",
-        "url": "https://suraga-website.vercel.app",
+        "url": "https://suraga-website.onrender.com",
         "email": "suragaelzibaer@gmail.com",
         "telephone": "+971557177083",
         "address": {
@@ -440,20 +440,20 @@
                 <div>
                     <form id="contact-form" class="contact-form">
                         <div class="form-group">
-                            <input type="text" id="name" placeholder="Your Name" required>
+                            <input type="text" id="name" name="name" autocomplete="name" aria-label="Full name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" id="email" placeholder="Your Email" required>
+                            <input type="email" id="email" name="email" autocomplete="email" aria-label="Email address" placeholder="Your Email" required>
                         </div>
                         <div class="form-group">
-                            <select id="inquiry-type">
+                            <select id="inquiry-type" name="inquiry-type" aria-label="Inquiry type">
                                 <option value="job">Job Inquiry</option>
                                 <option value="collaboration">Collaboration</option>
                                 <option value="general">General Question</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+                            <textarea id="message" name="message" rows="4" aria-label="Message" placeholder="Your Message" required></textarea>
                         </div>
                         <button type="submit" class="btn-primary btn-full">
                             <i class="fas fa-paper-plane"></i>Send Message

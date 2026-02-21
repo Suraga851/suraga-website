@@ -453,10 +453,12 @@ select:focus-visible,
 
 .translate-x-full {
     transform: translateX(100%);
+    pointer-events: none;
 }
 
 .-translate-x-full {
     transform: translateX(-100%);
+    pointer-events: none;
 }
 
 .mobile-close-btn {

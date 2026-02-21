@@ -10,12 +10,29 @@ const formStatus = document.getElementById("form-status");
 const isRtl = document.documentElement.dir === "rtl";
 const allNavLinks = [...desktopNavLinks, ...mobileNavLinks];
 
-const MESSAGES = {
-    sending: "Sending...",
-    success: "Thank you! Your message has been sent successfully.",
-    error: "Something went wrong. Please try again or contact me directly via WhatsApp.",
-    docUnavailable: "This document is currently unavailable."
+const I18N = {
+    en: {
+        sending: "Sending...",
+        success: "Thank you! Your message has been sent successfully.",
+        error: "Something went wrong. Please try again or contact me directly via WhatsApp.",
+        docUnavailable: "This document is currently unavailable.",
+        defaultDocTitle: "Document",
+        subjectPrefix: "New",
+        from: "from",
+        openDocLabel: (title) => `Open document: ${title}`
+    },
+    ar: {
+        sending: "\u062c\u0627\u0631\u064d \u0627\u0644\u0625\u0631\u0633\u0627\u0644...",
+        success: "\u0634\u0643\u0631\u0627\u064b! \u062a\u0645 \u0625\u0631\u0633\u0627\u0644 \u0631\u0633\u0627\u0644\u062a\u0643 \u0628\u0646\u062c\u0627\u062d.",
+        error: "\u062d\u062f\u062b \u062e\u0637\u0623. \u064a\u0631\u062c\u0649 \u0625\u0639\u0627\u062f\u0629 \u0627\u0644\u0645\u062d\u0627\u0648\u0644\u0629 \u0623\u0648 \u0627\u0644\u062a\u0648\u0627\u0635\u0644 \u0639\u0628\u0631 \u0648\u0627\u062a\u0633\u0627\u0628.",
+        docUnavailable: "\u0647\u0630\u0627 \u0627\u0644\u0645\u0633\u062a\u0646\u062f \u063a\u064a\u0631 \u0645\u062a\u0627\u062d \u062d\u0627\u0644\u064a\u0627\u064b.",
+        defaultDocTitle: "\u0645\u0633\u062a\u0646\u062f",
+        subjectPrefix: "\u0631\u0633\u0627\u0644\u0629",
+        from: "\u0645\u0646",
+        openDocLabel: (title) => `\u0641\u062a\u062d \u0645\u0633\u062a\u0646\u062f: ${title}`
+    }
 };
+const MESSAGES = I18N[isRtl ? "ar" : "en"];
 
 const setFormStatus = (message, type) => {
     if (!formStatus) return;
@@ -191,7 +208,7 @@ if (modal && closeModal && pdfViewer && pdfTitle) {
         }
 
         const titleNode = item.querySelector("h3");
-        const modalTitle = titleNode ? titleNode.innerText : "Document";
+        const modalTitle = titleNode ? titleNode.innerText : MESSAGES.defaultDocTitle;
         lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
         clearFormStatus();
@@ -211,7 +228,7 @@ if (modal && closeModal && pdfViewer && pdfTitle) {
         item.setAttribute("role", "button");
         item.setAttribute("tabindex", "0");
         item.setAttribute("aria-haspopup", "dialog");
-        item.setAttribute("aria-label", `Open document: ${itemTitle}`);
+        item.setAttribute("aria-label", MESSAGES.openDocLabel(itemTitle));
 
         item.addEventListener("click", async () => {
             await openModalForItem(item);
@@ -271,7 +288,10 @@ const initForm = () => {
         formData.append("name", nameEl.value.trim());
         formData.append("email", emailEl.value.trim());
         formData.append("message", messageEl.value.trim());
-        formData.append("_subject", `New ${inquiryEl.value} from ${nameEl.value.trim()}`);
+        formData.append(
+            "_subject",
+            `${MESSAGES.subjectPrefix} ${inquiryEl.value} ${MESSAGES.from} ${nameEl.value.trim()}`
+        );
         formData.append("_captcha", "false");
         formData.append("_template", "table");
 

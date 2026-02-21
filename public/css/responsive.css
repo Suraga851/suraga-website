@@ -42,6 +42,22 @@
 
 /* ===== Small Screens (max-width: 767px) ===== */
 @media (max-width: 767px) {
+    .lang-switcher-wrap {
+        top: 5.2rem;
+        right: 0.95rem;
+        z-index: 55;
+    }
+
+    [dir="rtl"] .lang-switcher-wrap {
+        left: 0.95rem;
+        right: auto;
+    }
+
+    .lang-switch-btn {
+        padding: 0.5rem 0.78rem;
+        font-size: 0.8rem;
+    }
+
     .hero-section {
         padding-top: 98px;
         min-height: auto;
