@@ -3,5 +3,5 @@ services:
     name: suraga-website
     env: docker
     plan: free
-    region: ohio
+    region: frankfurt
     healthCheckPath: /health

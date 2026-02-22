@@ -31,7 +31,7 @@ npm run test:smoke
 - `type: web`
 - `env: docker`
 - `plan: free`
-- `region: ohio`
+- `region: frankfurt`
 
 ## Environment Variables
 
@@ -39,6 +39,7 @@ Configure in Render dashboard:
 - `PORT`: Render sets this automatically.
 - `CONTACT_FORM_ENDPOINT`: Optional override for contact form backend.
 - `RUST_LOG`: Optional (example: `info`).
+- `WEB_CONCURRENCY`: Optional worker override (defaults to CPU parallelism).
 
 ## Health Endpoint
 

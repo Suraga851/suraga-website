@@ -192,6 +192,7 @@ const renderPage = (localeKey, locale) => {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" as="image" href="${escapeHtml(siteConfig.headshotPath)}" fetchpriority="high">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -295,7 +296,7 @@ ${heroBadges(locale)}
                 <div class="hero-image-container">
                     <div class="hero-image-glow"></div>
                     <img src="${escapeHtml(siteConfig.headshotPath)}" alt="${escapeHtml(locale.meta.ogTitle)}"
-                        class="hero-image" loading="eager">
+                        class="hero-image" loading="eager" fetchpriority="high" decoding="async">
                 </div>
             </div>
         </div>
