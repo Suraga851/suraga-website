@@ -1,22 +1,25 @@
 # Suraga Website
 
-Render-served bilingual portfolio site (English + Arabic) built as:
-- Rust (`actix-web`) server for static hosting + headers + runtime config.
-- Generated static pages in `public/`.
-- Single content source in `site-src/content.mjs`.
+Render-served bilingual portfolio site (English + Arabic) built as a static Jamstack deployment:
+- Static pages generated from a single source (`site-src/content.mjs`).
+- CDN delivery via Render Static Site.
+- UI/UX and behavior served from `public/`.
 
 ## Architecture
 
-- `src/main.rs`: web server, security headers, `/health`, `/config.json`, static file serving.
 - `site-src/content.mjs`: canonical bilingual content and metadata.
 - `scripts/build-pages.mjs`: generates:
   - `public/index.html`
   - `public/ar.html`
   - `public/robots.txt`
   - `public/sitemap.xml`
+  - `public/config.json`
 - `public/css/*`: styling.
 - `public/js/main.js` + `public/js/modules/*`: modular front-end behavior.
+- `render.yaml`: Render static service config (build command, publish path, headers).
 - `tests/smoke/site.spec.js`: Playwright smoke coverage.
+
+Note: legacy Rust service files remain in the repo, but production deployment uses static hosting.
 
 ## Local Development
 
@@ -28,9 +31,9 @@ npm install
 ```bash
 npm run build:pages
 ```
-3. Run the Rust server:
+3. Serve static output:
 ```bash
-cargo run
+npx http-server public -p 8080 -c-1 --silent
 ```
 4. Open:
 ```text
@@ -49,16 +52,9 @@ Run smoke tests:
 npm run test:smoke
 ```
 
-Rust checks:
-```bash
-cargo fmt --all --check
-cargo clippy --all-targets -- -D warnings
-cargo test --all-targets
-```
-
 ## Content Workflow
 
-Do not hand-edit generated pages (`public/index.html`, `public/ar.html`, `public/robots.txt`, `public/sitemap.xml`) unless debugging.
+Do not hand-edit generated pages (`public/index.html`, `public/ar.html`, `public/robots.txt`, `public/sitemap.xml`, `public/config.json`) unless debugging.
 
 Use this workflow:
 1. Edit `site-src/content.mjs`.
@@ -67,15 +63,17 @@ Use this workflow:
 
 ## Runtime Config
 
-Environment variables:
-- `PORT` (default: `8080`)
-- `CONTACT_FORM_ENDPOINT` (default: `https://formsubmit.co/ajax/suragaelzibaer@gmail.com`)
-- `RUST_LOG` (default: `actix_web=info`)
+`public/config.json` is generated at build time and currently exposes:
+```json
+{
+  "contactEndpoint": "https://formsubmit.co/ajax/suragaelzibaer@gmail.com"
+}
+```
 
-`/config.json` exposes runtime client config (currently contact endpoint).
+The page also carries a `data-contact-endpoint` fallback on `<body>`.
 
 ## Deployment
 
-The production target is Render via Docker (`render.yaml`, `Dockerfile`).
+Production target is Render Static Site via `render.yaml`.
 
 Push to `main` to trigger redeploy.

@@ -1,13 +1,12 @@
-# Deployment (Render)
+# Deployment (Render Static Site)
 
-This repository deploys to Render using Docker.
+This repository is configured for Render Static Site deployment.
 
 ## Production Stack
 
-- Hosting: Render Web Service
-- Runtime: Rust binary (`actix-web`)
-- Static assets: `public/`
-- Build/deploy config: `render.yaml`, `Dockerfile`
+- Hosting: Render Static Site (CDN)
+- Runtime: static build output from `public/`
+- Build/deploy config: `render.yaml`
 
 ## Pre-Deploy Checklist
 
@@ -29,36 +28,35 @@ npm run test:smoke
 
 `render.yaml`:
 - `type: web`
-- `env: docker`
+- `runtime: static`
 - `plan: free`
-- `region: frankfurt`
+- `buildCommand: npm ci && npm run build:pages`
+- `staticPublishPath: ./public`
+- custom response headers and cache policies
 
-## Environment Variables
+## Runtime Config
 
-Configure in Render dashboard:
-- `PORT`: Render sets this automatically.
-- `CONTACT_FORM_ENDPOINT`: Optional override for contact form backend.
-- `RUST_LOG`: Optional (example: `info`).
-- `WEB_CONCURRENCY`: Optional worker override (defaults to CPU parallelism).
-
-## Health Endpoint
-
-- `GET /health` returns `200 ok`.
-- Use it for uptime monitoring.
-
-## Runtime Client Config
-
-- `GET /config.json` returns:
+`public/config.json` is generated during build and consumed by client JS:
 ```json
 {
-  "contactEndpoint": "..."
+  "contactEndpoint": "https://formsubmit.co/ajax/suragaelzibaer@gmail.com"
 }
 ```
 
-Client-side JS reads this to determine where the contact form submits.
+To change the endpoint, update `site-src/content.mjs` (`siteConfig.contactEndpointDefault`) and rebuild.
+
+## Migrating Existing Docker Service
+
+If your current Render service is a Docker web service, Render does not allow changing runtime type in-place.
+
+Use this one-time migration:
+1. Create a new Render Static Site from this repo/blueprint (`render.yaml`).
+2. Verify `index.html` and `ar.html` render correctly.
+3. Move custom domain (if any) to the static service.
+4. Delete the old Docker service.
 
 ## Troubleshooting
 
 - If build fails: check Render build logs first.
 - If UI changes are missing: verify `npm run build:pages` output was committed.
-- If form submission fails: verify `CONTACT_FORM_ENDPOINT` and browser network logs.
+- If form submission fails: verify `public/config.json` value and browser network logs.

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build:pages": "node scripts/build-pages.mjs",
-    "check:generated": "npm run build:pages && git diff --exit-code -- public/index.html public/ar.html public/robots.txt public/sitemap.xml",
+    "check:generated": "npm run build:pages && git diff --exit-code -- public/index.html public/ar.html public/robots.txt public/sitemap.xml public/config.json",
     "check:js": "node scripts/check-js-syntax.mjs",
     "check": "npm run check:generated && npm run check:js",
     "test:smoke": "playwright test"

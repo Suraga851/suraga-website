@@ -553,6 +553,15 @@ const renderSitemap = () => {
 `;
 };
 
+const renderRuntimeConfig = () =>
+    `${JSON.stringify(
+        {
+            contactEndpoint: siteConfig.contactEndpointDefault
+        },
+        null,
+        4
+    )}\n`;
+
 const writeGeneratedFiles = async () => {
     const enPage = renderPage("en", localeMap.en);
     const arPage = renderPage("ar", localeMap.ar);
@@ -561,6 +570,7 @@ const writeGeneratedFiles = async () => {
     await fs.writeFile(path.join(publicDir, "ar.html"), arPage, "utf8");
     await fs.writeFile(path.join(publicDir, "robots.txt"), renderRobots(), "utf8");
     await fs.writeFile(path.join(publicDir, "sitemap.xml"), renderSitemap(), "utf8");
+    await fs.writeFile(path.join(publicDir, "config.json"), renderRuntimeConfig(), "utf8");
 };
 
 writeGeneratedFiles()
