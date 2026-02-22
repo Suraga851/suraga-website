@@ -2,7 +2,9 @@ target/
 **/*.rs.bk
 .git/
 .gitignore
-Dockerfile
-.dockerignore
 README.md
 build_and_run.bat
+node_modules/
+test-results/
+playwright-report/
+docs/

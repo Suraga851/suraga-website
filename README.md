@@ -1,8 +1,8 @@
 # Suraga Website
 
-Render-served bilingual portfolio site (English + Arabic) built as a static Jamstack deployment:
+Render-served bilingual portfolio site (English + Arabic) built for speed with:
 - Static pages generated from a single source (`site-src/content.mjs`).
-- CDN delivery via Render Static Site.
+- Native C web server runtime (`nginx`) in Docker.
 - UI/UX and behavior served from `public/`.
 
 ## Architecture
@@ -16,10 +16,10 @@ Render-served bilingual portfolio site (English + Arabic) built as a static Jams
   - `public/config.json`
 - `public/css/*`: styling.
 - `public/js/main.js` + `public/js/modules/*`: modular front-end behavior.
-- `render.yaml`: Render static service config (build command, publish path, headers).
+- `nginx/default.conf.template`: native C backend tuning, headers, cache policy, and `/health`.
+- `Dockerfile`: multi-stage build (Node page generation + nginx runtime).
+- `render.yaml`: Render Docker web service config.
 - `tests/smoke/site.spec.js`: Playwright smoke coverage.
-
-Note: legacy Rust service files remain in the repo, but production deployment uses static hosting.
 
 ## Local Development
 
@@ -74,6 +74,6 @@ The page also carries a `data-contact-endpoint` fallback on `<body>`.
 
 ## Deployment
 
-Production target is Render Static Site via `render.yaml`.
+Production target is Render Web Service via Docker (`nginx` runtime) through `render.yaml`.
 
 Push to `main` to trigger redeploy.

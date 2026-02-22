@@ -1,53 +1,7 @@
 services:
   - type: web
     name: suraga-website
-    runtime: static
+    env: docker
     plan: free
-    buildCommand: npm ci && npm run build:pages
-    staticPublishPath: ./public
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - path: /*
-        name: Permissions-Policy
-        value: camera=(), microphone=(), geolocation=()
-      - path: /*
-        name: Content-Security-Policy
-        value: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co;
-      - path: /
-        name: Cache-Control
-        value: public, max-age=0, s-maxage=300, must-revalidate
-      - path: /index.html
-        name: Cache-Control
-        value: public, max-age=0, s-maxage=300, must-revalidate
-      - path: /ar.html
-        name: Cache-Control
-        value: public, max-age=0, s-maxage=300, must-revalidate
-      - path: /css/*
-        name: Cache-Control
-        value: public, max-age=31536000, s-maxage=31536000, immutable
-      - path: /js/*
-        name: Cache-Control
-        value: public, max-age=31536000, s-maxage=31536000, immutable
-      - path: /assets/images/*
-        name: Cache-Control
-        value: public, max-age=31536000, s-maxage=31536000, immutable
-      - path: /assets/docs/*
-        name: Cache-Control
-        value: public, max-age=604800, s-maxage=2592000, stale-while-revalidate=86400
-      - path: /sitemap.xml
-        name: Cache-Control
-        value: public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400
-      - path: /robots.txt
-        name: Cache-Control
-        value: public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400
-      - path: /config.json
-        name: Cache-Control
-        value: public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400
+    region: frankfurt
+    healthCheckPath: /health

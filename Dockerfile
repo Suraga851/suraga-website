@@ -1,18 +1,21 @@
-# Stage 1: Build Backend
-FROM rust:1.83-slim-bookworm as backend-builder
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential pkg-config && rm -rf /var/lib/apt/lists/*
+# Stage 1: Generate static pages from canonical source
+FROM node:22-alpine AS page-builder
 WORKDIR /app
-COPY Cargo.toml Cargo.lock* ./
-COPY src/ ./src/
-RUN cargo build --release
 
-# Stage 2: Runtime
-FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
-WORKDIR /app
-COPY --from=backend-builder /app/target/release/suraga-website /app/suraga-website
-COPY public/ ./public/
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY scripts ./scripts
+COPY site-src ./site-src
+COPY public ./public
+
+RUN npm run build:pages
+
+# Stage 2: Native C backend runtime (nginx)
+FROM nginx:1.27-alpine
+
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY --from=page-builder /app/public /usr/share/nginx/html
+
 ENV PORT=8080
-ENV RUST_LOG=info
 EXPOSE 8080
-CMD ["./suraga-website"]

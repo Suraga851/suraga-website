@@ -1,12 +1,12 @@
-# Deployment (Render Static Site)
+# Deployment (Render Docker + nginx)
 
-This repository is configured for Render Static Site deployment.
+This repository is configured for Render Web Service deployment using Docker.
 
 ## Production Stack
 
-- Hosting: Render Static Site (CDN)
-- Runtime: static build output from `public/`
-- Build/deploy config: `render.yaml`
+- Hosting: Render Web Service
+- Runtime: native C web server (`nginx`)
+- Build/deploy config: `render.yaml`, `Dockerfile`, `nginx/default.conf.template`
 
 ## Pre-Deploy Checklist
 
@@ -28,11 +28,14 @@ npm run test:smoke
 
 `render.yaml`:
 - `type: web`
-- `runtime: static`
+- `env: docker`
 - `plan: free`
-- `buildCommand: npm ci && npm run build:pages`
-- `staticPublishPath: ./public`
-- custom response headers and cache policies
+- `region: frankfurt`
+- `healthCheckPath: /health`
+
+The Docker image:
+1. Generates pages with `npm run build:pages`.
+2. Serves them through nginx with tuned cache, gzip compression, and security headers.
 
 ## Runtime Config
 
@@ -44,16 +47,6 @@ npm run test:smoke
 ```
 
 To change the endpoint, update `site-src/content.mjs` (`siteConfig.contactEndpointDefault`) and rebuild.
-
-## Migrating Existing Docker Service
-
-If your current Render service is a Docker web service, Render does not allow changing runtime type in-place.
-
-Use this one-time migration:
-1. Create a new Render Static Site from this repo/blueprint (`render.yaml`).
-2. Verify `index.html` and `ar.html` render correctly.
-3. Move custom domain (if any) to the static service.
-4. Delete the old Docker service.
 
 ## Troubleshooting
 
