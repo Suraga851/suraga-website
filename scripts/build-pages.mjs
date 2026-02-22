@@ -195,6 +195,8 @@ const renderPage = (localeKey, locale) => {
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="${escapeHtml(siteConfig.faviconPath)}">
+    <link rel="apple-touch-icon" href="${escapeHtml(siteConfig.faviconPath)}">
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap"

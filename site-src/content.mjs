@@ -7,6 +7,7 @@ export const siteConfig = {
     linkedinUrl: "https://linkedin.com/in/suraga-elzibaer",
     contactEndpointDefault: "https://formsubmit.co/ajax/suragaelzibaer@gmail.com",
     headshotPath: "assets/images/suraga-headshot.jpg",
+    faviconPath: "assets/images/suraga-headshot.jpg",
     docs: [
         { key: "cv-suraga-dubai", icon: "pdf" },
         { key: "experience-letter-taaleem", icon: "pdf" },
@@ -44,18 +45,18 @@ export const locales = {
         meta: {
             title: "Suraga Elzibaer - Learning Assistant | Dubai",
             description:
-                "Suraga Elzibaer - Bilingual Learning Assistant in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.",
+                "Suraga Elzibaer - Bilingual Learning Assistant and AI Literacy Assistant Teacher in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.",
             keywords:
-                "Learning Assistant Dubai, SEN support UAE, Bilingual Teacher, Arabic Islamic support, Differentiated Instruction, Inclusive Education",
+                "Learning Assistant Dubai, AI Literacy Assistant Teacher Dubai, SEN support UAE, Bilingual Teacher, Arabic Islamic support, Differentiated Instruction, Inclusive Education, Responsible AI in education",
             ogTitle: "Suraga Elzibaer - Learning Assistant | Dubai",
             ogDescription:
-                "Professional Learning Assistant in Dubai with expertise in inclusive education and bilingual support"
+                "Professional Learning Assistant and AI Literacy Assistant Teacher in Dubai with expertise in inclusive education and bilingual support"
         },
         schema: {
             "@context": "https://schema.org",
             "@type": "Person",
             name: "Suraga Elzibaer",
-            jobTitle: "Learning Assistant & Inclusive Education Specialist",
+            jobTitle: "Learning Assistant, AI Literacy Assistant Teacher & Inclusive Education Specialist",
             email: "suragaelzibaer@gmail.com",
             telephone: "+971557177083",
             address: {
@@ -75,7 +76,7 @@ export const locales = {
             contact: "Contact"
         },
         hero: {
-            kicker: "Dubai-Based | Inclusive Education | Bilingual Support",
+            kicker: "Dubai-Based | Inclusive Education | Bilingual & AI Literacy Support",
             titlePrefix: "Learning Assistant &",
             titleAccent: "Inclusive Education",
             titleSuffix: "Specialist",
@@ -89,16 +90,18 @@ export const locales = {
                 "Differentiated Instruction",
                 "Students of Determination",
                 "Gifted & Talented",
-                "Arabic/Islamic Support"
+                "Arabic/Islamic Support",
+                "AI Literacy & EdTech Integration"
             ]
         },
         about: {
             title: "About Me",
-            subtitle: "Bilingual Education Professional",
+            subtitle: "Bilingual & AI Literacy Education Professional",
             paragraphs: [
                 "With a strong foundation in Classical Arabic and Islamic education from Sudan, I bring a unique perspective to Dubai's international school community. My secondary education in a rigorous Arabic-medium environment equips me to support students transitioning between Arabic and English curricula.",
                 "Currently based in Dubai with active UAE residency, I specialize in inclusive education practices that honor cultural diversity while meeting international standards. My experience spans British-style and American curriculum schools, working with students aged 4-18.",
-                "Fluent in both Arabic and English (C2 level), I serve as a bridge between home and school cultures, ensuring every student feels valued and understood."
+                "Fluent in both Arabic and English (C2 level), I serve as a bridge between home and school cultures, ensuring every student feels valued and understood.",
+                "I also support AI literacy for students and teachers through age-appropriate AI tool use, prompt fundamentals, fact-checking routines, and responsible digital citizenship."
             ],
             stats: [
                 { value: "3+", label: "Years Experience" },
@@ -148,6 +151,12 @@ export const locales = {
                         "Evidence-based reading support using SPIRE and PAST assessment methodologies for struggling readers."
                 },
                 {
+                    icon: "fa-robot",
+                    title: "AI Literacy & Responsible AI Use",
+                    description:
+                        "Age-appropriate AI literacy sessions, prompt basics, fact-checking, citation habits, and safe/ethical use of AI tools for students and teachers."
+                },
+                {
                     icon: "fa-graduation-cap",
                     title: "Curriculum Support",
                     description:
@@ -166,7 +175,8 @@ export const locales = {
                         "Supported grades 6-7 in British-style curriculum delivery",
                         "Developed differentiated materials for diverse learning needs",
                         "Implemented inclusive strategies for Students of Determination",
-                        "Collaborated with SENCO and parents on student progress"
+                        "Collaborated with SENCO and parents on student progress",
+                        "Supported classroom AI literacy activities and digital citizenship routines."
                     ]
                 },
                 {
@@ -211,7 +221,7 @@ export const locales = {
             title: "Get In Touch",
             subtitle: "Let's Collaborate",
             description:
-                "I'm currently seeking opportunities with international schools in Dubai. Available for immediate placement with active UAE residency.",
+                "I'm currently seeking opportunities with international schools in Dubai, including Learning Assistant and AI Literacy Assistant Teacher roles. Available for immediate placement with active UAE residency.",
             location: "Dubai, United Arab Emirates",
             whatsappLink:
                 "https://wa.me/971557177083?text=Hello%20Suraga,%20I%20found%20your%20website%20and%20would%20like%20to%20discuss%20opportunities.",
@@ -230,7 +240,7 @@ export const locales = {
         },
         footer: {
             description:
-                "Professional Learning Assistant specializing in inclusive education and bilingual support for Dubai's international schools.",
+                "Professional Learning Assistant and AI Literacy Assistant Teacher specializing in inclusive education and bilingual support for Dubai's international schools.",
             quickLinks: "Quick Links",
             connect: "Connect",
             tagline: "Designed for Dubai's International Education Community",
@@ -256,17 +266,17 @@ export const locales = {
         meta: {
             title: "سراجا الزبير - مساعد تعليم | دبي",
             description:
-                "سراجا الزبير - مساعد تعليم في دبي متخصص في التعليم الشامل، التدريس المختلف، والدعم العربي/الإسلامي للمدارس الدولية",
+                "سراجا الزبير - مساعد تعليم ومعلم محو الأمية في الذكاء الاصطناعي في دبي متخصص في التعليم الشامل، التدريس المختلف، والدعم العربي/الإسلامي للمدارس الدولية",
             keywords:
-                "مساعد تعليم دبي, دعم ذوي الاحتياجات الخاصة الإمارات, معلم ثنائي اللغة, دعم عربي إسلامي, التدريس المتمايز, التعليم الشامل",
+                "مساعد تعليم دبي, معلم محو الأمية في الذكاء الاصطناعي دبي, دعم ذوي الاحتياجات الخاصة الإمارات, معلم ثنائي اللغة, دعم عربي إسلامي, التدريس المتمايز, التعليم الشامل",
             ogTitle: "سراجا الزبير - مساعد تعليم | دبي",
-            ogDescription: "مساعد تعليم محترف في دبي متخصص في التعليم الشامل والدعم ثنائي اللغة"
+            ogDescription: "مساعد تعليم محترف ومعلم محو الأمية في الذكاء الاصطناعي في دبي متخصص في التعليم الشامل والدعم ثنائي اللغة"
         },
         schema: {
             "@context": "https://schema.org",
             "@type": "Person",
             name: "سراجا الزبير",
-            jobTitle: "مساعد تعليم ومتخصص في التعليم الشامل",
+            jobTitle: "مساعد تعليم ومعلم محو الأمية في الذكاء الاصطناعي ومتخصص في التعليم الشامل",
             email: "suragaelzibaer@gmail.com",
             telephone: "+971557177083",
             address: {
@@ -286,7 +296,7 @@ export const locales = {
             contact: "تواصل معي"
         },
         hero: {
-            kicker: "دبي | تعليم شامل | دعم ثنائي اللغة",
+            kicker: "دبي | تعليم شامل | دعم ثنائي اللغة | محو أمية الذكاء الاصطناعي",
             titlePrefix: "مساعد تعليم و",
             titleAccent: "متخصص في التعليم الشامل",
             titleSuffix: "",
@@ -296,15 +306,16 @@ export const locales = {
                 "بناء الجسور بين الثقافات والمناهج لدعم رحلة كل متعلم في أنظمة المنهاج البريطاني والأمريكي والبكالوريا الدولية.",
             ctaPrimary: "وظفني",
             ctaSecondary: "عرض الملف",
-            badges: ["التدريس المتمايز", "أصحاب الهمم", "الموهوبين والمتفوقين", "الدعم العربي/الإسلامي"]
+            badges: ["التدريس المتمايز", "أصحاب الهمم", "الموهوبين والمتفوقين", "الدعم العربي/الإسلامي", "محو أمية الذكاء الاصطناعي"]
         },
         about: {
             title: "نبذة عني",
-            subtitle: "متخصص تعليم ثنائي اللغة",
+            subtitle: "متخصص تعليم ثنائي اللغة ومحو الأمية في الذكاء الاصطناعي",
             paragraphs: [
                 "مع أساس قوي في اللغة العربية الفصحى والتعليم الإسلامي من السودان، أقدم منظوراً فريداً لمجتمع المدارس الدولية في دبي. تعليمي الثانوي في بيئة عربية صارمة يؤهلني لدعم الطلاب الذين ينتقلون بين المناهج العربية والإنجليزية.",
                 "مقيم حالياً في دبي مع إقامة إماراتية سارية، أتخصص في ممارسات التعليم الشامل التي تحترم التنوع الثقافي مع الالتزام بالمعايير الدولية. خبرتي تمتد لتشمل مدارس المنهج البريطاني والأمريكي، مع طلاب تتراوح أعمارهم بين 4 و18 عاماً.",
-                "أتقن كلاً من العربية والإنجليزية (مستوى C2)، وأعمل كجسر بين ثقافة المنزل والمدرسة، مما يضمن شعور كل طالب بالتقدير والفهم."
+                "أتقن كلاً من العربية والإنجليزية (مستوى C2)، وأعمل كجسر بين ثقافة المنزل والمدرسة، مما يضمن شعور كل طالب بالتقدير والفهم.",
+                "أدعم أيضاً محو الأمية في الذكاء الاصطناعي للطلاب والمعلمين عبر تدريب مناسب للعمر على استخدام أدوات الذكاء الاصطناعي، وصياغة الأوامر، والتحقق من المعلومات، والمواطنة الرقمية المسؤولة."
             ],
             stats: [
                 { value: "+3", label: "سنوات خبرة" },
@@ -354,6 +365,12 @@ export const locales = {
                         "دعم القراءة القائم على الأدلة باستخدام منهجيات SPIRE وتقييم PAST للقراء المتعثرين."
                 },
                 {
+                    icon: "fa-robot",
+                    title: "محو الأمية في الذكاء الاصطناعي والاستخدام المسؤول",
+                    description:
+                        "جلسات عملية مناسبة للعمر حول مهارات الذكاء الاصطناعي، أساسيات صياغة الأوامر، التحقق من المعلومات، نسب المصادر، والاستخدام الآمن والأخلاقي للذكاء الاصطناعي."
+                },
+                {
                     icon: "fa-graduation-cap",
                     title: "دعم المناهج",
                     description:
@@ -372,7 +389,8 @@ export const locales = {
                         "دعم الصفوف 6-7 في تقديم المنهج البريطاني",
                         "تطوير مواد متمايزة لاحتياجات التعلم المتنوعة",
                         "تنفيذ استراتيجيات شاملة لأصحاب الهمم",
-                        "التعاون مع منسق الاحتياجات الخاصة وأولياء الأمور حول تقدم الطلاب"
+                        "التعاون مع منسق الاحتياجات الخاصة وأولياء الأمور حول تقدم الطلاب",
+                        "دعم أنشطة محو الأمية في الذكاء الاصطناعي ومهارات المواطنة الرقمية داخل الصف."
                     ]
                 },
                 {
@@ -417,7 +435,7 @@ export const locales = {
             title: "تواصل معي",
             subtitle: "لنتعاون معاً",
             description:
-                "أبحث حالياً عن فرص مع المدارس الدولية في دبي. متاح للتعيين الفوري مع إقامة إماراتية سارية.",
+                "أبحث حالياً عن فرص مع المدارس الدولية في دبي، بما يشمل أدوار مساعد التعليم ومعلم محو الأمية في الذكاء الاصطناعي. متاح للتعيين الفوري مع إقامة إماراتية سارية.",
             location: "دبي، الإمارات العربية المتحدة",
             whatsappLink:
                 "https://wa.me/971557177083?text=مرحباً%20سراجا،%20وجدت%20موقعك%20وأود%20مناقشة%20الفرص.",
@@ -436,7 +454,7 @@ export const locales = {
         },
         footer: {
             description:
-                "مساعد تعليم محترف متخصص في التعليم الشامل والدعم ثنائي اللغة للمدارس الدولية في دبي.",
+                "مساعد تعليم محترف ومعلم محو الأمية في الذكاء الاصطناعي متخصص في التعليم الشامل والدعم ثنائي اللغة للمدارس الدولية في دبي.",
             quickLinks: "روابط سريعة",
             connect: "تواصل",
             tagline: "مصمم لمجتمع التعليم الدولي في دبي",
