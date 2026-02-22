@@ -42,20 +42,20 @@ fn cache_control_for_path(path: &str) -> &'static str {
     }
 
     if is_html_route(path) {
-        return "public, max-age=0, must-revalidate";
+        return "public, max-age=0, s-maxage=300, must-revalidate";
     }
 
     if path.starts_with("/css/") || path.starts_with("/js/") || path.starts_with("/assets/images/")
     {
-        return "public, max-age=31536000, immutable";
+        return "public, max-age=31536000, s-maxage=31536000, immutable";
     }
 
     if path.starts_with("/assets/docs/") || path.ends_with(".pdf") {
-        return "public, max-age=604800, stale-while-revalidate=86400";
+        return "public, max-age=604800, s-maxage=2592000, stale-while-revalidate=86400";
     }
 
     if path == "/sitemap.xml" || path == "/robots.txt" || path == "/config.json" {
-        return "public, max-age=3600, stale-while-revalidate=86400";
+        return "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400";
     }
 
     "public, max-age=86400"
