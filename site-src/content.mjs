@@ -1,5 +1,6 @@
 export const siteConfig = {
     siteName: "Suraga Elzibaer",
+    searchAliases: ["Suraga Website", "Suraga Elzibaer Website", "Suraqa Website"],
     baseUrl: "https://suraga-website.onrender.com",
     themeColor: "#0d9488",
     email: "suragaelzibaer@gmail.com",
@@ -45,12 +46,12 @@ export const locales = {
             closeDocument: "Close document viewer"
         },
         meta: {
-            title: "Suraga Elzibaer | Learning Assistant in Dubai | Inclusive Education",
+            title: "Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai",
             description:
-                "Suraga Elzibaer - Bilingual Learning Assistant and AI Literacy Assistant Teacher in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.",
+                "Official Suraga website. Suraga Elzibaer is a bilingual Learning Assistant and AI Literacy Assistant Teacher in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.",
             keywords:
-                "Suraga Elzibaer, Learning Assistant Dubai, Teaching Assistant Dubai, AI Literacy Assistant Teacher Dubai, SEN support UAE, Inclusive Education Specialist Dubai, Arabic Islamic support teacher, Bilingual Arabic English educator",
-            ogTitle: "Suraga Elzibaer | Learning Assistant in Dubai",
+                "Suraga website, Suraga Elzibaer website, Suraga Elzibaer, Learning Assistant Dubai, Teaching Assistant Dubai, AI Literacy Assistant Teacher Dubai, SEN support UAE, Inclusive Education Specialist Dubai, Arabic Islamic support teacher, Bilingual Arabic English educator",
+            ogTitle: "Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai",
             ogDescription:
                 "Professional Learning Assistant and AI Literacy Assistant Teacher in Dubai with expertise in inclusive education and bilingual support"
         },

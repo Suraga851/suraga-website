@@ -41,6 +41,9 @@ const structuredDataFor = (locale, canonical) => {
                 "@type": "WebSite",
                 "@id": siteId,
                 name: siteConfig.siteName,
+                alternateName: Array.isArray(siteConfig.searchAliases)
+                    ? siteConfig.searchAliases
+                    : undefined,
                 url: `${siteConfig.baseUrl}/`,
                 inLanguage: locale.lang
             },
