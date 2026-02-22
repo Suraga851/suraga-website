@@ -19,15 +19,54 @@ const escapeHtml = (value) =>
 
 const pageUrl = (locale) => `${siteConfig.baseUrl}${locale.path}`;
 
-const structuredDataFor = (locale) =>
-    JSON.stringify(
-        {
-            ...locale.schema,
-            url: pageUrl(locale)
-        },
+const assetUrl = (value) => {
+    if (value.startsWith("http://") || value.startsWith("https://")) {
+        return value;
+    }
+
+    const normalized = value.startsWith("/") ? value.slice(1) : value;
+    return `${siteConfig.baseUrl}/${normalized}`;
+};
+
+const structuredDataFor = (locale, canonical) => {
+    const personId = `${siteConfig.baseUrl}#person`;
+    const siteId = `${siteConfig.baseUrl}#website`;
+    const pageId = `${canonical}#webpage`;
+    const socialImageUrl = assetUrl(siteConfig.socialImagePath || siteConfig.headshotPath);
+
+    return JSON.stringify(
+        [
+            {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "@id": siteId,
+                name: siteConfig.siteName,
+                url: `${siteConfig.baseUrl}/`,
+                inLanguage: locale.lang
+            },
+            {
+                ...locale.schema,
+                "@id": personId,
+                url: pageUrl(locale),
+                image: socialImageUrl
+            },
+            {
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "@id": pageId,
+                url: canonical,
+                name: locale.meta.title,
+                description: locale.meta.description,
+                inLanguage: locale.lang,
+                isPartOf: { "@id": siteId },
+                about: { "@id": personId },
+                primaryImageOfPage: socialImageUrl
+            }
+        ],
         null,
         4
     );
+};
 
 const navLinks = (locale, itemClass) =>
     shared.navIds
@@ -154,6 +193,9 @@ const renderPage = (localeKey, locale) => {
     const enHref = `${siteConfig.baseUrl}/`;
     const arHref = `${siteConfig.baseUrl}/ar.html`;
     const canonical = localeKey === "en" ? enHref : arHref;
+    const ogLocale = localeKey === "en" ? "en_US" : "ar_AE";
+    const ogLocaleAlternate = localeKey === "en" ? "ar_AE" : "en_US";
+    const socialImageUrl = assetUrl(siteConfig.socialImagePath || siteConfig.headshotPath);
     const mobileMenuClosedClass = locale.dir === "rtl" ? "-translate-x-full" : "translate-x-full";
     const rtlNavClass = locale.dir === "rtl" ? " nav-links-rtl" : "";
     const heroImageRtlClass = locale.dir === "rtl" ? " hero-image-rtl" : "";
@@ -177,16 +219,33 @@ const renderPage = (localeKey, locale) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="${escapeHtml(locale.meta.description)}">
     <meta name="keywords" content="${escapeHtml(locale.meta.keywords)}">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="${escapeHtml(siteConfig.siteName)}">
+    <meta name="theme-color" content="${escapeHtml(siteConfig.themeColor || "#0d9488")}">
     <meta property="og:title" content="${escapeHtml(locale.meta.ogTitle)}">
     <meta property="og:description" content="${escapeHtml(locale.meta.ogDescription)}">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="${escapeHtml(siteConfig.siteName)}">
     <meta property="og:url" content="${escapeHtml(canonical)}">
+    <meta property="og:locale" content="${escapeHtml(ogLocale)}">
+    <meta property="og:locale:alternate" content="${escapeHtml(ogLocaleAlternate)}">
+    <meta property="og:image" content="${escapeHtml(socialImageUrl)}">
+    <meta property="og:image:alt" content="${escapeHtml(locale.meta.ogTitle)}">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtml(locale.meta.ogTitle)}">
+    <meta name="twitter:description" content="${escapeHtml(locale.meta.ogDescription)}">
+    <meta name="twitter:image" content="${escapeHtml(socialImageUrl)}">
+    <meta name="twitter:image:alt" content="${escapeHtml(locale.meta.ogTitle)}">
     <title>${escapeHtml(locale.meta.title)}</title>
 
     <!-- Canonical & Hreflang -->
     <link rel="canonical" href="${escapeHtml(canonical)}">
     <link rel="alternate" hreflang="en" href="${escapeHtml(enHref)}">
     <link rel="alternate" hreflang="ar" href="${escapeHtml(arHref)}">
+    <link rel="alternate" hreflang="x-default" href="${escapeHtml(enHref)}">
+    <link rel="sitemap" type="application/xml" href="${escapeHtml(siteConfig.baseUrl)}/sitemap.xml">
 
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,7 +267,7 @@ const renderPage = (localeKey, locale) => {
 
     <!-- Structured Data -->
     <script type="application/ld+json">
-${structuredDataFor(locale)}
+${structuredDataFor(locale, canonical)}
     </script>
 </head>
 
@@ -523,6 +582,7 @@ Sitemap: ${siteConfig.baseUrl}/sitemap.xml
 Allow: /assets/
 Allow: /css/
 Allow: /js/
+Allow: /ar.html
 `;
 
 const renderSitemap = () => {

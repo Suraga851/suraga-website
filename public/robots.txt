@@ -8,3 +8,4 @@ Sitemap: https://suraga-website.onrender.com/sitemap.xml
 Allow: /assets/
 Allow: /css/
 Allow: /js/
+Allow: /ar.html
