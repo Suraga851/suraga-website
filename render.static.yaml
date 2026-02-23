@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: suraga-website-static
+    runtime: static
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    staticPublishPath: public
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains; preload
+      - path: /*
+        name: Content-Security-Policy
+        value: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co;
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /index.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - path: /ar.html
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+      - path: /robots.txt
+        name: Cache-Control
+        value: public, max-age=3600, stale-while-revalidate=86400
+      - path: /sitemap.xml
+        name: Cache-Control
+        value: public, max-age=3600, stale-while-revalidate=86400
+      - path: /config.json
+        name: Cache-Control
+        value: public, max-age=3600, stale-while-revalidate=86400
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /assets/docs/*
+        name: Cache-Control
+        value: public, max-age=604800, stale-while-revalidate=86400

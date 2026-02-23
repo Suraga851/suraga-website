@@ -1,6 +1,6 @@
 use actix_files::{Files, NamedFile};
 use actix_web::dev::{fn_service, Service, ServiceRequest};
-use actix_web::http::header::{HeaderValue, CACHE_CONTROL};
+use actix_web::http::header::{HeaderValue, CACHE_CONTROL, X_FRAME_OPTIONS};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
 use serde::Serialize;
 use std::env;
@@ -45,7 +45,11 @@ fn cache_control_for_path(path: &str) -> &'static str {
         return "public, max-age=0, s-maxage=300, must-revalidate";
     }
 
-    if path.starts_with("/css/") || path.starts_with("/js/") || path.starts_with("/assets/images/")
+    if path.starts_with("/css/")
+        || path.starts_with("/js/")
+        || path.starts_with("/assets/images/")
+        || path.starts_with("/assets/build/")
+        || path.starts_with("/assets/vendor/")
     {
         return "public, max-age=31536000, s-maxage=31536000, immutable";
     }
@@ -64,8 +68,8 @@ fn cache_control_for_path(path: &str) -> &'static str {
 fn csp_policy() -> String {
     "default-src 'self'; \
      script-src 'self' 'unsafe-inline'; \
-     style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com; \
-     font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; \
+     style-src 'self'; \
+     font-src 'self'; \
      img-src 'self' data:; \
      connect-src 'self' https://formsubmit.co; \
      frame-src 'self'; \
@@ -116,12 +120,20 @@ async fn main() -> std::io::Result<()> {
                         CACHE_CONTROL,
                         HeaderValue::from_static(cache_control_for_path(&path)),
                     );
+                    let frame_policy =
+                        if path.starts_with("/assets/docs/") || path.ends_with(".pdf") {
+                            "SAMEORIGIN"
+                        } else {
+                            "DENY"
+                        };
+                    response
+                        .headers_mut()
+                        .insert(X_FRAME_OPTIONS, HeaderValue::from_static(frame_policy));
                     Ok(response)
                 }
             })
             .wrap(
                 middleware::DefaultHeaders::new()
-                    .add(("X-Frame-Options", "DENY"))
                     .add(("X-Content-Type-Options", "nosniff"))
                     .add(("Referrer-Policy", "strict-origin-when-cross-origin"))
                     .add((

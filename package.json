@@ -5,13 +5,19 @@
   "type": "module",
   "scripts": {
     "build:pages": "node scripts/build-pages.mjs",
-    "check:generated": "npm run build:pages && git diff --exit-code -- public/index.html public/ar.html public/robots.txt public/sitemap.xml public/config.json",
+    "build:images": "node scripts/build-images.mjs",
+    "build:assets": "node scripts/build-assets.mjs",
+    "build": "npm run build:pages && npm run build:images && npm run build:assets",
+    "check:generated": "npm run build && git diff --exit-code -- public/index.html public/ar.html public/robots.txt public/sitemap.xml public/config.json public/assets/build",
     "check:js": "node scripts/check-js-syntax.mjs",
     "check": "npm run check:generated && npm run check:js",
     "test:smoke": "playwright test"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^7.2.0",
     "@playwright/test": "^1.51.0",
-    "http-server": "^14.1.1"
+    "esbuild": "^0.27.3",
+    "http-server": "^14.1.1",
+    "sharp": "^0.34.5"
   }
 }

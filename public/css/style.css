@@ -133,6 +133,11 @@ select:focus-visible,
 
 .animated-bg::before {
     background: url('../assets/images/bg-texture.jpg') center / cover no-repeat;
+    background-image: image-set(
+        url('../assets/images/bg-texture.avif') type('image/avif'),
+        url('../assets/images/bg-texture.webp') type('image/webp'),
+        url('../assets/images/bg-texture.jpg') type('image/jpeg')
+    );
     opacity: 0.08;
     mix-blend-mode: multiply;
     filter: saturate(0.5) contrast(0.9);
@@ -681,6 +686,10 @@ select:focus-visible,
     border: 1px solid rgba(15, 118, 110, 0.15);
     background: rgba(255, 255, 255, 0.68);
     box-shadow: var(--shadow-md);
+}
+
+.hero-image-picture {
+    display: block;
 }
 
 .hero-image-glow {

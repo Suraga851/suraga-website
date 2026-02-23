@@ -9,7 +9,7 @@ COPY scripts ./scripts
 COPY site-src ./site-src
 COPY public ./public
 
-RUN npm run build:pages
+RUN npm run build
 
 # Stage 2: Native C backend runtime (nginx)
 FROM nginx:1.27-alpine

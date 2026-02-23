@@ -2,9 +2,9 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
     testDir: "tests/smoke",
-    timeout: 30000,
+    timeout: 60000,
     expect: {
-        timeout: 10000
+        timeout: 15000
     },
     retries: process.env.CI ? 1 : 0,
     use: {

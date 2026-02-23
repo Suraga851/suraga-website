@@ -34,23 +34,13 @@
     <link rel="alternate" hreflang="x-default" href="https://suraga-website.onrender.com/">
     <link rel="sitemap" type="application/xml" href="https://suraga-website.onrender.com/sitemap.xml">
 
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preload" as="image" href="assets/images/suraga-headshot.jpg" fetchpriority="high">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/jpeg" href="assets/images/suraga-headshot.jpg">
-    <link rel="apple-touch-icon" href="assets/images/suraga-headshot.jpg">
-    <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Preload critical assets -->
+    <link rel="preload" as="style" href="/assets/build/styles-en-QAD63N3J.css">
+    <link rel="preload" as="image" href="assets/images/suraga-headshot.webp" type="image/webp" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/build/styles-en-QAD63N3J.css">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -207,8 +197,12 @@
             <div class="hero-image-wrap animate-fade-in">
                 <div class="hero-image-container">
                     <div class="hero-image-glow"></div>
-                    <img src="assets/images/suraga-headshot.jpg" alt="Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai"
-                        class="hero-image" loading="eager" fetchpriority="high" decoding="async">
+                    <picture class="hero-image-picture">
+                        <source srcset="assets/images/suraga-headshot.avif" type="image/avif">
+                        <source srcset="assets/images/suraga-headshot.webp" type="image/webp">
+                        <img src="assets/images/suraga-headshot.jpg" alt="Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai"
+                            class="hero-image" loading="eager" fetchpriority="high" decoding="async">
+                    </picture>
                 </div>
             </div>
         </div>
@@ -568,7 +562,7 @@
         </div>
     </div>
 
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="/assets/build/main-5HFKUX2M.js"></script>
 </body>
 
 </html>

@@ -28,6 +28,8 @@ const assetUrl = (value) => {
     return `${siteConfig.baseUrl}/${normalized}`;
 };
 
+const withExtension = (assetPath, extension) => assetPath.replace(/\.[^./]+$/u, extension);
+
 const structuredDataFor = (locale, canonical) => {
     const personId = `${siteConfig.baseUrl}#person`;
     const siteId = `${siteConfig.baseUrl}#website`;
@@ -208,8 +210,8 @@ const renderPage = (localeKey, locale) => {
     const emailAriaLabel = locale.dir === "rtl" ? "البريد الإلكتروني" : "Email address";
     const inquiryAriaLabel = locale.dir === "rtl" ? "نوع الاستفسار" : "Inquiry type";
     const messageAriaLabel = locale.dir === "rtl" ? "الرسالة" : "Message";
-    const includeArabicCss =
-        locale.dir === "rtl" ? `\n    <link rel="stylesheet" href="css/arabic.css">` : "";
+    const headshotWebpPath = withExtension(siteConfig.headshotPath, ".webp");
+    const headshotAvifPath = withExtension(siteConfig.headshotPath, ".avif");
     const titleSuffix = locale.hero.titleSuffix
         ? `\n                ${escapeHtml(locale.hero.titleSuffix)}`
         : "";
@@ -250,23 +252,13 @@ const renderPage = (localeKey, locale) => {
     <link rel="alternate" hreflang="x-default" href="${escapeHtml(enHref)}">
     <link rel="sitemap" type="application/xml" href="${escapeHtml(siteConfig.baseUrl)}/sitemap.xml">
 
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preload" as="image" href="${escapeHtml(siteConfig.headshotPath)}" fetchpriority="high">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/jpeg" href="${escapeHtml(siteConfig.faviconPath)}">
-    <link rel="apple-touch-icon" href="${escapeHtml(siteConfig.faviconPath)}">
-    <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;800&display=swap"
-        rel="stylesheet">
-
-    <link rel="stylesheet" href="css/style.css">${includeArabicCss}
-    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Preload critical assets -->
+    <link rel="preload" as="style" href="__ASSET_CSS__">
+    <link rel="preload" as="image" href="${escapeHtml(headshotWebpPath)}" type="image/webp" fetchpriority="high">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
+    <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+    <link rel="stylesheet" href="__ASSET_CSS__">
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -357,8 +349,12 @@ ${heroBadges(locale)}
             <div class="hero-image-wrap animate-fade-in${heroImageRtlClass}">
                 <div class="hero-image-container">
                     <div class="hero-image-glow"></div>
-                    <img src="${escapeHtml(siteConfig.headshotPath)}" alt="${escapeHtml(locale.meta.ogTitle)}"
-                        class="hero-image" loading="eager" fetchpriority="high" decoding="async">
+                    <picture class="hero-image-picture">
+                        <source srcset="${escapeHtml(headshotAvifPath)}" type="image/avif">
+                        <source srcset="${escapeHtml(headshotWebpPath)}" type="image/webp">
+                        <img src="${escapeHtml(siteConfig.headshotPath)}" alt="${escapeHtml(locale.meta.ogTitle)}"
+                            class="hero-image" loading="eager" fetchpriority="high" decoding="async">
+                    </picture>
                 </div>
             </div>
         </div>
@@ -568,7 +564,7 @@ ${footerLinks(locale)}
         </div>
     </div>
 
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="__ASSET_JS__"></script>
 </body>
 
 </html>
