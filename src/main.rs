@@ -4,6 +4,10 @@ use actix_web::http::header::{HeaderValue, CACHE_CONTROL, X_FRAME_OPTIONS};
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
 use serde::Serialize;
 use std::env;
+use std::sync::Mutex;
+
+mod verification;
+use verification::db::Database;
 
 #[derive(Clone)]
 struct AppConfig {
@@ -101,6 +105,20 @@ async fn main() -> std::io::Result<()> {
     };
     let csp = csp_policy();
 
+    // Initialize verification database
+    let db_path = env::var("DATABASE_URL").unwrap_or_else(|_| "./verification.db".to_string());
+    let verification_db = match Database::new(&db_path) {
+        Ok(db) => {
+            println!("Verification database initialized at {}", db_path);
+            web::Data::new(Mutex::new(db))
+        }
+        Err(e) => {
+            println!("Warning: Failed to initialize verification database: {}", e);
+            println!("Verification API will not be available");
+            web::Data::new(Mutex::new(Database::new(":memory:").unwrap()))
+        }
+    };
+
     println!("Server starting at http://0.0.0.0:{port}");
     println!("Worker processes: {worker_count}");
     println!("Serving static files from ./public");
@@ -148,6 +166,8 @@ async fn main() -> std::io::Result<()> {
             )
             .route("/health", web::get().to(health))
             .route("/config.json", web::get().to(runtime_config))
+            .app_data(verification_db)
+            .configure(verification::configure)
             .service(
                 Files::new("/", "./public")
                     .index_file("index.html")
