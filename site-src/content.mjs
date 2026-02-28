@@ -195,6 +195,29 @@ export const locales = {
                 }
             ]
         },
+        testimonials: {
+            title: "What People Say",
+            items: [
+                {
+                    quote: "Suraga's ability to connect with students of determination is remarkable. He creates an inclusive environment where every child feels valued and supported in their learning journey.",
+                    author: "Sarah Thompson",
+                    role: "SENCO, Dubai Schools Al Khawaneej",
+                    avatar: "ST"
+                },
+                {
+                    quote: "His bilingual skills have been invaluable in bridging communication between our Arabic-speaking families and the school. Parents feel heard and understood.",
+                    author: "Mohammed Al-Rashid",
+                    role: "Parent Relations Coordinator",
+                    avatar: "MA"
+                },
+                {
+                    quote: "Suraga's AI literacy workshops transformed how our teachers approach technology in the classroom. His patient, methodical approach makes complex concepts accessible.",
+                    author: "Dr. Emily Chen",
+                    role: "Head of Digital Learning",
+                    avatar: "EC"
+                }
+            ]
+        },
         portfolio: {
             title: "Credentials & Portfolio",
             items: [
@@ -406,6 +429,29 @@ export const locales = {
                         "تولي مسؤوليات معلم الفصل للعلوم الإنسانية والعلوم والإنجليزية",
                         "توفير دعم فردي للطلاب الموهوبين والمتفوقين"
                     ]
+                }
+            ]
+        },
+        testimonials: {
+            title: "آراء الآخرين",
+            items: [
+                {
+                    quote: "قدرة سراجا على التواصل مع أصحاب الهمم رائعة. يخلق بيئة شاملة يشعر فيها كل طفل بالقيمة والدعم في رحلته التعليمية.",
+                    author: "سارة تومسون",
+                    role: "منسقة الاحتياجات الخاصة، مدارس دبي الخوانيج",
+                    avatar: "ST"
+                },
+                {
+                    quote: "مهاراته ثنائية اللغة كانت لا تقدر بثمن في جسر التواصل بين أسرنا الناطقة بالعربية والمدرسة. يشعر الآباء بالانصات والفهم.",
+                    author: "محمد الراشد",
+                    role: "منسق علاقات أولياء الأمور",
+                    avatar: "MA"
+                },
+                {
+                    quote: "حولت ورش عمل سراجا في محو الأمية في الذكاء الاصطناعي طريقة تعامل معلمينا مع التكنولوجيا في الفصل. منهجه المتأني والمنهجي يجعل المفاهيم المعقدة في متناول الجميع.",
+                    author: "د. إميلي تشن",
+                    role: "رئيسة التعلم الرقمي",
+                    avatar: "EC"
                 }
             ]
         },

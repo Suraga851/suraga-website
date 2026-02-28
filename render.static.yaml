@@ -5,6 +5,9 @@ services:
     plan: free
     region: frankfurt
     buildCommand: npm ci && npm run build
+    envVars:
+      - key: NODE_ENV
+        value: production
     staticPublishPath: public
     pullRequestPreviewsEnabled: false
     headers:

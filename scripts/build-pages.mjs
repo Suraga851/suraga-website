@@ -252,13 +252,22 @@ const renderPage = (localeKey, locale) => {
     <link rel="alternate" hreflang="x-default" href="${escapeHtml(enHref)}">
     <link rel="sitemap" type="application/xml" href="${escapeHtml(siteConfig.baseUrl)}/sitemap.xml">
 
+    <!-- Resource hints for third-party origins -->
+    <link rel="dns-prefetch" href="https://formsubmit.co">
+    <link rel="preconnect" href="https://formsubmit.co" crossorigin>
+
     <!-- Preload critical assets -->
     <link rel="preload" as="style" href="__ASSET_CSS__">
     <link rel="preload" as="image" href="${escapeHtml(headshotWebpPath)}" type="image/webp" fetchpriority="high">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32.png">
     <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
-    <link rel="stylesheet" href="__ASSET_CSS__">
+
+    <!-- Critical CSS: inline above-the-fold styles to eliminate render-blocking -->
+    <style>__CRITICAL_CSS__</style>
+    <!-- Full stylesheet loaded asynchronously -->
+    <link rel="stylesheet" href="__ASSET_CSS__" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="__ASSET_CSS__"></noscript>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -564,6 +573,7 @@ ${footerLinks(locale)}
         </div>
     </div>
 
+    <link rel="modulepreload" href="__ASSET_JS__">
     <script type="module" src="__ASSET_JS__"></script>
 </body>
 

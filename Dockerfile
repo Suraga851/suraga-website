@@ -1,4 +1,4 @@
-# Stage 1: Generate static pages from canonical source
+# Stage 1: Generate static pages and pre-compress assets
 FROM node:22-alpine AS page-builder
 WORKDIR /app
 

@@ -5,6 +5,12 @@ import { initContactForm } from "./modules/form.js";
 import { setCurrentYear } from "./modules/year.js";
 import { getMessages } from "./modules/i18n.js";
 import { createStatusHandlers } from "./modules/status.js";
+import { initBackToTop } from "./modules/backToTop.js";
+import { initPageLoader } from "./modules/pageLoader.js";
+import { initImageLoader } from "./modules/imageLoader.js";
+
+// Initialize page loader immediately
+initPageLoader();
 
 const isRtl = document.documentElement.dir === "rtl";
 const messages = getMessages(isRtl);
@@ -24,3 +30,5 @@ initContactForm({
     clearFormStatus
 });
 setCurrentYear();
+initBackToTop();
+initImageLoader();

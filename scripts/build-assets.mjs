@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { build } from "esbuild";
+import { build, transform } from "esbuild";
 
 const currentFile = fileURLToPath(import.meta.url);
 const rootDir = path.resolve(path.dirname(currentFile), "..");
@@ -38,23 +38,79 @@ const writeManifest = async (manifest) => {
     await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 };
 
+/**
+ * Read and minify the hand-crafted critical CSS file.
+ * This contains the minimal above-the-fold styles (navbar, hero, animated-bg,
+ * layout, variables) needed for first paint without FOUC.
+ */
+const criticalCssPath = path.join(rootDir, "scripts", "critical.css");
+let criticalCssCache = null;
+
+const getCriticalCss = async () => {
+    if (criticalCssCache !== null) return criticalCssCache;
+
+    const raw = await fs.readFile(criticalCssPath, "utf8");
+    const minified = await transform(raw, { loader: "css", minify: true });
+    criticalCssCache = minified.code.trim();
+    return criticalCssCache;
+};
+
+/**
+ * Minify HTML by collapsing whitespace while preserving <pre>, <script>, <style> content.
+ */
+const minifyHtml = (html) => {
+    // Protect content inside <pre>, <script>, <style>, and <textarea> tags
+    const preserved = [];
+    const protectedHtml = html.replace(
+        /(<(?:pre|script|style|textarea)\b[^>]*>)([\s\S]*?)(<\/(?:pre|script|style|textarea)>)/gi,
+        (match, open, content, close) => {
+            const idx = preserved.length;
+            preserved.push(match);
+            return `__PRESERVED_${idx}__`;
+        }
+    );
+
+    let minified = protectedHtml
+        // Remove HTML comments (but not conditional comments)
+        .replace(/<!--(?!\[if)[\s\S]*?-->/g, "")
+        // Collapse multiple whitespace/newlines into single space
+        .replace(/\s{2,}/g, " ")
+        // Remove whitespace between tags
+        .replace(/>\s+</g, "><")
+        // Trim leading/trailing whitespace
+        .trim();
+
+    // Restore protected blocks
+    for (let i = 0; i < preserved.length; i++) {
+        minified = minified.replace(`__PRESERVED_${i}__`, preserved[i]);
+    }
+
+    return minified;
+};
+
 const rewriteHtmlBundles = async ({ jsBundlePath, cssEnBundlePath, cssArBundlePath }) => {
+    const criticalCss = await getCriticalCss();
+
     const htmlFiles = [
-        { file: "index.html", cssBundlePath: cssEnBundlePath },
-        { file: "ar.html", cssBundlePath: cssArBundlePath }
+        { file: "index.html", cssBundlePath: cssEnBundlePath, criticalCss },
+        { file: "ar.html", cssBundlePath: cssArBundlePath, criticalCss }
     ];
 
     await Promise.all(
-        htmlFiles.map(async ({ file, cssBundlePath }) => {
+        htmlFiles.map(async ({ file, cssBundlePath, criticalCss }) => {
             const fullPath = path.join(publicDir, file);
             const html = await fs.readFile(fullPath, "utf8");
-            const rewritten = html
+            let rewritten = html
                 .replaceAll("__ASSET_JS__", jsBundlePath)
-                .replaceAll("__ASSET_CSS__", cssBundlePath);
+                .replaceAll("__ASSET_CSS__", cssBundlePath)
+                .replaceAll("__CRITICAL_CSS__", criticalCss);
 
-            if (rewritten.includes("__ASSET_")) {
+            if (rewritten.includes("__ASSET_") || rewritten.includes("__CRITICAL_CSS__")) {
                 throw new Error(`Unresolved asset placeholder in ${file}`);
             }
+
+            // Minify HTML for smaller transfer size
+            rewritten = minifyHtml(rewritten);
 
             await fs.writeFile(fullPath, rewritten, "utf8");
         })
