@@ -30,6 +30,10 @@
     --shadow-md: 0 12px 26px rgba(12, 34, 44, 0.12);
     --shadow-lg: 0 18px 40px rgba(10, 32, 41, 0.18);
     --shadow-xl: 0 28px 60px rgba(9, 31, 40, 0.24);
+    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-bg-dark: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-blur: 20px;
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.45s ease;
@@ -679,6 +683,14 @@ select:focus-visible,
 }
 
 .hero-image-container {
+    --eye-offset-x: 0px;
+    --eye-offset-y: 0px;
+    --eye-tilt-x: 0deg;
+    --eye-tilt-y: 0deg;
+    --eye-pupil-x: 0px;
+    --eye-pupil-y: 0px;
+    --eye-glint-x: 0px;
+    --eye-glint-y: 0px;
     position: relative;
     display: inline-block;
     padding: 0.65rem;
@@ -686,10 +698,14 @@ select:focus-visible,
     border: 1px solid rgba(15, 118, 110, 0.15);
     background: rgba(255, 255, 255, 0.68);
     box-shadow: var(--shadow-md);
+    perspective: 900px;
+    isolation: isolate;
 }
 
 .hero-image-picture {
     display: block;
+    position: relative;
+    z-index: 8;
 }
 
 .hero-image-glow {
@@ -700,6 +716,85 @@ select:focus-visible,
     filter: blur(40px);
     opacity: 0.3;
     animation: pulseSlow 3s ease-in-out infinite;
+    z-index: 1;
+}
+
+.god-eye {
+    position: absolute;
+    inset: -0.4rem;
+    border-radius: 50%;
+    pointer-events: none;
+    transform-style: preserve-3d;
+    transform: translate3d(var(--eye-offset-x), var(--eye-offset-y), 0) rotateX(var(--eye-tilt-x)) rotateY(var(--eye-tilt-y));
+    transition: transform 180ms ease-out;
+    z-index: 6;
+}
+
+.god-eye-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(15, 118, 110, 0.28);
+    box-shadow: inset 0 0 28px rgba(20, 184, 166, 0.14), 0 0 24px rgba(13, 148, 136, 0.12);
+}
+
+.god-eye-ring-outer {
+    inset: 0;
+    animation: godEyeSpin 13s linear infinite;
+}
+
+.god-eye-ring-mid {
+    inset: 0.95rem;
+    border-color: rgba(20, 184, 166, 0.42);
+    animation: godEyeSpin 9s linear infinite reverse;
+}
+
+.god-eye-ring-inner {
+    inset: 1.9rem;
+    border-color: rgba(15, 118, 110, 0.54);
+    animation: godEyeSpin 6s linear infinite;
+}
+
+.god-eye-pupil {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.9), rgba(20, 184, 166, 0.72) 35%, rgba(11, 79, 74, 0.95) 78%);
+    box-shadow: 0 0 28px rgba(15, 118, 110, 0.42), inset 0 0 12px rgba(255, 255, 255, 0.22);
+    transform: translate(calc(-50% + var(--eye-pupil-x)), calc(-50% + var(--eye-pupil-y)));
+    transition: transform 160ms ease-out;
+}
+
+.god-eye-glint {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10%;
+    height: 10%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+    transform: translate(calc(-50% + var(--eye-glint-x)), calc(-50% + var(--eye-glint-y)));
+    transition: transform 180ms ease-out;
+}
+
+.hero-image-container.god-eye-static .god-eye {
+    transform: none;
+}
+
+.hero-image-container.god-eye-static .god-eye-ring {
+    animation: none;
+}
+
+@keyframes godEyeSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .hero-image {
@@ -763,11 +858,11 @@ section {
 }
 
 .section-white .container {
-    background: linear-gradient(155deg, rgba(255, 255, 255, 0.94), rgba(246, 252, 252, 0.9));
+    background: transparent; border: none; box-shadow: none;
 }
 
 .section-gradient .container {
-    background: linear-gradient(135deg, rgba(238, 248, 247, 0.94), rgba(250, 252, 253, 0.92));
+    background: transparent; border: none; box-shadow: none;
 }
 
 /* ===== Section Titles ===== */
@@ -825,7 +920,7 @@ section {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 30px rgba(15, 118, 110, 0.34);
+    box-shadow: 0 16px 30px rgba(15, 118, 110, 0.34), 0 0 20px rgba(20, 184, 166, 0.4);
 }
 
 .btn-secondary {

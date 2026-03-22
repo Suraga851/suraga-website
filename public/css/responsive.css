@@ -97,6 +97,18 @@
         height: 13.5rem;
     }
 
+    .god-eye {
+        inset: -0.2rem;
+    }
+
+    .god-eye-ring-mid {
+        inset: 0.6rem;
+    }
+
+    .god-eye-ring-inner {
+        inset: 1.2rem;
+    }
+
     .section-title {
         font-size: 1.75rem;
     }
@@ -260,6 +272,16 @@
 
     .animated-bg {
         animation: none;
+    }
+
+    .god-eye-ring {
+        animation: none;
+    }
+
+    .god-eye,
+    .god-eye-pupil,
+    .god-eye-glint {
+        transition: none;
     }
 
     .reveal-section {

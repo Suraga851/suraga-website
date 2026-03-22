@@ -8,6 +8,7 @@ import { createStatusHandlers } from "./modules/status.js";
 import { initBackToTop } from "./modules/backToTop.js";
 import { initPageLoader } from "./modules/pageLoader.js";
 import { initImageLoader } from "./modules/imageLoader.js";
+import { initGodsEye } from "./modules/godsEye.js";
 
 // Initialize page loader immediately
 initPageLoader();
@@ -32,3 +33,4 @@ initContactForm({
 setCurrentYear();
 initBackToTop();
 initImageLoader();
+initGodsEye();

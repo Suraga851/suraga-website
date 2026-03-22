@@ -358,6 +358,13 @@ ${heroBadges(locale)}
             <div class="hero-image-wrap animate-fade-in${heroImageRtlClass}">
                 <div class="hero-image-container">
                     <div class="hero-image-glow"></div>
+                    <div class="god-eye" aria-hidden="true">
+                        <span class="god-eye-ring god-eye-ring-outer"></span>
+                        <span class="god-eye-ring god-eye-ring-mid"></span>
+                        <span class="god-eye-ring god-eye-ring-inner"></span>
+                        <span class="god-eye-pupil"></span>
+                        <span class="god-eye-glint"></span>
+                    </div>
                     <picture class="hero-image-picture">
                         <source srcset="${escapeHtml(headshotAvifPath)}" type="image/avif">
                         <source srcset="${escapeHtml(headshotWebpPath)}" type="image/webp">

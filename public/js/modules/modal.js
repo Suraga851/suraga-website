@@ -1,4 +1,4 @@
-export const initPdfModal = ({ messages, setFormStatus, clearFormStatus, isMenuOpen }) => {
+export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
     const modal = document.getElementById("pdf-modal");
     const modalItems = document.querySelectorAll(".portfolio-item");
     const closeModal = document.getElementById("close-modal");
@@ -8,6 +8,25 @@ export const initPdfModal = ({ messages, setFormStatus, clearFormStatus, isMenuO
     if (!modal || !closeModal || !pdfViewer || !pdfTitle) return;
 
     let lastFocusedElement = null;
+    const shouldOpenDocDirectly = () =>
+        window.matchMedia("(max-width: 767px)").matches ||
+        window.matchMedia("(pointer: coarse)").matches;
+
+    const openDocumentDirectly = (docPath) => {
+        const absolutePath = new URL(docPath, window.location.href).toString();
+
+        // Use an anchor-click approach: avoids popup blockers in mobile in-app
+        // browsers (Soul, Instagram, etc.) which block window.open() but allow
+        // navigation triggered by clicking a real <a> element during a user gesture.
+        const anchor = document.createElement("a");
+        anchor.href = absolutePath;
+        anchor.target = "_blank";
+        anchor.rel = "noopener noreferrer";
+        anchor.style.display = "none";
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    };
 
     const hideModal = () => {
         modal.classList.add("hidden");
@@ -20,20 +39,14 @@ export const initPdfModal = ({ messages, setFormStatus, clearFormStatus, isMenuO
         lastFocusedElement = null;
     };
 
-    const openModalForItem = async (item) => {
+    const openModalForItem = (item) => {
         const docName = item.dataset.doc;
         if (!docName) return;
 
         const docPath = `assets/docs/${docName}.pdf`;
-        try {
-            const check = await fetch(docPath, { method: "HEAD" });
-            if (!check.ok && check.status !== 405) {
-                setFormStatus(messages.docUnavailable, "error");
-                return;
-            }
-        } catch (error) {
-            console.error("Document availability check failed:", error);
-            setFormStatus(messages.docUnavailable, "error");
+        if (shouldOpenDocDirectly()) {
+            clearFormStatus();
+            openDocumentDirectly(docPath);
             return;
         }
 
@@ -60,14 +73,14 @@ export const initPdfModal = ({ messages, setFormStatus, clearFormStatus, isMenuO
         item.setAttribute("aria-haspopup", "dialog");
         item.setAttribute("aria-label", messages.openDocLabel(itemTitle));
 
-        item.addEventListener("click", async () => {
-            await openModalForItem(item);
+        item.addEventListener("click", () => {
+            openModalForItem(item);
         });
 
-        item.addEventListener("keydown", async (event) => {
+        item.addEventListener("keydown", (event) => {
             if (event.key !== "Enter" && event.key !== " ") return;
             event.preventDefault();
-            await openModalForItem(item);
+            openModalForItem(item);
         });
     });
 
