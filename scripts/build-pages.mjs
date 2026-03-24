@@ -91,6 +91,22 @@ const mobileNavLinks = (locale) =>
         )
         .join("\n");
 
+const maintenanceBanner = (locale) => {
+    if (!locale.maintenance?.enabled) {
+        return "";
+    }
+
+    return `    <section class="maintenance-banner" role="status" aria-live="polite">
+        <div class="container maintenance-banner-inner">
+            <i class="fas fa-screwdriver-wrench maintenance-banner-icon" aria-hidden="true"></i>
+            <div>
+                <p class="maintenance-banner-title">${escapeHtml(locale.maintenance.title)}</p>
+                <p class="maintenance-banner-message">${escapeHtml(locale.maintenance.message)}</p>
+            </div>
+        </div>
+    </section>`;
+};
+
 const heroBadges = (locale) =>
     locale.hero.badges
         .map((badge) => `                    <span class="skill-badge">${escapeHtml(badge)}</span>`)
@@ -277,6 +293,7 @@ ${structuredDataFor(locale, canonical)}
 
 <body class="${escapeHtml(locale.bodyClass)}" data-contact-endpoint="${escapeHtml(siteConfig.contactEndpointDefault)}">
     <a href="#main-content" class="skip-link">${escapeHtml(locale.skipLink)}</a>
+${maintenanceBanner(locale)}
     <!-- Animated Background -->
     <div class="animated-bg"></div>
 
