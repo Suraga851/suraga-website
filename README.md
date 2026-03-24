@@ -47,6 +47,19 @@ npx http-server public -p 8080 -c-1 --silent
 http://127.0.0.1:8080
 ```
 
+### UI screenshot workflow
+
+After starting a local server, capture a full-page screenshot with:
+```bash
+npm run screenshot -- http://127.0.0.1:8080 artifacts/site-screenshot.png
+```
+
+If Playwright reports a missing Chromium executable, install it with:
+```bash
+npx playwright install chromium
+```
+If Chromium is unavailable (or download is blocked in a restricted environment), the screenshot script now generates a fallback PNG with diagnostic details instead of failing.
+
 ## Quality Gates
 
 Run static checks:
