@@ -26,6 +26,8 @@ Render-served bilingual portfolio site (English + Arabic) built for speed with:
 - `Dockerfile`: multi-stage build (Node page generation + nginx runtime).
 - `render.yaml`: current Render Docker web service config.
 - `render.static.yaml`: optional Render Static Site blueprint for edge-cached deployment.
+- `render.verification.yaml`: separate Render blueprint for the verification API used by `verify-whatsapp.html`.
+- `src/bin/verification-api.rs`: dedicated Rust binary for the verification API.
 - `tests/smoke/site.spec.js`: Playwright smoke coverage.
 
 ## Local Development
@@ -85,5 +87,7 @@ The page also carries a `data-contact-endpoint` fallback on `<body>`.
 Production target today is Render Web Service via Docker (`nginx` runtime) through `render.yaml`.
 
 For maximum free-tier speed, a ready static blueprint is provided in `render.static.yaml` (Render Static runtime).
+
+For the Vercel-hosted frontend, deploy the WhatsApp verification backend separately with `render.verification.yaml`. `vercel.json` proxies `/api/verification/*` to the Render API service so the frontend can keep using same-origin API URLs.
 
 Push to `main` to trigger redeploy.

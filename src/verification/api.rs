@@ -1,7 +1,5 @@
-use crate::verification::db::Database;
 use crate::verification::models::{
-    NumberStatus, PhoneNumber, RegisterNumberRequest, RegisterNumberResponse, TextNowGuide,
-    DownloadLink, GuideStep,
+    DownloadLink, GuideStep, RegisterNumberRequest, RegisterNumberResponse, TextNowGuide,
 };
 use crate::verification::DbPool;
 use actix_web::{web, HttpResponse, Result};
@@ -36,7 +34,7 @@ pub async fn register_number(
     db: web::Data<DbPool>,
     req: web::Json<RegisterNumberRequest>,
 ) -> Result<HttpResponse> {
-    let mut db = db.lock().unwrap();
+    let db = db.lock().unwrap();
 
     // Validate phone number format (basic validation)
     let phone = req.phone.trim();
@@ -81,7 +79,7 @@ pub async fn mark_verified(
     db: web::Data<DbPool>,
     id: web::Path<i64>,
 ) -> Result<HttpResponse> {
-    let mut db = db.lock().unwrap();
+    let db = db.lock().unwrap();
     let number_id = id.into_inner();
 
     match db.mark_verified(number_id) {
@@ -99,7 +97,7 @@ pub async fn delete_number(
     db: web::Data<DbPool>,
     id: web::Path<i64>,
 ) -> Result<HttpResponse> {
-    let mut db = db.lock().unwrap();
+    let db = db.lock().unwrap();
     let number_id = id.into_inner();
 
     match db.delete_number(number_id) {

@@ -65,6 +65,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/verification/:path*",
+      "destination": "https://suraga-verification-api.onrender.com/api/verification/:path*"
+    },
     { "source": "/",      "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/$1" }
   ]

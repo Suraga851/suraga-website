@@ -500,6 +500,7 @@
     <script>
         // API Base URL
         const API_BASE = '/api/verification';
+        const API_UNAVAILABLE_MESSAGE = 'The verification backend is waking up or unavailable. If it is hosted on a free Render service, wait about a minute and refresh.';
 
         // DOM Elements
         const registerForm = document.getElementById('registerForm');
@@ -533,6 +534,7 @@
 
             } catch (error) {
                 console.error('Failed to load guide:', error);
+                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 
@@ -573,7 +575,7 @@
 
             } catch (error) {
                 console.error('Failed to load numbers:', error);
-                numbersList.innerHTML = '<p style="color: #ff4757;">Failed to load numbers. Please try again.</p>';
+                numbersList.innerHTML = `<p style="color: #ff4757;">${escapeHtml(API_UNAVAILABLE_MESSAGE)}</p>`;
             }
         }
 
@@ -614,7 +616,7 @@
 
             } catch (error) {
                 console.error('Failed to register:', error);
-                showMessage('Failed to register number. Please try again.', 'error');
+                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Register Number';
@@ -637,7 +639,7 @@
 
             } catch (error) {
                 console.error('Failed to mark verified:', error);
-                showMessage('Failed to update status', 'error');
+                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 
@@ -661,7 +663,7 @@
 
             } catch (error) {
                 console.error('Failed to delete:', error);
-                showMessage('Failed to delete number', 'error');
+                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 

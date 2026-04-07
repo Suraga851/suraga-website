@@ -124,6 +124,7 @@ async fn main() -> std::io::Result<()> {
     println!("Serving static files from ./public");
 
     HttpServer::new(move || {
+        let app_verification_db = verification_db.clone();
         App::new()
             .app_data(web::Data::new(app_config.clone()))
             .wrap(middleware::Logger::default())
@@ -166,7 +167,7 @@ async fn main() -> std::io::Result<()> {
             )
             .route("/health", web::get().to(health))
             .route("/config.json", web::get().to(runtime_config))
-            .app_data(verification_db)
+            .app_data(app_verification_db)
             .configure(verification::configure)
             .service(
                 Files::new("/", "./public")

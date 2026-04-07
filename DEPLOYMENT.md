@@ -4,6 +4,7 @@ This repository supports two deployment modes:
 
 - Current: Render Web Service using Docker + `nginx` (`render.yaml`)
 - Faster option: Render Static runtime (`render.static.yaml`)
+- Split deployment: Vercel static frontend + Render verification API (`render.verification.yaml`)
 
 ## Production Stack
 
@@ -52,6 +53,29 @@ Use `render.static.yaml` to create a new static service:
 - Includes security/cache headers with same-origin framing support for PDF modal rendering
 
 Note: Render runtime is immutable after service creation. If your current service is Docker-based, create a new static service and then point your domain to it.
+
+## Verification Backend for Vercel Frontend
+
+`public/verify-whatsapp.html` expects `/api/verification/*`.
+
+This repo now includes:
+- `src/bin/verification-api.rs`: dedicated Rust API binary for the verification endpoints.
+- `render.verification.yaml`: Render blueprint for the API service.
+- `vercel.json`: rewrites `/api/verification/*` on the Vercel site to `https://suraga-verification-api.onrender.com/api/verification/*`.
+
+Recommended setup:
+1. Create a new Render web service from `render.verification.yaml`.
+2. Keep the service name as `suraga-verification-api` so the Vercel rewrite target matches.
+3. Push the repo so Vercel picks up `vercel.json`.
+4. Visit `https://suraga-website.vercel.app/verify-whatsapp.html`.
+
+Free-tier caveat as of April 7, 2026:
+- Render Free web services spin down after inactivity and can take about a minute to wake up.
+- Render Free web services use an ephemeral filesystem, so the default SQLite file at `./verification.db` will reset on restart, redeploy, or spin-down.
+
+For durable storage:
+- Upgrade the Render service and attach a persistent disk, then change `DATABASE_URL` to a mounted path such as `/opt/render/project/src/data/verification.db`.
+- Or move the verification data to a managed database instead of local SQLite.
 
 ## Runtime Config
 
