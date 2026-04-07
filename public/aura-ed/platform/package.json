@@ -1,0 +1,21 @@
+{
+  "name": "aura-ed-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Aura-Ed monorepo foundation for UAE-focused inclusive adaptive learning",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace apps/web-next",
+    "dev:gateway": "npm run dev --workspace services/api-gateway",
+    "dev:adaptive": "echo \"Run adaptive engine with: uvicorn app.main:app --reload --port 8010\"",
+    "build": "npm run build --workspace apps/web-next && npm run build --workspace services/api-gateway && npm run build --workspace packages/shared-types",
+    "typecheck": "npm run typecheck --workspace apps/web-next && npm run typecheck --workspace services/api-gateway && npm run typecheck --workspace packages/shared-types"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

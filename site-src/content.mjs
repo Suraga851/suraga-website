@@ -1,7 +1,7 @@
 export const siteConfig = {
     siteName: "Suraga Elzibaer",
     searchAliases: ["Suraga Website", "Suraga Elzibaer Website", "Suraqa Website"],
-    baseUrl: "https://suraga-website.onrender.com",
+    baseUrl: "https://suraga-website.vercel.app",
     themeColor: "#0d9488",
     email: "suragaelzibaer@gmail.com",
     phoneRaw: "+971557177083",

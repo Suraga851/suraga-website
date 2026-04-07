@@ -1,0 +1,15 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: degoog-searxng
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+    volumes:
+      - ./searxng:/etc/searxng
+      - searxng-cache:/var/cache/searxng
+
+volumes:
+  searxng-cache:

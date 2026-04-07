@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="description"
+        content="Aura-Ed is a bilingual UAE-ready EdTech platform prototype focused on adaptive scaffolding, inclusive access, teacher enablement, and privacy-first learning analytics."
+    >
+    <meta name="theme-color" content="#154f44">
+    <title>Aura-Ed | Inclusive Adaptive Learning Platform</title>
+    <link rel="stylesheet" href="../assets/vendor/fonts/fonts-en.css">
+    <link rel="stylesheet" href="../assets/vendor/fonts/fonts-ar.css">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <div class="page-glow page-glow-one" aria-hidden="true"></div>
+    <div class="page-glow page-glow-two" aria-hidden="true"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <a class="brand" href="#hero" aria-label="Aura-Ed home">
+            <span class="brand-mark">A</span>
+            <span class="brand-text">Aura-Ed</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary navigation">
+            <a href="#architecture" data-nav="architecture">Architecture</a>
+            <a href="#adaptive" data-nav="adaptive">Adaptive Engine</a>
+            <a href="#features" data-nav="features">Features</a>
+            <a href="#compliance" data-nav="compliance">Compliance</a>
+            <a href="#roadmap" data-nav="roadmap">Roadmap</a>
+            <a href="#readme" data-nav="readme">README</a>
+        </nav>
+
+        <div class="topbar-actions">
+            <a class="ghost-button" href="#adaptive" data-cta-link="demo">Try the demo</a>
+            <button class="lang-toggle" id="lang-toggle" type="button" aria-live="polite">العربية</button>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="hero" id="hero">
+            <div class="hero-copy">
+                <p class="eyebrow" id="hero-eyebrow">Inclusive AI for UAE classrooms</p>
+                <h1 id="hero-title">A bilingual learning platform that closes the gap between national tech ambition and day-to-day learning reality.</h1>
+                <p class="hero-lead" id="hero-lead">
+                    Aura-Ed combines adaptive scaffolding, SEND-aware design, low-bandwidth resilience, and regional compliance into one product foundation for schools across the UAE.
+                </p>
+
+                <div class="hero-actions">
+                    <a class="primary-button" href="#adaptive" id="hero-primary-cta">Run adaptive simulation</a>
+                    <a class="secondary-button" href="#readme" id="hero-secondary-cta">View technical README</a>
+                </div>
+
+                <div class="metric-grid" id="metric-grid"></div>
+            </div>
+
+            <aside class="hero-panel">
+                <div class="panel-header">
+                    <p class="panel-kicker" id="panel-kicker">System posture</p>
+                    <h2 id="panel-title">Designed for UAE hosting, Arabic-first access, device equity, and teacher-visible interventions.</h2>
+                </div>
+
+                <div class="signal-grid" id="signal-grid"></div>
+
+                <div class="privacy-card">
+                    <p class="privacy-label" id="privacy-label">Privacy layer</p>
+                    <p class="privacy-title" id="privacy-title">Edge AI keeps sensitive attention signals in the browser.</p>
+                    <p class="privacy-copy" id="privacy-copy">
+                        Only engagement scores travel upstream. Raw video, audio, and biometric traces stay local unless the institution explicitly enables them.
+                    </p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section" id="architecture">
+            <div class="section-heading">
+                <p class="section-kicker" id="architecture-kicker">Architecture</p>
+                <h2 id="architecture-title">A decentralized microservices model that treats access, inclusion, and compliance as core infrastructure.</h2>
+                <p id="architecture-intro">
+                    Each domain is isolated so schools can scale services independently while respecting local residency, accessibility, and interoperability needs.
+                </p>
+            </div>
+
+            <div class="card-grid card-grid-architecture" id="architecture-grid"></div>
+        </section>
+
+        <section class="section section-contrast" id="adaptive">
+            <div class="section-heading">
+                <p class="section-kicker" id="adaptive-kicker">Adaptive scaffolding engine</p>
+                <h2 id="adaptive-title">A working simulation of how Aura-Ed can decide the next support level.</h2>
+                <p id="adaptive-intro">
+                    Adjust performance, engagement, and educator weighting to see how the engine changes the student pathway.
+                </p>
+            </div>
+
+            <div class="adaptive-layout">
+                <form class="control-panel" id="adaptive-form">
+                    <div class="control-group">
+                        <label for="performance" id="label-performance">Recent performance</label>
+                        <div class="control-meta">
+                            <span id="performance-value">72</span>
+                            <span id="performance-unit">percent</span>
+                        </div>
+                        <input id="performance" name="performance" type="range" min="0" max="100" value="72">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="engagement" id="label-engagement">Engagement duration</label>
+                        <div class="control-meta">
+                            <span id="engagement-value">68</span>
+                            <span id="engagement-unit">percent</span>
+                        </div>
+                        <input id="engagement" name="engagement" type="range" min="0" max="100" value="68">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="weight-performance" id="label-weight-performance">Performance weight</label>
+                        <div class="control-meta">
+                            <span id="weight-performance-value">3</span>
+                            <span id="weight-performance-unit">priority points</span>
+                        </div>
+                        <input id="weight-performance" name="weight-performance" type="range" min="1" max="5" value="3">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="weight-engagement" id="label-weight-engagement">Engagement weight</label>
+                        <div class="control-meta">
+                            <span id="weight-engagement-value">2</span>
+                            <span id="weight-engagement-unit">priority points</span>
+                        </div>
+                        <input id="weight-engagement" name="weight-engagement" type="range" min="1" max="5" value="2">
+                    </div>
+                </form>
+
+                <aside class="result-panel">
+                    <p class="result-kicker" id="result-kicker">Live output</p>
+                    <div class="result-score">
+                        <span class="result-value" id="next-level">70</span>
+                        <span class="result-caption" id="next-level-caption">Next support level</span>
+                    </div>
+
+                    <div class="result-band" id="support-band">Guided practice</div>
+                    <p class="result-summary" id="support-summary">
+                        The learner is ready to continue, but the platform should add bilingual hints and shorter checkpoints.
+                    </p>
+
+                    <div class="formula-block">
+                        <p class="formula-label" id="formula-label">Adaptive formula</p>
+                        <code id="formula-output">((3 x 72) + (2 x 68)) / (3 + 2) = 70.4</code>
+                    </div>
+
+                    <div class="recommendations">
+                        <p class="recommendations-title" id="recommendations-title">Recommended scaffold actions</p>
+                        <ul id="recommendation-list"></ul>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <div class="section-heading">
+                <p class="section-kicker" id="features-kicker">Feature set</p>
+                <h2 id="features-title">The first release is shaped around inclusion, teacher readiness, and local relevance.</h2>
+                <p id="features-intro">
+                    These modules map directly to the ground-level issues highlighted across UAE online learning research.
+                </p>
+            </div>
+
+            <div class="card-grid" id="features-grid"></div>
+        </section>
+
+        <section class="section" id="compliance">
+            <div class="section-heading">
+                <p class="section-kicker" id="compliance-kicker">Compliance and safety</p>
+                <h2 id="compliance-title">Every major workflow is framed by privacy, interoperability, accessibility, and integrity design.</h2>
+                <p id="compliance-intro">
+                    The goal is to make compliance a product feature instead of a last-minute paperwork exercise.
+                </p>
+            </div>
+
+            <div class="card-grid" id="compliance-grid"></div>
+        </section>
+
+        <section class="section section-roadmap" id="roadmap">
+            <div class="section-heading">
+                <p class="section-kicker" id="roadmap-kicker">Implementation roadmap</p>
+                <h2 id="roadmap-title">A phased build that starts lean, proves value quickly, and expands responsibly.</h2>
+                <p id="roadmap-intro">
+                    Each phase keeps scope tight while preparing the platform for institutional rollout.
+                </p>
+            </div>
+
+            <div class="roadmap-grid">
+                <div class="timeline" id="roadmap-list"></div>
+
+                <aside class="stack-card">
+                    <p class="stack-kicker" id="stack-kicker">Suggested technical spine</p>
+                    <h3 id="stack-title">One product, multiple execution layers.</h3>
+                    <ul class="stack-list" id="stack-list"></ul>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section section-readme" id="readme">
+            <div class="section-heading">
+                <p class="section-kicker" id="readme-kicker">README snapshot</p>
+                <h2 id="readme-title">A repo structure that can grow from pilot to platform.</h2>
+                <p id="readme-intro">
+                    This mirrors the companion README so the concept page and the engineering plan stay aligned.
+                </p>
+            </div>
+
+            <div class="readme-layout">
+                <article class="readme-card">
+                    <p class="readme-label" id="readme-structure-label">Suggested monorepo</p>
+                    <pre id="repo-structure"></pre>
+                </article>
+
+                <article class="readme-card">
+                    <p class="readme-label" id="readme-steps-label">Local setup</p>
+                    <ol id="setup-steps"></ol>
+                </article>
+
+                <article class="readme-card readme-card-wide">
+                    <p class="readme-label" id="readme-standards-label">Delivery principles</p>
+                    <div class="standards-grid" id="standards-grid"></div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p id="footer-copy">Aura-Ed prototype foundation for UAE-focused inclusive learning.</p>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

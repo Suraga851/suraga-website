@@ -25,7 +25,14 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
         anchor.style.display = "none";
         document.body.appendChild(anchor);
         anchor.click();
-        document.body.removeChild(anchor);
+        
+        // Use setTimeout to ensure the navigation/download has time to start
+        // before removing the element from the DOM, which fixes issues in some browsers
+        setTimeout(() => {
+            if (document.body.contains(anchor)) {
+                document.body.removeChild(anchor);
+            }
+        }, 500);
     };
 
     const hideModal = () => {
@@ -44,10 +51,21 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
         if (!docName) return;
 
         const docPath = `assets/docs/${docName}.pdf`;
+        const absolutePath = new URL(docPath, window.location.href).toString();
+        const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        
+        let viewerUrl = docPath;
+
         if (shouldOpenDocDirectly()) {
-            clearFormStatus();
-            openDocumentDirectly(docPath);
-            return;
+            if (isLocalhost) {
+                // Cannot use Google Docs Viewer on localhost, fallback to direct download/open
+                clearFormStatus();
+                openDocumentDirectly(docPath);
+                return;
+            } else {
+                // Use Google Docs Viewer to render the PDF inside the modal iframe for mobile users
+                viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(absolutePath)}&embedded=true`;
+            }
         }
 
         const titleNode = item.querySelector("h3");
@@ -56,7 +74,7 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
 
         clearFormStatus();
         pdfTitle.innerText = modalTitle;
-        pdfViewer.src = docPath;
+        pdfViewer.src = viewerUrl;
         modal.classList.remove("hidden");
         modal.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";

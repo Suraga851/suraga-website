@@ -1,0 +1,74 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aura-ed-postgres
+    environment:
+      - POSTGRES_USER=aura
+      - POSTGRES_PASSWORD=aura
+      - POSTGRES_DB=aura_ed
+    ports:
+      - "5432:5432"
+    volumes:
+      - aura_ed_postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:7
+    container_name: aura-ed-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - aura_ed_mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: aura-ed-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - aura_ed_redis_data:/data
+
+  adaptive-engine:
+    build:
+      context: ..
+      dockerfile: services/adaptive-engine/Dockerfile
+    container_name: aura-ed-adaptive
+    ports:
+      - "8010:8010"
+
+  api-gateway:
+    build:
+      context: ..
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: aura-ed-gateway
+    environment:
+      - PORT=8000
+      - ADAPTIVE_ENGINE_URL=http://adaptive-engine:8010
+      - POSTGRES_URL=postgresql://aura:aura@postgres:5432/aura_ed
+      - MONGO_URL=mongodb://mongo:27017
+      - MONGO_DB_NAME=aura_ed
+      - REDIS_URL=redis://redis:6379
+      - REDIS_CACHE_TTL_SECONDS=120
+    ports:
+      - "8000:8000"
+    depends_on:
+      - adaptive-engine
+      - postgres
+      - mongo
+      - redis
+
+  web-next:
+    build:
+      context: ..
+      dockerfile: apps/web-next/Dockerfile
+    container_name: aura-ed-web
+    environment:
+      - NEXT_PUBLIC_API_GATEWAY_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  aura_ed_postgres_data:
+  aura_ed_mongo_data:
+  aura_ed_redis_data:
