@@ -38,6 +38,7 @@ impl From<String> for NumberStatus {
 
 /// A registered phone number for WhatsApp verification
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PhoneNumber {
     pub id: i64,
     pub phone: String,
@@ -58,6 +59,7 @@ pub struct RegisterNumberRequest {
 
 /// Response for number registration
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RegisterNumberResponse {
     pub id: i64,
     pub phone: String,
@@ -67,6 +69,7 @@ pub struct RegisterNumberResponse {
 
 /// TextNow guide information
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct TextNowGuide {
     pub title: String,
     pub description: String,
@@ -75,6 +78,7 @@ pub struct TextNowGuide {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GuideStep {
     pub step_number: u32,
     pub title: String,
@@ -82,6 +86,7 @@ pub struct GuideStep {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DownloadLink {
     pub platform: String,
     pub url: String,

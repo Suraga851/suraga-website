@@ -3,9 +3,8 @@ pub mod db;
 pub mod models;
 
 use actix_web::web;
-use std::sync::Mutex;
 
-pub type DbPool = Mutex<db::Database>;
+pub type DbPool = db::Database;
 
 pub fn configure(cfg: &mut web::ServiceConfig) {
     cfg.service(

@@ -2,7 +2,6 @@ use actix_web::dev::Service;
 use actix_web::http::header::{HeaderValue, CACHE_CONTROL, LOCATION, X_FRAME_OPTIONS};
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use std::env;
-use std::sync::Mutex;
 
 mod verification;
 use verification::db::Database;
@@ -21,6 +20,15 @@ fn is_local_host(host: &str) -> bool {
     host.starts_with("127.0.0.1")
         || host.starts_with("localhost")
         || host.starts_with("[::1]")
+}
+
+fn database_label(database_url: &str) -> &'static str {
+    let value = database_url.trim().to_ascii_lowercase();
+    if value.starts_with("postgres://") || value.starts_with("postgresql://") {
+        "postgres"
+    } else {
+        "sqlite"
+    }
 }
 
 fn cache_control_for_path(path: &str) -> &'static str {
@@ -86,13 +94,16 @@ async fn main() -> std::io::Result<()> {
     let db_path = env::var("DATABASE_URL").unwrap_or_else(|_| "./verification.db".to_string());
     let verification_db = match Database::new(&db_path) {
         Ok(db) => {
-            println!("Verification database initialized at {}", db_path);
-            web::Data::new(Mutex::new(db))
+            println!(
+                "Verification database initialized using {} backend",
+                database_label(&db_path)
+            );
+            web::Data::new(db)
         }
         Err(e) => {
             println!("Warning: Failed to initialize verification database: {}", e);
             println!("Verification API will not be available");
-            web::Data::new(Mutex::new(Database::new(":memory:").unwrap()))
+            web::Data::new(Database::new(":memory:").unwrap())
         }
     };
 

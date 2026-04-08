@@ -6,7 +6,6 @@ use actix_web::{web, HttpResponse, Result};
 
 /// Get all registered phone numbers
 pub async fn list_numbers(db: web::Data<DbPool>) -> Result<HttpResponse> {
-    let db = db.lock().unwrap();
     match db.get_all_numbers() {
         Ok(numbers) => Ok(HttpResponse::Ok().json(numbers)),
         Err(e) => {
@@ -18,7 +17,6 @@ pub async fn list_numbers(db: web::Data<DbPool>) -> Result<HttpResponse> {
 
 /// Get a single phone number by ID
 pub async fn get_number(db: web::Data<DbPool>, id: web::Path<i64>) -> Result<HttpResponse> {
-    let db = db.lock().unwrap();
     match db.get_number(id.into_inner()) {
         Ok(Some(number)) => Ok(HttpResponse::Ok().json(number)),
         Ok(None) => Ok(HttpResponse::NotFound().json("Number not found")),
@@ -34,8 +32,6 @@ pub async fn register_number(
     db: web::Data<DbPool>,
     req: web::Json<RegisterNumberRequest>,
 ) -> Result<HttpResponse> {
-    let db = db.lock().unwrap();
-
     // Validate phone number format (basic validation)
     let phone = req.phone.trim();
     if phone.len() < 7 {
@@ -79,7 +75,6 @@ pub async fn mark_verified(
     db: web::Data<DbPool>,
     id: web::Path<i64>,
 ) -> Result<HttpResponse> {
-    let db = db.lock().unwrap();
     let number_id = id.into_inner();
 
     match db.mark_verified(number_id) {
@@ -97,7 +92,6 @@ pub async fn delete_number(
     db: web::Data<DbPool>,
     id: web::Path<i64>,
 ) -> Result<HttpResponse> {
-    let db = db.lock().unwrap();
     let number_id = id.into_inner();
 
     match db.delete_number(number_id) {
