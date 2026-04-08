@@ -12,8 +12,8 @@ struct AppConfig {
     database_backend: &'static str,
 }
 
-async fn health() -> impl Responder {
-    HttpResponse::Ok().body("ok")
+async fn health(config: web::Data<AppConfig>) -> impl Responder {
+    HttpResponse::Ok().body(format!("ok:{}", config.database_backend))
 }
 
 fn is_local_host(host: &str) -> bool {
