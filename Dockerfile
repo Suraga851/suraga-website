@@ -1,23 +1,23 @@
-# Stage 1: Generate static pages and pre-compress assets
-FROM node:22-alpine AS page-builder
+# Stage 1: Build Rust API/redirect service
+FROM rust:1.87-bookworm AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
 
-COPY scripts ./scripts
-COPY site-src ./site-src
-COPY public ./public
+RUN cargo build --release
 
-RUN npm run build
+# Stage 2: Minimal runtime
+FROM debian:bookworm-slim
 
-# Stage 2: Native C backend runtime (nginx)
-FROM nginx:1.27-alpine
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
-COPY nginx/security-headers.conf /etc/nginx/snippets/security-headers.conf
-COPY nginx/security-headers-framable.conf /etc/nginx/snippets/security-headers-framable.conf
-COPY --from=page-builder /app/public /usr/share/nginx/html
+WORKDIR /app
+COPY --from=builder /app/target/release/suraga-website /usr/local/bin/suraga-website
 
 ENV PORT=8080
 EXPOSE 8080
+
+CMD ["suraga-website"]

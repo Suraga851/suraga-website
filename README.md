@@ -1,11 +1,10 @@
 # Suraga Website
 
-Render-served bilingual portfolio site (English + Arabic) built for speed with:
+Vercel-hosted bilingual portfolio site (English + Arabic) with the legacy Render service reused as the verification API backend and redirect target.
 - Static pages generated from a single source (`site-src/content.mjs`).
 - Fingerprinted/minified JS + CSS bundles generated at build time.
 - Self-hosted fonts/icons (no runtime Google Fonts or CDN icon calls).
 - Modern image variants (`.webp`/`.avif`) generated for hero/background.
-- Native C web server runtime (`nginx`) in Docker.
 - UI/UX and behavior served from `public/`.
 
 ## Architecture
@@ -22,12 +21,9 @@ Render-served bilingual portfolio site (English + Arabic) built for speed with:
 - `scripts/entries/styles-en.css`, `scripts/entries/styles-ar.css`: bundle entrypoints.
 - `public/css/*`: styling.
 - `public/js/main.js` + `public/js/modules/*`: modular front-end behavior.
-- `nginx/default.conf.template`: native C backend tuning, headers, cache policy, and `/health`.
-- `Dockerfile`: multi-stage build (Node page generation + nginx runtime).
+- `Dockerfile`: builds the Render backend service.
 - `render.yaml`: current Render Docker web service config.
 - `render.static.yaml`: optional Render Static Site blueprint for edge-cached deployment.
-- `render.verification.yaml`: separate Render blueprint for the verification API used by `verify-whatsapp.html`.
-- `src/bin/verification-api.rs`: dedicated Rust binary for the verification API.
 - `tests/smoke/site.spec.js`: Playwright smoke coverage.
 
 ## Local Development
@@ -84,10 +80,10 @@ The page also carries a `data-contact-endpoint` fallback on `<body>`.
 
 ## Deployment
 
-Production target today is Render Web Service via Docker (`nginx` runtime) through `render.yaml`.
+Production target today is:
+- Vercel for the public frontend
+- the existing Render service for `/api/verification/*` and `/health`
 
-For maximum free-tier speed, a ready static blueprint is provided in `render.static.yaml` (Render Static runtime).
-
-For the Vercel-hosted frontend, deploy the WhatsApp verification backend separately with `render.verification.yaml`. `vercel.json` proxies `/api/verification/*` to the Render API service so the frontend can keep using same-origin API URLs.
+The old Render domain is intentionally retained as the backend host and should redirect normal page visits to the Vercel site after deploy.
 
 Push to `main` to trigger redeploy.

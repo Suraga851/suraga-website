@@ -1,17 +1,17 @@
-# Deployment (Render Docker + Optional Static Runtime)
+# Deployment (Vercel Frontend + Render Backend Redirect)
 
 This repository supports two deployment modes:
 
-- Current: Render Web Service using Docker + `nginx` (`render.yaml`)
-- Faster option: Render Static runtime (`render.static.yaml`)
-- Split deployment: Vercel static frontend + Render verification API (`render.verification.yaml`)
+- Current frontend: Vercel static deployment (`vercel.json`)
+- Current backend: existing Render Docker web service (`render.yaml`)
+- Optional legacy static-only Render setup: `render.static.yaml`
 
 ## Production Stack
 
-- Hosting: Render Web Service
-- Runtime: native C web server (`nginx`)
-- Build/deploy config: `render.yaml`, `Dockerfile`, `nginx/default.conf.template`
-- Build pipeline: `npm run build` (`build-pages` + `build-images` + `build-assets`)
+- Frontend hosting: Vercel
+- Backend hosting: existing Render Web Service
+- Render runtime: Rust API + redirect service
+- Build/deploy config: `render.yaml`, `Dockerfile`, `vercel.json`
 
 ## Pre-Deploy Checklist
 
@@ -38,11 +38,19 @@ npm run test:smoke
 - `region: frankfurt`
 - `healthCheckPath: /health`
 
-The Docker image:
-1. Generates optimized output with `npm run build`.
-2. Serves them through nginx with tuned cache, gzip compression, and security headers.
+The Docker image now:
+1. Builds the Rust service from `src/main.rs`.
+2. Serves `/api/verification/*` and `/health`.
+3. Redirects all normal page requests from `suraga-website.onrender.com` to `https://suraga-website.vercel.app`.
 
-## Optional Migration: Render Static Runtime (Fastest Free-Tier)
+## Vercel Frontend Routing
+
+`vercel.json` rewrites:
+- `/api/verification/*` -> `https://suraga-website.onrender.com/api/verification/*`
+
+That keeps the Vercel frontend same-origin from the browser while using the Render service as the API backend.
+
+## Optional Legacy Static Runtime
 
 Use `render.static.yaml` to create a new static service:
 
@@ -54,22 +62,7 @@ Use `render.static.yaml` to create a new static service:
 
 Note: Render runtime is immutable after service creation. If your current service is Docker-based, create a new static service and then point your domain to it.
 
-## Verification Backend for Vercel Frontend
-
-`public/verify-whatsapp.html` expects `/api/verification/*`.
-
-This repo now includes:
-- `src/bin/verification-api.rs`: dedicated Rust API binary for the verification endpoints.
-- `render.verification.yaml`: Render blueprint for the API service.
-- `vercel.json`: rewrites `/api/verification/*` on the Vercel site to `https://suraga-verification-api.onrender.com/api/verification/*`.
-
-Recommended setup:
-1. Create a new Render web service from `render.verification.yaml`.
-2. Keep the service name as `suraga-verification-api` so the Vercel rewrite target matches.
-3. Push the repo so Vercel picks up `vercel.json`.
-4. Visit `https://suraga-website.vercel.app/verify-whatsapp.html`.
-
-Free-tier caveat as of April 7, 2026:
+Free-tier caveat as of April 8, 2026:
 - Render Free web services spin down after inactivity and can take about a minute to wake up.
 - Render Free web services use an ephemeral filesystem, so the default SQLite file at `./verification.db` will reset on restart, redeploy, or spin-down.
 

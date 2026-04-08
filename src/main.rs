@@ -1,8 +1,6 @@
-use actix_files::{Files, NamedFile};
-use actix_web::dev::{fn_service, Service, ServiceRequest};
-use actix_web::http::header::{HeaderValue, CACHE_CONTROL, X_FRAME_OPTIONS};
-use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
-use serde::Serialize;
+use actix_web::dev::Service;
+use actix_web::http::header::{HeaderValue, CACHE_CONTROL, LOCATION, X_FRAME_OPTIONS};
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use std::env;
 use std::sync::Mutex;
 
@@ -11,76 +9,56 @@ use verification::db::Database;
 
 #[derive(Clone)]
 struct AppConfig {
-    contact_endpoint: String,
-}
-
-#[derive(Serialize)]
-#[serde(rename_all = "camelCase")]
-struct RuntimeConfig {
-    contact_endpoint: String,
+    frontend_origin: String,
 }
 
 async fn health() -> impl Responder {
     HttpResponse::Ok().body("ok")
 }
 
-async fn runtime_config(config: web::Data<AppConfig>) -> impl Responder {
-    HttpResponse::Ok().json(RuntimeConfig {
-        contact_endpoint: config.contact_endpoint.clone(),
-    })
-}
-
-fn is_html_route(path: &str) -> bool {
-    if path == "/" || path.ends_with(".html") {
-        return true;
-    }
-
-    // Requests without a file extension are served by the SPA fallback.
-    let last_segment = path.rsplit('/').next().unwrap_or_default();
-    !last_segment.contains('.')
+fn is_local_host(host: &str) -> bool {
+    let host = host.to_ascii_lowercase();
+    host.starts_with("127.0.0.1")
+        || host.starts_with("localhost")
+        || host.starts_with("[::1]")
 }
 
 fn cache_control_for_path(path: &str) -> &'static str {
-    if path == "/health" {
+    if path == "/health" || path.starts_with("/api/verification/numbers") {
         return "no-store";
     }
 
-    if is_html_route(path) {
-        return "public, max-age=0, s-maxage=300, must-revalidate";
+    if path.starts_with("/api/verification/textnow-guide") {
+        return "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
     }
 
-    if path.starts_with("/css/")
-        || path.starts_with("/js/")
-        || path.starts_with("/assets/images/")
-        || path.starts_with("/assets/build/")
-        || path.starts_with("/assets/vendor/")
-    {
-        return "public, max-age=31536000, s-maxage=31536000, immutable";
-    }
-
-    if path.starts_with("/assets/docs/") || path.ends_with(".pdf") {
-        return "public, max-age=604800, s-maxage=2592000, stale-while-revalidate=86400";
-    }
-
-    if path == "/sitemap.xml" || path == "/robots.txt" || path == "/config.json" {
-        return "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400";
-    }
-
-    "public, max-age=86400"
+    "no-store"
 }
 
-fn csp_policy() -> String {
-    "default-src 'self'; \
-     script-src 'self' 'unsafe-inline'; \
-     style-src 'self'; \
-     font-src 'self'; \
-     img-src 'self' data:; \
-     connect-src 'self' https://formsubmit.co; \
-     frame-src 'self'; \
-     object-src 'none'; \
-     base-uri 'self'; \
-     form-action 'self' https://formsubmit.co;"
-        .to_string()
+fn redirect_location(req: &HttpRequest, frontend_origin: &str) -> String {
+    let mut location = format!("{}{}", frontend_origin.trim_end_matches('/'), req.path());
+    let query = req.query_string();
+
+    if !query.is_empty() {
+        location.push('?');
+        location.push_str(query);
+    }
+
+    location
+}
+
+async fn redirect_or_info(req: HttpRequest, config: web::Data<AppConfig>) -> impl Responder {
+    let host = req.connection_info().host().to_string();
+
+    if is_local_host(&host) {
+        return HttpResponse::Ok()
+            .content_type("text/plain; charset=utf-8")
+            .body("Suraga verification API is running locally.");
+    }
+
+    HttpResponse::MovedPermanently()
+        .insert_header((LOCATION, redirect_location(&req, &config.frontend_origin)))
+        .finish()
 }
 
 #[actix_web::main]
@@ -100,10 +78,9 @@ async fn main() -> std::io::Result<()> {
         .or_else(|| std::thread::available_parallelism().ok().map(usize::from))
         .unwrap_or(2);
     let app_config = AppConfig {
-        contact_endpoint: env::var("CONTACT_FORM_ENDPOINT")
-            .unwrap_or_else(|_| "https://formsubmit.co/ajax/suragaelzibaer@gmail.com".to_string()),
+        frontend_origin: env::var("FRONTEND_ORIGIN")
+            .unwrap_or_else(|_| "https://suraga-website.vercel.app".to_string()),
     };
-    let csp = csp_policy();
 
     // Initialize verification database
     let db_path = env::var("DATABASE_URL").unwrap_or_else(|_| "./verification.db".to_string());
@@ -121,7 +98,7 @@ async fn main() -> std::io::Result<()> {
 
     println!("Server starting at http://0.0.0.0:{port}");
     println!("Worker processes: {worker_count}");
-    println!("Serving static files from ./public");
+    println!("Frontend redirect target: {}", app_config.frontend_origin);
 
     HttpServer::new(move || {
         let app_verification_db = verification_db.clone();
@@ -139,15 +116,9 @@ async fn main() -> std::io::Result<()> {
                         CACHE_CONTROL,
                         HeaderValue::from_static(cache_control_for_path(&path)),
                     );
-                    let frame_policy =
-                        if path.starts_with("/assets/docs/") || path.ends_with(".pdf") {
-                            "SAMEORIGIN"
-                        } else {
-                            "DENY"
-                        };
                     response
                         .headers_mut()
-                        .insert(X_FRAME_OPTIONS, HeaderValue::from_static(frame_policy));
+                        .insert(X_FRAME_OPTIONS, HeaderValue::from_static("DENY"));
                     Ok(response)
                 }
             })
@@ -159,26 +130,12 @@ async fn main() -> std::io::Result<()> {
                         "Strict-Transport-Security",
                         "max-age=31536000; includeSubDomains; preload",
                     ))
-                    .add((
-                        "Permissions-Policy",
-                        "camera=(), microphone=(), geolocation=()",
-                    ))
-                    .add(("Content-Security-Policy", csp.clone())),
+                    .add(("Permissions-Policy", "camera=(), microphone=(), geolocation=()")),
             )
             .route("/health", web::get().to(health))
-            .route("/config.json", web::get().to(runtime_config))
             .app_data(app_verification_db)
             .configure(verification::configure)
-            .service(
-                Files::new("/", "./public")
-                    .index_file("index.html")
-                    .prefer_utf8(true)
-                    .default_handler(fn_service(|req: ServiceRequest| async {
-                        let file = NamedFile::open_async("./public/index.html").await?;
-                        let response = file.into_response(req.request());
-                        Ok(req.into_response(response))
-                    })),
-            )
+            .default_service(web::route().to(redirect_or_info))
     })
     .workers(worker_count)
     .bind(("0.0.0.0", port))?
