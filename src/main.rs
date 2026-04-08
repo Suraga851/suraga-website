@@ -1,5 +1,5 @@
 use actix_web::dev::Service;
-use actix_web::http::header::{HeaderValue, CACHE_CONTROL, LOCATION, X_FRAME_OPTIONS};
+use actix_web::http::header::{HeaderName, HeaderValue, CACHE_CONTROL, LOCATION, X_FRAME_OPTIONS};
 use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use std::env;
 
@@ -9,6 +9,7 @@ use verification::db::Database;
 #[derive(Clone)]
 struct AppConfig {
     frontend_origin: String,
+    database_backend: &'static str,
 }
 
 async fn health() -> impl Responder {
@@ -20,15 +21,6 @@ fn is_local_host(host: &str) -> bool {
     host.starts_with("127.0.0.1")
         || host.starts_with("localhost")
         || host.starts_with("[::1]")
-}
-
-fn database_label(database_url: &str) -> &'static str {
-    let value = database_url.trim().to_ascii_lowercase();
-    if value.starts_with("postgres://") || value.starts_with("postgresql://") {
-        "postgres"
-    } else {
-        "sqlite"
-    }
 }
 
 fn cache_control_for_path(path: &str) -> &'static str {
@@ -88,22 +80,38 @@ async fn main() -> std::io::Result<()> {
     let app_config = AppConfig {
         frontend_origin: env::var("FRONTEND_ORIGIN")
             .unwrap_or_else(|_| "https://suraga-website.vercel.app".to_string()),
+        database_backend: "sqlite",
     };
 
     // Initialize verification database
     let db_path = env::var("DATABASE_URL").unwrap_or_else(|_| "./verification.db".to_string());
-    let verification_db = match Database::new(&db_path) {
+    let (verification_db, app_config) = match Database::new(&db_path) {
         Ok(db) => {
+            let backend_label = db.backend_label();
             println!(
                 "Verification database initialized using {} backend",
-                database_label(&db_path)
+                backend_label
             );
-            web::Data::new(db)
+            (
+                web::Data::new(db),
+                AppConfig {
+                    database_backend: backend_label,
+                    ..app_config
+                },
+            )
         }
         Err(e) => {
             println!("Warning: Failed to initialize verification database: {}", e);
             println!("Verification API will not be available");
-            web::Data::new(Database::new(":memory:").unwrap())
+            let fallback = Database::new(":memory:").unwrap();
+            let backend_label = fallback.backend_label();
+            (
+                web::Data::new(fallback),
+                AppConfig {
+                    database_backend: backend_label,
+                    ..app_config
+                },
+            )
         }
     };
 
@@ -113,11 +121,13 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let app_verification_db = verification_db.clone();
+        let app_config_data = web::Data::new(app_config.clone());
+        let database_backend = app_config.database_backend;
         App::new()
-            .app_data(web::Data::new(app_config.clone()))
+            .app_data(app_config_data)
             .wrap(middleware::Logger::default())
             .wrap(middleware::Compress::default())
-            .wrap_fn(|req, srv| {
+            .wrap_fn(move |req, srv| {
                 let path = req.path().to_owned();
                 let fut = srv.call(req);
 
@@ -126,6 +136,10 @@ async fn main() -> std::io::Result<()> {
                     response.headers_mut().insert(
                         CACHE_CONTROL,
                         HeaderValue::from_static(cache_control_for_path(&path)),
+                    );
+                    response.headers_mut().insert(
+                        HeaderName::from_static("x-database-backend"),
+                        HeaderValue::from_static(database_backend),
                     );
                     response
                         .headers_mut()

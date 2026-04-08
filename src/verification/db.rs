@@ -34,6 +34,13 @@ impl Database {
         })
     }
 
+    pub fn backend_label(&self) -> &'static str {
+        match self.backend {
+            Backend::Sqlite(_) => "sqlite",
+            Backend::Postgres(_) => "postgres",
+        }
+    }
+
     /// Register a new phone number.
     pub fn register_number(
         &self,
