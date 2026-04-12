@@ -1,4 +1,4 @@
-# Stage 1: Build Rust API/redirect service
+# Stage 1: Build
 FROM rust:1.87-bookworm AS builder
 WORKDIR /app
 

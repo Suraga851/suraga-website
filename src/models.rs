@@ -1,7 +1,35 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-/// Status of a phone number
+// ── Database row (maps directly from Postgres TEXT column) ──
+
+#[derive(Debug, sqlx::FromRow)]
+pub struct PhoneNumberRow {
+    pub id: i64,
+    pub phone: String,
+    pub country: String,
+    pub status: String,
+    pub notes: Option<String>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
+impl From<PhoneNumberRow> for PhoneNumber {
+    fn from(row: PhoneNumberRow) -> Self {
+        Self {
+            id: row.id,
+            phone: row.phone,
+            country: row.country,
+            status: row.status.into(),
+            notes: row.notes,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+        }
+    }
+}
+
+// ── API models ──
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum NumberStatus {
@@ -12,16 +40,16 @@ pub enum NumberStatus {
 
 impl Default for NumberStatus {
     fn default() -> Self {
-        NumberStatus::Pending
+        Self::Pending
     }
 }
 
 impl std::fmt::Display for NumberStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            NumberStatus::Pending => write!(f, "pending"),
-            NumberStatus::Verified => write!(f, "verified"),
-            NumberStatus::Expired => write!(f, "expired"),
+            Self::Pending => write!(f, "pending"),
+            Self::Verified => write!(f, "verified"),
+            Self::Expired => write!(f, "expired"),
         }
     }
 }
@@ -29,15 +57,14 @@ impl std::fmt::Display for NumberStatus {
 impl From<String> for NumberStatus {
     fn from(s: String) -> Self {
         match s.as_str() {
-            "verified" => NumberStatus::Verified,
-            "expired" => NumberStatus::Expired,
-            _ => NumberStatus::Pending,
+            "verified" => Self::Verified,
+            "expired" => Self::Expired,
+            _ => Self::Pending,
         }
     }
 }
 
-/// A registered phone number for WhatsApp verification
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PhoneNumber {
     pub id: i64,
@@ -49,25 +76,22 @@ pub struct PhoneNumber {
     pub updated_at: DateTime<Utc>,
 }
 
-/// Request to register a new number
 #[derive(Debug, Deserialize)]
-pub struct RegisterNumberRequest {
+pub struct RegisterRequest {
     pub phone: String,
     pub country: String,
     pub notes: Option<String>,
 }
 
-/// Response for number registration
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct RegisterNumberResponse {
+pub struct RegisterResponse {
     pub id: i64,
     pub phone: String,
     pub status: NumberStatus,
     pub message: String,
 }
 
-/// TextNow guide information
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TextNowGuide {

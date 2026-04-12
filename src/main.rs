@@ -1,169 +1,86 @@
-use actix_web::dev::Service;
-use actix_web::http::header::{HeaderName, HeaderValue, CACHE_CONTROL, LOCATION, X_FRAME_OPTIONS};
-use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
-use std::env;
+mod db;
+mod error;
+mod handlers;
+mod models;
 
-mod verification;
-use verification::db::Database;
+use axum::{middleware, routing::{delete, get, post}, Router};
+use handlers::AppState;
+use tower_http::{compression::CompressionLayer, cors::CorsLayer, trace::TraceLayer};
 
-#[derive(Clone)]
-struct AppConfig {
-    frontend_origin: String,
-    database_backend: &'static str,
-}
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    // ── Logging ──
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            tracing_subscriber::EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| "suraga_website=info,tower_http=debug".into()),
+        )
+        .init();
 
-async fn health(config: web::Data<AppConfig>) -> impl Responder {
-    HttpResponse::Ok().body(format!("ok:{}", config.database_backend))
-}
+    // ── Config ──
+    let frontend_origin =
+        std::env::var("FRONTEND_ORIGIN").unwrap_or_else(|_| "https://suraga-website.vercel.app".into());
 
-fn is_local_host(host: &str) -> bool {
-    let host = host.to_ascii_lowercase();
-    host.starts_with("127.0.0.1")
-        || host.starts_with("localhost")
-        || host.starts_with("[::1]")
-}
+    let database_url =
+        std::env::var("DATABASE_URL").expect("DATABASE_URL environment variable must be set");
 
-fn cache_control_for_path(path: &str) -> &'static str {
-    if path == "/health" || path.starts_with("/api/verification/numbers") {
-        return "no-store";
-    }
-
-    if path.starts_with("/api/verification/textnow-guide") {
-        return "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
-    }
-
-    "no-store"
-}
-
-fn redirect_location(req: &HttpRequest, frontend_origin: &str) -> String {
-    let mut location = format!("{}{}", frontend_origin.trim_end_matches('/'), req.path());
-    let query = req.query_string();
-
-    if !query.is_empty() {
-        location.push('?');
-        location.push_str(query);
-    }
-
-    location
-}
-
-async fn redirect_or_info(req: HttpRequest, config: web::Data<AppConfig>) -> impl Responder {
-    let host = req.connection_info().host().to_string();
-
-    if is_local_host(&host) {
-        return HttpResponse::Ok()
-            .content_type("text/plain; charset=utf-8")
-            .body("Suraga verification API is running locally.");
-    }
-
-    HttpResponse::MovedPermanently()
-        .insert_header((LOCATION, redirect_location(&req, &config.frontend_origin)))
-        .finish()
-}
-
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    if env::var_os("RUST_LOG").is_none() {
-        env::set_var("RUST_LOG", "actix_web=info");
-    }
-    env_logger::init();
-
-    let port = env::var("PORT")
+    let port: u16 = std::env::var("PORT")
         .ok()
-        .and_then(|value| value.parse::<u16>().ok())
+        .and_then(|v| v.parse().ok())
         .unwrap_or(8080);
-    let worker_count = env::var("WEB_CONCURRENCY")
-        .ok()
-        .and_then(|value| value.parse::<usize>().ok())
-        .or_else(|| std::thread::available_parallelism().ok().map(usize::from))
-        .unwrap_or(2);
-    let app_config = AppConfig {
-        frontend_origin: env::var("FRONTEND_ORIGIN")
-            .unwrap_or_else(|_| "https://suraga-website.vercel.app".to_string()),
-        database_backend: "sqlite",
+
+    // ── Database ──
+    let db = db::Database::new(&database_url).await?;
+
+    // ── Router ──
+    let state = AppState {
+        db,
+        frontend_origin: frontend_origin.clone(),
     };
 
-    // Initialize verification database
-    let db_path = env::var("DATABASE_URL").unwrap_or_else(|_| "./verification.db".to_string());
-    let (verification_db, app_config) = match Database::new(&db_path) {
-        Ok(db) => {
-            let backend_label = db.backend_label();
-            println!(
-                "Verification database initialized using {} backend",
-                backend_label
-            );
-            (
-                web::Data::new(db),
-                AppConfig {
-                    database_backend: backend_label,
-                    ..app_config
-                },
-            )
-        }
-        Err(e) => {
-            println!("Warning: Failed to initialize verification database: {}", e);
-            println!("Verification API will not be available");
-            let fallback = Database::new(":memory:").unwrap();
-            let backend_label = fallback.backend_label();
-            (
-                web::Data::new(fallback),
-                AppConfig {
-                    database_backend: backend_label,
-                    ..app_config
-                },
-            )
-        }
-    };
+    let api = Router::new()
+        .route("/numbers", get(handlers::list_numbers))
+        .route("/numbers", post(handlers::register_number))
+        .route("/numbers/{id}", get(handlers::get_number))
+        .route("/numbers/{id}/verify", post(handlers::mark_verified))
+        .route("/numbers/{id}", delete(handlers::delete_number))
+        .route("/textnow-guide", get(handlers::get_textnow_guide));
 
-    println!("Server starting at http://0.0.0.0:{port}");
-    println!("Worker processes: {worker_count}");
-    println!("Frontend redirect target: {}", app_config.frontend_origin);
+    let app = Router::new()
+        .route("/health", get(handlers::health))
+        .nest("/api/verification", api)
+        .fallback(handlers::redirect_to_frontend)
+        .with_state(state)
+        .layer(CompressionLayer::new())
+        .layer(TraceLayer::new_for_http())
+        .layer(CorsLayer::permissive())
+        .layer(middleware::from_fn(security_headers));
 
-    HttpServer::new(move || {
-        let app_verification_db = verification_db.clone();
-        let app_config_data = web::Data::new(app_config.clone());
-        let database_backend = app_config.database_backend;
-        App::new()
-            .app_data(app_config_data)
-            .wrap(middleware::Logger::default())
-            .wrap(middleware::Compress::default())
-            .wrap_fn(move |req, srv| {
-                let path = req.path().to_owned();
-                let fut = srv.call(req);
+    tracing::info!("Listening on 0.0.0.0:{port}");
+    tracing::info!("Frontend: {frontend_origin}");
 
-                async move {
-                    let mut response = fut.await?;
-                    response.headers_mut().insert(
-                        CACHE_CONTROL,
-                        HeaderValue::from_static(cache_control_for_path(&path)),
-                    );
-                    response.headers_mut().insert(
-                        HeaderName::from_static("x-database-backend"),
-                        HeaderValue::from_static(database_backend),
-                    );
-                    response
-                        .headers_mut()
-                        .insert(X_FRAME_OPTIONS, HeaderValue::from_static("DENY"));
-                    Ok(response)
-                }
-            })
-            .wrap(
-                middleware::DefaultHeaders::new()
-                    .add(("X-Content-Type-Options", "nosniff"))
-                    .add(("Referrer-Policy", "strict-origin-when-cross-origin"))
-                    .add((
-                        "Strict-Transport-Security",
-                        "max-age=31536000; includeSubDomains; preload",
-                    ))
-                    .add(("Permissions-Policy", "camera=(), microphone=(), geolocation=()")),
-            )
-            .route("/health", web::get().to(health))
-            .app_data(app_verification_db)
-            .configure(verification::configure)
-            .default_service(web::route().to(redirect_or_info))
-    })
-    .workers(worker_count)
-    .bind(("0.0.0.0", port))?
-    .run()
-    .await
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}")).await?;
+    axum::serve(listener, app).await?;
+
+    Ok(())
+}
+
+/// Add security headers to every response.
+async fn security_headers(
+    req: axum::http::Request<axum::body::Body>,
+    next: middleware::Next,
+) -> axum::response::Response {
+    let mut response = next.run(req).await;
+
+    let headers = response.headers_mut();
+    headers.insert("x-content-type-options", "nosniff".parse().unwrap());
+    headers.insert("referrer-policy", "strict-origin-when-cross-origin".parse().unwrap());
+    headers.insert(
+        "strict-transport-security",
+        "max-age=31536000; includeSubDomains; preload".parse().unwrap(),
+    );
+    headers.insert("permissions-policy", "camera=(), microphone=(), geolocation=()".parse().unwrap());
+    headers.insert("x-frame-options", "DENY".parse().unwrap());
+
+    response
 }
