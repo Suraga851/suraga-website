@@ -243,6 +243,8 @@ select:focus-visible,
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease, transform 0.8s ease;
+    content-visibility: auto;
+    contain-intrinsic-size: 700px;
 }
 
 .reveal-section.revealed {
@@ -1843,7 +1845,7 @@ section {
     outline-offset: 3px;
 }
 
-/* ===== Loading Animation for Render ===== */
+/* ===== Loading Animation ===== */
 .page-loader {
     position: fixed;
     inset: 0;

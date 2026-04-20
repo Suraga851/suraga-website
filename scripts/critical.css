@@ -63,24 +63,13 @@ h1, h2, h3, h4, h5, h6 {
     z-index: -1; overflow: hidden;
     background: radial-gradient(circle at 15% 20%, rgba(20, 184, 166, 0.3), transparent 45%),
         radial-gradient(circle at 84% 12%, rgba(255, 107, 74, 0.2), transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(15, 118, 110, 0.15), transparent 50%),
-        linear-gradient(145deg, #e0f2f1 0%, #f0fdfa 38%, #e0f2f1 100%);
-    background-size: 180% 180%;
-    animation: gradientShift 24s ease-in-out infinite;
-}
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    25% { background-position: 100% 50%; }
-    50% { background-position: 100% 0%; }
-    75% { background-position: 0% 100%; }
-    100% { background-position: 0% 50%; }
+        linear-gradient(145deg, #e8f4f3 0%, #f8fcfc 38%, #edf6fb 100%);
 }
 
 /* Navbar */
 .navbar {
     position: fixed; top: 0; left: 0; width: 100%;
     background: var(--glass-bg);
-    backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
     border-bottom: 1px solid var(--glass-border);
     box-shadow: var(--shadow-sm); z-index: 40;
     transition: all var(--transition-normal);
@@ -182,7 +171,7 @@ h1, h2, h3, h4, h5, h6 {
 .hero-image-glow {
     position: absolute; inset: 0;
     background: linear-gradient(135deg, #2dd4bf, var(--primary-teal-light));
-    border-radius: 50%; filter: blur(40px); opacity: 0.3;
+    border-radius: 50%; opacity: 0.2;
 }
 .hero-image {
     border-radius: 50%; width: 18rem; height: 18rem;

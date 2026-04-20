@@ -207,6 +207,33 @@
     }
 }
 
+/* ===== Touch / Mobile Performance ===== */
+@media (max-width: 767px), (pointer: coarse) {
+    .animated-bg {
+        animation: none;
+        background-size: auto;
+    }
+
+    .animated-bg::before,
+    .animated-bg::after {
+        display: none;
+    }
+
+    .navbar,
+    .lang-switch-btn,
+    .hero-image-container,
+    .section-white .container,
+    .section-gradient .container {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .hero-image-glow,
+    .god-eye {
+        display: none;
+    }
+}
+
 /* ===== RTL Responsive Adjustments ===== */
 @media (max-width: 767px) {
 

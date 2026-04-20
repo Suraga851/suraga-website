@@ -500,7 +500,7 @@
     <script>
         // API Base URL
         const API_BASE = '/api/verification';
-        const API_UNAVAILABLE_MESSAGE = 'The verification backend is waking up or unavailable. If it is hosted on a free Render service, wait about a minute and refresh.';
+        const API_UNAVAILABLE_MESSAGE = 'The verification service is temporarily unavailable. Refresh and try again in a moment.';
 
         // DOM Elements
         const registerForm = document.getElementById('registerForm');
@@ -517,11 +517,57 @@
             }, 5000);
         }
 
+        async function parseApiPayload(response) {
+            const contentType = response.headers.get('content-type') || '';
+
+            if (contentType.includes('application/json')) {
+                return response.json();
+            }
+
+            const text = await response.text();
+            return text ? { message: text } : null;
+        }
+
+        function getApiErrorMessage(payload, fallback) {
+            if (!payload) {
+                return fallback;
+            }
+
+            if (typeof payload === 'string') {
+                return payload;
+            }
+
+            if (typeof payload.error === 'string' && payload.error) {
+                return payload.error;
+            }
+
+            if (typeof payload.message === 'string' && payload.message) {
+                return payload.message;
+            }
+
+            return fallback;
+        }
+
         // Load TextNow guide
         async function loadGuide() {
             try {
                 const response = await fetch(`${API_BASE}/textnow-guide`);
-                const guide = await response.json();
+                const guide = await parseApiPayload(response);
+
+                if (!response.ok) {
+                    throw new Error(getApiErrorMessage(guide, API_UNAVAILABLE_MESSAGE));
+                }
+
+                const guideStepsEl = document.getElementById('guideSteps');
+                guideStepsEl.innerHTML = guide.steps.map(step =>
+                    `<li>
+                        <span class="step-number">${step.stepNumber}</span>
+                        <div class="step-content">
+                            <h3>${escapeHtml(step.title)}</h3>
+                            <p>${escapeHtml(step.description)}</p>
+                        </div>
+                    </li>`
+                ).join('');
 
                 // Update download links
                 const downloadLinksEl = document.getElementById('downloadLinks');
@@ -534,7 +580,7 @@
 
             } catch (error) {
                 console.error('Failed to load guide:', error);
-                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
+                showMessage(error.message || API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 
@@ -542,7 +588,11 @@
         async function loadNumbers() {
             try {
                 const response = await fetch(`${API_BASE}/numbers`);
-                const numbers = await response.json();
+                const numbers = await parseApiPayload(response);
+
+                if (!response.ok) {
+                    throw new Error(getApiErrorMessage(numbers, API_UNAVAILABLE_MESSAGE));
+                }
 
                 if (numbers.length === 0) {
                     numbersList.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 2rem;">No numbers registered yet. Add your first TextNow number above!</p>';
@@ -575,7 +625,7 @@
 
             } catch (error) {
                 console.error('Failed to load numbers:', error);
-                numbersList.innerHTML = `<p style="color: #ff4757;">${escapeHtml(API_UNAVAILABLE_MESSAGE)}</p>`;
+                numbersList.innerHTML = `<p style="color: #ff4757;">${escapeHtml(error.message || API_UNAVAILABLE_MESSAGE)}</p>`;
             }
         }
 
@@ -604,19 +654,19 @@
                     body: JSON.stringify({ phone, country, notes })
                 });
 
-                const data = await response.json();
+                const data = await parseApiPayload(response);
 
                 if (response.ok) {
                     showMessage(`Number ${data.phone} registered successfully!`, 'success');
                     registerForm.reset();
                     loadNumbers();
                 } else {
-                    showMessage(data || 'Failed to register number', 'error');
+                    showMessage(getApiErrorMessage(data, 'Failed to register number'), 'error');
                 }
 
             } catch (error) {
                 console.error('Failed to register:', error);
-                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
+                showMessage(error.message || API_UNAVAILABLE_MESSAGE, 'error');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Register Number';
@@ -630,16 +680,18 @@
                     method: 'POST'
                 });
 
+                const payload = await parseApiPayload(response);
+
                 if (response.ok) {
                     showMessage('Number marked as verified!', 'success');
                     loadNumbers();
                 } else {
-                    showMessage('Failed to update status', 'error');
+                    showMessage(getApiErrorMessage(payload, 'Failed to update status'), 'error');
                 }
 
             } catch (error) {
                 console.error('Failed to mark verified:', error);
-                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
+                showMessage(error.message || API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 
@@ -654,16 +706,18 @@
                     method: 'DELETE'
                 });
 
+                const payload = response.status === 204 ? null : await parseApiPayload(response);
+
                 if (response.ok) {
                     showMessage('Number deleted successfully', 'success');
                     loadNumbers();
                 } else {
-                    showMessage('Failed to delete number', 'error');
+                    showMessage(getApiErrorMessage(payload, 'Failed to delete number'), 'error');
                 }
 
             } catch (error) {
                 console.error('Failed to delete:', error);
-                showMessage(API_UNAVAILABLE_MESSAGE, 'error');
+                showMessage(error.message || API_UNAVAILABLE_MESSAGE, 'error');
             }
         }
 

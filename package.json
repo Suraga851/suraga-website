@@ -12,13 +12,25 @@
     "check:generated": "npm run build && git diff --exit-code -- public/index.html public/ar.html public/robots.txt public/sitemap.xml public/config.json public/assets/build",
     "check:js": "node scripts/check-js-syntax.mjs",
     "check": "npm run check:generated && npm run check:js",
-    "test:smoke": "playwright test"
+    "test:smoke": "playwright test",
+    "sync": "npm run build && npx cap sync"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/ios": "^8.3.1",
     "@fortawesome/fontawesome-free": "^7.2.0",
     "@playwright/test": "^1.51.0",
     "esbuild": "^0.27.3",
     "http-server": "^14.1.1",
     "sharp": "^0.34.5"
+  },
+  "dependencies": {
+    "@capacitor/core": "^8.3.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
+    "@vercel/functions": "^3.4.3",
+    "pg": "^8.20.0"
   }
 }

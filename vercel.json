@@ -3,6 +3,7 @@
   "outputDirectory": "public",
   "cleanUrls": false,
   "trailingSlash": false,
+  "regions": ["fra1"],
   "headers": [
     {
       "source": "/(.*)",
@@ -73,10 +74,8 @@
   ],
   "rewrites": [
     {
-      "source": "/api/verification/:path*",
-      "destination": "https://suraga-website.onrender.com/api/verification/:path*"
-    },
-    { "source": "/",      "destination": "/index.html" },
-    { "source": "/(.*)", "destination": "/$1" }
+      "source": "/health",
+      "destination": "/api/health"
+    }
   ]
 }

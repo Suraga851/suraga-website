@@ -5,7 +5,10 @@ import { spawnSync } from "node:child_process";
 
 const currentFile = fileURLToPath(import.meta.url);
 const rootDir = path.resolve(path.dirname(currentFile), "..");
-const jsRoot = path.join(rootDir, "public", "js");
+const jsRoots = [
+    path.join(rootDir, "public", "js"),
+    path.join(rootDir, "api")
+];
 
 const collectJsFiles = async (directory) => {
     const entries = await fs.readdir(directory, { withFileTypes: true });
@@ -26,9 +29,19 @@ const collectJsFiles = async (directory) => {
 };
 
 const run = async () => {
-    const files = await collectJsFiles(jsRoot);
+    const files = [];
+
+    for (const root of jsRoots) {
+        try {
+            await fs.access(root);
+            files.push(...await collectJsFiles(root));
+        } catch {
+            // Skip optional roots that are not present.
+        }
+    }
+
     if (files.length === 0) {
-        throw new Error("No JavaScript files found in public/js.");
+        throw new Error("No JavaScript files found in the configured syntax-check roots.");
     }
 
     for (const file of files) {

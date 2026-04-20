@@ -6,12 +6,18 @@ import { setCurrentYear } from "./modules/year.js";
 import { getMessages } from "./modules/i18n.js";
 import { createStatusHandlers } from "./modules/status.js";
 import { initBackToTop } from "./modules/backToTop.js";
-import { initPageLoader } from "./modules/pageLoader.js";
 import { initImageLoader } from "./modules/imageLoader.js";
 import { initGodsEye } from "./modules/godsEye.js";
+import { initCapacitorHooks } from "./modules/capacitor.js";
 
-// Initialize page loader immediately
-initPageLoader();
+const scheduleNonCriticalWork = (callback) => {
+    if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(() => callback(), { timeout: 1500 });
+        return;
+    }
+
+    window.setTimeout(callback, 1);
+};
 
 const isRtl = document.documentElement.dir === "rtl";
 const messages = getMessages(isRtl);
@@ -19,18 +25,22 @@ const { setFormStatus, clearFormStatus } = createStatusHandlers(document.getElem
 
 const navigation = initNavigation();
 initRevealSections();
-initPdfModal({
-    messages,
-    setFormStatus,
-    clearFormStatus,
-    isMenuOpen: navigation.isMobileMenuOpen
-});
-initContactForm({
-    messages,
-    setFormStatus,
-    clearFormStatus
-});
 setCurrentYear();
-initBackToTop();
 initImageLoader();
-initGodsEye();
+initCapacitorHooks();
+
+scheduleNonCriticalWork(() => {
+    initPdfModal({
+        messages,
+        setFormStatus,
+        clearFormStatus,
+        isMenuOpen: navigation.isMobileMenuOpen
+    });
+    initContactForm({
+        messages,
+        setFormStatus,
+        clearFormStatus
+    });
+    initBackToTop();
+    initGodsEye();
+});
