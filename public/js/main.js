@@ -28,19 +28,19 @@ initRevealSections();
 setCurrentYear();
 initImageLoader();
 initCapacitorHooks();
+initPdfModal({
+    messages,
+    setFormStatus,
+    clearFormStatus,
+    isMenuOpen: navigation.isMobileMenuOpen
+});
+initContactForm({
+    messages,
+    setFormStatus,
+    clearFormStatus
+});
 
 scheduleNonCriticalWork(() => {
-    initPdfModal({
-        messages,
-        setFormStatus,
-        clearFormStatus,
-        isMenuOpen: navigation.isMobileMenuOpen
-    });
-    initContactForm({
-        messages,
-        setFormStatus,
-        clearFormStatus
-    });
     initBackToTop();
     initGodsEye();
 });
