@@ -608,6 +608,17 @@ const renderSitemap = () => {
     const now = new Date().toISOString().slice(0, 10);
     const en = `${siteConfig.baseUrl}/`;
     const ar = `${siteConfig.baseUrl}/ar.html`;
+    const extraUrls = (siteConfig.extraSitemapPaths || [])
+        .map((extraPath) => {
+            const pathWithSlash = extraPath.startsWith("/") ? extraPath : `/${extraPath}`;
+            return `    <url>
+        <loc>${siteConfig.baseUrl}${pathWithSlash}</loc>
+        <lastmod>${now}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>`;
+        })
+        .join("\n");
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -628,7 +639,7 @@ const renderSitemap = () => {
         <xhtml:link rel="alternate" hreflang="en" href="${en}"/>
         <xhtml:link rel="alternate" hreflang="ar" href="${ar}"/>
     </url>
-</urlset>
+${extraUrls ? `${extraUrls}\n` : ""}</urlset>
 `;
 };
 

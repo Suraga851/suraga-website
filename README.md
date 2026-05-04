@@ -6,6 +6,7 @@ Vercel-hosted bilingual portfolio site (English + Arabic) with the legacy Render
 - Self-hosted fonts/icons (no runtime Google Fonts or CDN icon calls).
 - Modern image variants (`.webp`/`.avif`) generated for hero/background.
 - UI/UX and behavior served from `public/`.
+- Static exported Replit microsites live under `public/suraga-promo/` and `public/suraga-pitch-deck/`.
 - Only deployable site assets should live in `public/`; unrelated experiments belong outside the deploy root.
 
 ## Architecture

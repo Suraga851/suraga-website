@@ -13,6 +13,7 @@ export const siteConfig = {
     headshotPath: "assets/images/suraga-headshot.jpg",
     socialImagePath: "assets/images/suraga-headshot.jpg",
     faviconPath: "assets/images/suraga-headshot.jpg",
+    extraSitemapPaths: ["/suraga-promo/", "/suraga-pitch-deck/"],
     docs: [
         { key: "cv-suraga-dubai", icon: "pdf" },
         { key: "experience-letter-taaleem", icon: "pdf" },
