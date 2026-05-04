@@ -107,6 +107,22 @@
     {
       "source": "/health",
       "destination": "/api/health"
+    },
+    {
+      "source": "/suraga-pitch-deck",
+      "destination": "/suraga-pitch-deck/index.html"
+    },
+    {
+      "source": "/suraga-pitch-deck/",
+      "destination": "/suraga-pitch-deck/index.html"
+    },
+    {
+      "source": "/suraga-promo",
+      "destination": "/suraga-promo/index.html"
+    },
+    {
+      "source": "/suraga-promo/",
+      "destination": "/suraga-promo/index.html"
     }
   ]
 }
