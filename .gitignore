@@ -13,6 +13,9 @@ test-results/
 # Local environment files
 .env
 .env.*
+admin_check.txt
+archive/
+windows_update_repair_*.log
 
 # Pre-compressed build artifacts
 public/**/*.gz

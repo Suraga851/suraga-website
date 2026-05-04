@@ -1,7 +1,9 @@
+const siteUrl = (process.env.SITE_URL || "https://suraga-website.vercel.app").trim().replace(/\/+$/u, "");
+
 export const siteConfig = {
     siteName: "Suraga Elzibaer",
     searchAliases: ["Suraga Website", "Suraga Elzibaer Website", "Suraqa Website"],
-    baseUrl: "https://suraga-website.vercel.app",
+    baseUrl: siteUrl,
     themeColor: "#0d9488",
     email: "suragaelzibaer@gmail.com",
     phoneRaw: "+971557177083",
@@ -46,12 +48,12 @@ export const locales = {
             closeDocument: "Close document viewer"
         },
         meta: {
-            title: "Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai",
+            title: "Suraga Elzibaer | Learning Assistant in Dubai",
             description:
-                "Official Suraga website. Suraga Elzibaer is a bilingual Learning Assistant and AI Literacy Assistant Teacher in Dubai specializing in inclusive education, differentiated learning, and Arabic/Islamic support for international schools.",
+                "Suraga Elzibaer is a bilingual Learning Assistant and AI Literacy Assistant Teacher in Dubai specializing in inclusive education, differentiated learning, and Arabic and Islamic support for international schools.",
             keywords:
                 "Suraga website, Suraga Elzibaer website, Suraga Elzibaer, Learning Assistant Dubai, Teaching Assistant Dubai, AI Literacy Assistant Teacher Dubai, SEN support UAE, Inclusive Education Specialist Dubai, Arabic Islamic support teacher, Bilingual Arabic English educator",
-            ogTitle: "Suraga Website | Suraga Elzibaer | Learning Assistant in Dubai",
+            ogTitle: "Suraga Elzibaer | Learning Assistant in Dubai",
             ogDescription:
                 "Professional Learning Assistant and AI Literacy Assistant Teacher in Dubai with expertise in inclusive education and bilingual support"
         },

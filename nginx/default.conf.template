@@ -60,6 +60,7 @@ server {
     location = /index.html {
         include /etc/nginx/snippets/security-headers.conf;
         add_header Cache-Control "public, max-age=0, s-maxage=300, must-revalidate" always;
+        return 308 /;
     }
 
     location = /ar.html {
@@ -79,7 +80,14 @@ server {
 
     location = /config.json {
         include /etc/nginx/snippets/security-headers.conf;
+        add_header X-Robots-Tag "noindex, nofollow" always;
         add_header Cache-Control "public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400" always;
+    }
+
+    location = /verify-whatsapp.html {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+        add_header Cache-Control "public, max-age=0, s-maxage=300, must-revalidate" always;
     }
 
     location ^~ /css/ {

@@ -1,9 +1,0 @@
-*.iml
-.gradle/
-/local.properties
-/.idea/
-/captures/
-/build/
-app/build/
-app/src/main/jniLibs/
-rust-lib/target/

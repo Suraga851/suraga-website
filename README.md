@@ -6,6 +6,7 @@ Vercel-hosted bilingual portfolio site (English + Arabic) with the legacy Render
 - Self-hosted fonts/icons (no runtime Google Fonts or CDN icon calls).
 - Modern image variants (`.webp`/`.avif`) generated for hero/background.
 - UI/UX and behavior served from `public/`.
+- Only deployable site assets should live in `public/`; unrelated experiments belong outside the deploy root.
 
 ## Architecture
 
@@ -79,6 +80,10 @@ Use this workflow:
 The page also carries a `data-contact-endpoint` fallback on `<body>`.
 
 ## Deployment
+
+Build-time SEO environment variables:
+- `SITE_URL`: canonical production origin used for generated canonical tags, sitemap URLs, and structured data.
+- `GOOGLE_SITE_VERIFICATION`: optional Google Search Console verification token injected as a meta tag during build.
 
 Production target today is:
 - Vercel for the public frontend

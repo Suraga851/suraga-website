@@ -81,6 +81,10 @@ For durable storage:
 
 To change the endpoint, update `site-src/content.mjs` (`siteConfig.contactEndpointDefault`) and rebuild.
 
+Build-time SEO environment variables:
+- `SITE_URL`: canonical public origin for generated metadata, sitemap entries, and structured data.
+- `GOOGLE_SITE_VERIFICATION`: optional Search Console verification token injected into generated HTML.
+
 ## Troubleshooting
 
 - If build fails: check Render build logs first.

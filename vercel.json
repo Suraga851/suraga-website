@@ -1,9 +1,17 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm ci && npm run build",
   "outputDirectory": "public",
   "cleanUrls": false,
   "trailingSlash": false,
   "regions": ["fra1"],
+  "redirects": [
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -47,7 +55,16 @@
       "source": "/config.json",
       "headers": [
         { "key": "X-Frame-Options",    "value": "DENY" },
+        { "key": "X-Robots-Tag",       "value": "noindex, nofollow" },
         { "key": "Cache-Control",      "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/verify-whatsapp.html",
+      "headers": [
+        { "key": "X-Frame-Options",    "value": "DENY" },
+        { "key": "X-Robots-Tag",       "value": "noindex, nofollow" },
+        { "key": "Cache-Control",      "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {

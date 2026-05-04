@@ -6,6 +6,7 @@ import { locales, siteConfig } from "../site-src/content.mjs";
 const currentFile = fileURLToPath(import.meta.url);
 const rootDir = path.resolve(path.dirname(currentFile), "..");
 const publicDir = path.join(rootDir, "public");
+const googleSiteVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim() || "";
 
 const { shared, ...localeMap } = locales;
 
@@ -228,6 +229,11 @@ const renderPage = (localeKey, locale) => {
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <meta name="author" content="${escapeHtml(siteConfig.siteName)}">
     <meta name="theme-color" content="${escapeHtml(siteConfig.themeColor || "#0d9488")}">
+    ${
+        googleSiteVerification
+            ? `<meta name="google-site-verification" content="${escapeHtml(googleSiteVerification)}">`
+            : ""
+    }
     <meta property="og:title" content="${escapeHtml(locale.meta.ogTitle)}">
     <meta property="og:description" content="${escapeHtml(locale.meta.ogDescription)}">
     <meta property="og:type" content="website">
@@ -263,11 +269,8 @@ const renderPage = (localeKey, locale) => {
     <link rel="icon" type="image/png" sizes="64x64" href="assets/images/favicon-64.png">
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 
-    <!-- Critical CSS: inline above-the-fold styles to eliminate render-blocking -->
-    <style>__CRITICAL_CSS__</style>
-    <!-- Full stylesheet loaded asynchronously -->
-    <link rel="stylesheet" href="__ASSET_CSS__" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="__ASSET_CSS__"></noscript>
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="__ASSET_CSS__">
 
     <!-- Structured Data -->
     <script type="application/ld+json">

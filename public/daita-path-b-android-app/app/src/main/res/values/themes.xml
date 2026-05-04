@@ -1,9 +1,0 @@
-<resources>
-    <style name="Theme.SuragaSuperSecVPN" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/suraga_primary</item>
-        <item name="colorOnPrimary">@color/suraga_on_primary</item>
-        <item name="colorSecondary">@color/suraga_secondary</item>
-        <item name="colorSurface">@color/card_surface</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-</resources>

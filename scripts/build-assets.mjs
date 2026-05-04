@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { build, transform } from "esbuild";
+import { build } from "esbuild";
 
 const currentFile = fileURLToPath(import.meta.url);
 const rootDir = path.resolve(path.dirname(currentFile), "..");
@@ -39,23 +39,6 @@ const writeManifest = async (manifest) => {
 };
 
 /**
- * Read and minify the hand-crafted critical CSS file.
- * This contains the minimal above-the-fold styles (navbar, hero, animated-bg,
- * layout, variables) needed for first paint without FOUC.
- */
-const criticalCssPath = path.join(rootDir, "scripts", "critical.css");
-let criticalCssCache = null;
-
-const getCriticalCss = async () => {
-    if (criticalCssCache !== null) return criticalCssCache;
-
-    const raw = await fs.readFile(criticalCssPath, "utf8");
-    const minified = await transform(raw, { loader: "css", minify: true });
-    criticalCssCache = minified.code.trim();
-    return criticalCssCache;
-};
-
-/**
  * Minify HTML by collapsing whitespace while preserving <pre>, <script>, <style> content.
  */
 const minifyHtml = (html) => {
@@ -89,23 +72,20 @@ const minifyHtml = (html) => {
 };
 
 const rewriteHtmlBundles = async ({ jsBundlePath, cssEnBundlePath, cssArBundlePath }) => {
-    const criticalCss = await getCriticalCss();
-
     const htmlFiles = [
-        { file: "index.html", cssBundlePath: cssEnBundlePath, criticalCss },
-        { file: "ar.html", cssBundlePath: cssArBundlePath, criticalCss }
+        { file: "index.html", cssBundlePath: cssEnBundlePath },
+        { file: "ar.html", cssBundlePath: cssArBundlePath }
     ];
 
     await Promise.all(
-        htmlFiles.map(async ({ file, cssBundlePath, criticalCss }) => {
+        htmlFiles.map(async ({ file, cssBundlePath }) => {
             const fullPath = path.join(publicDir, file);
             const html = await fs.readFile(fullPath, "utf8");
             let rewritten = html
                 .replaceAll("__ASSET_JS__", jsBundlePath)
-                .replaceAll("__ASSET_CSS__", cssBundlePath)
-                .replaceAll("__CRITICAL_CSS__", criticalCss);
+                .replaceAll("__ASSET_CSS__", cssBundlePath);
 
-            if (rewritten.includes("__ASSET_") || rewritten.includes("__CRITICAL_CSS__")) {
+            if (rewritten.includes("__ASSET_")) {
                 throw new Error(`Unresolved asset placeholder in ${file}`);
             }
 
