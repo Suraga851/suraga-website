@@ -10,6 +10,16 @@
       "source": "/index.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/suraga-pitch-deck",
+      "destination": "/suraga-pitch-deck/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/suraga-promo",
+      "destination": "/suraga-promo/index.html",
+      "permanent": false
     }
   ],
   "headers": [
