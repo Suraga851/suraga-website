@@ -109,19 +109,19 @@
       "destination": "/api/health"
     },
     {
+      "source": "/suraga-pitch-deck/:path*",
+      "destination": "/suraga-pitch-deck/index.html"
+    },
+    {
       "source": "/suraga-pitch-deck",
       "destination": "/suraga-pitch-deck/index.html"
     },
     {
-      "source": "/suraga-pitch-deck/",
-      "destination": "/suraga-pitch-deck/index.html"
-    },
-    {
-      "source": "/suraga-promo",
+      "source": "/suraga-promo/:path*",
       "destination": "/suraga-promo/index.html"
     },
     {
-      "source": "/suraga-promo/",
+      "source": "/suraga-promo",
       "destination": "/suraga-promo/index.html"
     }
   ]
