@@ -62,3 +62,15 @@ test("contact form submits with success message", async ({ page }) => {
     await page.getByRole("button", { name: /Send Message/i }).click();
     await expect(page.locator("#form-status")).toContainText("Thank you!");
 });
+
+test("promo microsite renders from local static assets", async ({ page }) => {
+    await page.goto("/suraga-promo/");
+    await expect(page).toHaveTitle(/Educator & AI Literacy/i);
+    await expect(page.locator("#root > *")).toBeVisible();
+});
+
+test("pitch deck microsite renders from local static assets", async ({ page }) => {
+    await page.goto("/suraga-pitch-deck/");
+    await expect(page).toHaveTitle(/Pitch Deck/i);
+    await expect(page.locator("#root > *")).toBeVisible();
+});

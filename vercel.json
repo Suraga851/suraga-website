@@ -20,6 +20,16 @@
       "source": "/suraga-promo",
       "destination": "/suraga-promo/index.html",
       "permanent": false
+    },
+    {
+      "source": "/suraga-3d",
+      "destination": "/suraga-3d/index.html",
+      "permanent": false
+    },
+    {
+      "source": "/suraga-3d/ar",
+      "destination": "/suraga-3d/ar/index.html",
+      "permanent": false
     }
   ],
   "headers": [
@@ -111,6 +121,13 @@
         { "key": "X-Frame-Options",    "value": "DENY" },
         { "key": "Cache-Control",      "value": "public, max-age=31536000, immutable" }
       ]
+    },
+    {
+      "source": "/suraga-3d/_next/static/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options",    "value": "DENY" },
+        { "key": "Cache-Control",      "value": "public, max-age=31536000, immutable" }
+      ]
     }
   ],
   "rewrites": [
@@ -133,6 +150,22 @@
     {
       "source": "/suraga-promo",
       "destination": "/suraga-promo/index.html"
+    },
+    {
+      "source": "/suraga-3d/ar/:path*",
+      "destination": "/suraga-3d/ar/index.html"
+    },
+    {
+      "source": "/suraga-3d/ar",
+      "destination": "/suraga-3d/ar/index.html"
+    },
+    {
+      "source": "/suraga-3d/:path*",
+      "destination": "/suraga-3d/index.html"
+    },
+    {
+      "source": "/suraga-3d",
+      "destination": "/suraga-3d/index.html"
     }
   ]
 }
