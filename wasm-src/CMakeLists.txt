@@ -12,7 +12,6 @@ endif()
 set(CMAKE_EXECUTABLE_SUFFIX ".js")
 
 add_executable(suraga
-  src/bindings.cpp
   src/physics.cpp
   src/meshgen.cpp
 )
@@ -29,7 +28,7 @@ set(EMSCRIPTEN_LINK_FLAGS
   "-s MAXIMUM_MEMORY=128MB"
   "-s ENVIRONMENT=web"
   "-s NO_EXIT_RUNTIME=1"
-  "-s EXPORTED_FUNCTIONS=['_malloc','_free']"
+  "-s EXPORTED_FUNCTIONS=['_malloc','_free','_initParticles','_stepParticles','_getParticleCount','_getPositionsPtr','_getVelocitiesPtr','_generateIcosphere','_getLastMeshVertexCount','_getLastMeshIndexCount','_getLastMeshIndicesPtr']"
   "-s EXPORTED_RUNTIME_METHODS=['ccall','cwrap','getValue','setValue','UTF8ToString','stringToUTF8','lengthBytesUTF8','HEAPF32','HEAPU16']"
   "-O3"
   "-flto"
@@ -39,6 +38,4 @@ set(EMSCRIPTEN_LINK_FLAGS
 string(REPLACE ";" " " EMSCRIPTEN_LINK_FLAGS_STR "${EMSCRIPTEN_LINK_FLAGS}")
 set_target_properties(suraga PROPERTIES LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS_STR}")
 
-set_target_properties(suraga PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/../web/public/wasm
-)
+set_target_properties(suraga PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

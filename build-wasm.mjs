@@ -5,7 +5,7 @@
  * Prerequisites:
  *   1. Install Emscripten SDK: https://emscripten.org/docs/getting_started/downloads.html
  *   2. Activate emsdk: `emsdk activate latest && emsdk_env.bat` (Windows)
- *   3. Ensure `emcmake` and `emmake` are in your PATH.
+ *   3. Ensure `emcmake` and `cmake` are in your PATH.
  *
  * Usage:
  *   node build-wasm.mjs
@@ -35,7 +35,7 @@ function ensureDir(dir) {
 
 function hasCommand(cmd) {
   const result = spawnSync(cmd, ["--version"], { stdio: "ignore", shell: true });
-  return result.status === 0 || result.error === undefined;
+  return result.status === 0;
 }
 
 function run(label, cmd, args, opts = {}) {
@@ -49,6 +49,17 @@ function run(label, cmd, args, opts = {}) {
   if (result.status !== 0) {
     throw new Error(`${label} failed with exit code ${result.status}`);
   }
+}
+
+function findBuiltOutput(file) {
+  const candidates = [
+    path.join(buildDir, file),
+    path.join(buildDir, "Release", file),
+    path.join(buildDir, "RelWithDebInfo", file),
+    path.join(buildDir, "MinSizeRel", file),
+  ];
+
+  return candidates.find((candidate) => fs.existsSync(candidate));
 }
 
 function main() {
@@ -73,19 +84,19 @@ function main() {
     { cwd: rootDir }
   );
 
-  // Build
-  run("Build", "emmake", ["make", "-C", buildDir, "-j"], { cwd: rootDir });
+  // Build through CMake so this works with Make, Ninja, and Visual Studio generators.
+  run("Build", "cmake", ["--build", buildDir, "--config", "Release", "--parallel"], { cwd: rootDir });
 
   // Copy outputs
   const outputs = ["suraga.js", "suraga.wasm"];
   for (const file of outputs) {
-    const src = path.join(buildDir, file);
+    const src = findBuiltOutput(file);
     const dst = path.join(outDir, file);
-    if (fs.existsSync(src)) {
+    if (src) {
       fs.copyFileSync(src, dst);
       log(`Copied ${file} → ${path.relative(rootDir, dst)}`);
     } else {
-      log(`Warning: expected output not found: ${src}`);
+      log(`Warning: expected output not found: ${file}`);
     }
   }
 

@@ -39,6 +39,7 @@ const copyDirectory = async (source, destination) => {
 
 const runBuild = async () => {
     run("npm", ["ci"], { cwd: webDir });
+    run("npm", ["run", "build:wasm"], { cwd: webDir });
     run("npm", ["run", "build"], { cwd: webDir });
 
     await fs.rm(publicWebDir, { recursive: true, force: true });

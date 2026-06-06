@@ -296,6 +296,25 @@ ${structuredDataFor(locale, canonical)}
             <a href="#home" class="logo" aria-label="${escapeHtml(locale.aria.goHome)}">
                 <span class="logo-text">${escapeHtml(locale.logoText)}</span>
             </a>
+            <div class="theme-toggle-wrap">
+                <button id="theme-toggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to light mode">
+                    <span class="stars">
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                        <span class="star"></span>
+                    </span>
+                    <span class="moon"></span>
+                    <span class="sun"></span>
+                    <span class="clouds">
+                        <span class="cloud cloud-1"></span>
+                        <span class="cloud cloud-2"></span>
+                    </span>
+                    <span class="horizon"></span>
+                    <span class="ground"></span>
+                </button>
+            </div>
             <ul class="nav-links${rtlNavClass}">
 ${navLinks(locale, "nav-link")}
             </ul>

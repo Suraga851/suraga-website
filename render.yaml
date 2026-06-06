@@ -18,3 +18,5 @@ services:
         fromDatabase:
           name: suraga-website-db
           property: connectionString
+      - key: API_KEY
+        generateValue: true

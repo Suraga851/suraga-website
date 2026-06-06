@@ -14,6 +14,31 @@ if (DATABASE_URL) {
     attachDatabasePool(pool);
 }
 
+// Simple in-memory rate limiter for serverless (10 req/min per IP)
+const rateLimiter = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 10;
+
+function checkRateLimit(ip) {
+    const now = Date.now();
+    const windowStart = now - RATE_LIMIT_WINDOW;
+    
+    if (!rateLimiter.has(ip)) {
+        rateLimiter.set(ip, [now]);
+        return true;
+    }
+    
+    const requests = rateLimiter.get(ip).filter(t => t > windowStart);
+    
+    if (requests.length >= RATE_LIMIT_MAX) {
+        return false;
+    }
+    
+    requests.push(now);
+    rateLimiter.set(ip, requests);
+    return true;
+}
+
 const TEXTNOW_GUIDE = {
     title: "Get a Free Phone Number",
     description: "Follow these steps to get a free US/Canada phone number from TextNow for WhatsApp verification.",
@@ -75,6 +100,20 @@ export class ApiError extends Error {
         super(message);
         this.name = "ApiError";
         this.statusCode = statusCode;
+    }
+}
+
+export function requireApiKey(req) {
+    const apiKey = process.env.API_KEY;
+
+    if (!apiKey) {
+        throw new ApiError(500, "API_KEY not configured");
+    }
+
+    const provided = req.headers["x-api-key"];
+
+    if (!provided || provided !== apiKey) {
+        throw new ApiError(401, "Invalid or missing API key");
     }
 }
 

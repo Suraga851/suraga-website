@@ -1,0 +1,13 @@
+﻿
+
+ro.product.manufacturer         : samsung
+ro.product.model                : SM-A127F
+ro.product.device               : a12s
+ro.product.name                 : a12snnxx
+ro.build.version.release        : 13
+ro.build.version.security_patch : 2024-10-01
+ro.build.PDA                    : A127FXXSDDXJ1
+ro.csc.sales_code               : AFR
+
+
+

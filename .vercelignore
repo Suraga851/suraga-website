@@ -1,0 +1,17 @@
+.git
+.github
+.http-server.*.log
+.env
+.env.*
+node_modules
+target
+debug
+archive
+scratch
+test-results
+custom-shells
+playwright-report
+windows_update_repair_*.log
+public/**/*.gz
+public/**/*.br
+public/ I found your website and would like to discuss opportunities.

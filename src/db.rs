@@ -74,6 +74,27 @@ impl Database {
         Ok(rows.into_iter().map(Into::into).collect())
     }
 
+    pub async fn get_numbers_paginated(&self, limit: i64, offset: i64) -> Result<(Vec<PhoneNumber>, i64), AppError> {
+        let total: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM phone_numbers")
+            .fetch_one(&self.pool)
+            .await?;
+
+        let rows: Vec<PhoneNumberRow> = sqlx::query_as(
+            r#"
+            SELECT id, phone, country, status, notes, created_at, updated_at
+            FROM phone_numbers
+            ORDER BY created_at DESC
+            LIMIT $1 OFFSET $2
+            "#,
+        )
+        .bind(limit)
+        .bind(offset)
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok((rows.into_iter().map(Into::into).collect(), total))
+    }
+
     pub async fn get_number(&self, id: i64) -> Result<Option<PhoneNumber>, AppError> {
         let row: Option<PhoneNumberRow> = sqlx::query_as(
             r#"

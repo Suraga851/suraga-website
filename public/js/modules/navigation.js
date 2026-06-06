@@ -65,7 +65,23 @@ export const initNavigation = () => {
         navSections.push(section);
     });
 
+    let activeSectionId = null;
+    let navSectionOffsets = [];
+    let navbarHeight = navbar ? navbar.offsetHeight : 0;
+    let scrollRafId = null;
+
+    const refreshNavMetrics = () => {
+        navbarHeight = navbar ? navbar.offsetHeight : 0;
+        navSectionOffsets = navSections.map((section) => ({
+            id: section.id,
+            top: section.offsetTop
+        }));
+    };
+
     const setActiveNav = (sectionId) => {
+        if (sectionId === activeSectionId) return;
+        activeSectionId = sectionId;
+
         allNavLinks.forEach((link) => {
             const href = link.getAttribute("href");
             const isActive = href === `#${sectionId}`;
@@ -79,30 +95,43 @@ export const initNavigation = () => {
     };
 
     const updateHeaderAndActiveSection = () => {
+        scrollRafId = null;
+
         if (navbar) {
-            if (window.scrollY > 50) {
-                navbar.classList.add("nav-scrolled");
-            } else {
-                navbar.classList.remove("nav-scrolled");
-            }
+            navbar.classList.toggle("nav-scrolled", window.scrollY > 50);
         }
 
-        if (navSections.length === 0) return;
+        if (navSectionOffsets.length === 0) return;
 
-        const scrollMark = window.scrollY + (navbar ? navbar.offsetHeight + 120 : 180);
-        let activeSectionId = navSections[0].id;
+        const scrollMark = window.scrollY + (navbar ? navbarHeight + 120 : 180);
+        let nextActiveSectionId = navSectionOffsets[0].id;
 
-        navSections.forEach((section) => {
-            if (scrollMark >= section.offsetTop) {
-                activeSectionId = section.id;
+        navSectionOffsets.forEach((section) => {
+            if (scrollMark >= section.top) {
+                nextActiveSectionId = section.id;
             }
         });
 
-        setActiveNav(activeSectionId);
+        setActiveNav(nextActiveSectionId);
     };
 
-    window.addEventListener("scroll", updateHeaderAndActiveSection, { passive: true });
-    window.addEventListener("hashchange", updateHeaderAndActiveSection);
+    const queueHeaderAndActiveSectionUpdate = () => {
+        if (scrollRafId !== null) return;
+        scrollRafId = window.requestAnimationFrame(updateHeaderAndActiveSection);
+    };
+
+    const refreshAndQueueNavUpdate = () => {
+        refreshNavMetrics();
+        queueHeaderAndActiveSectionUpdate();
+    };
+
+    window.addEventListener("scroll", queueHeaderAndActiveSectionUpdate, { passive: true });
+    window.addEventListener("resize", refreshAndQueueNavUpdate);
+    window.addEventListener("load", refreshAndQueueNavUpdate, { once: true });
+    window.addEventListener("hashchange", refreshAndQueueNavUpdate);
+    document.fonts?.ready.then(refreshAndQueueNavUpdate).catch(() => {});
+
+    refreshNavMetrics();
     updateHeaderAndActiveSection();
 
     return {

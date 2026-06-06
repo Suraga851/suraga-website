@@ -1,0 +1,14 @@
+﻿package:com.sec.android.app.fm
+package:com.rsupport.rs.activity.rsupport.aas2
+package:uk.co.bbc.learningenglish
+package:com.samsung.cmfa.AuthTouch
+package:com.macmillan.app.sounds
+package:com.google.android.apps.docs.editors.sheets
+package:com.britishcouncil.phonemicchart
+package:com.pinterest
+package:com.ncaferra.podcast
+package:vn.innoloop.VOALearningEnglish
+package:com.learning.bbc
+package:com.ebooks.ebookreader
+package:com.google.android.gms.supervision
+package:com.samsung.android.cmfa.framework

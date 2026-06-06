@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Path, State},
+    extract::{Path, Query, State},
     http::{header, HeaderMap, StatusCode},
     response::{IntoResponse, Redirect, Response},
     Json,
@@ -14,6 +14,8 @@ use crate::models::*;
 pub struct AppState {
     pub db: Database,
     pub frontend_origin: String,
+    pub api_key: String,
+    pub rate_limiter: crate::RateLimiter,
 }
 
 use crate::db::Database;
@@ -26,11 +28,40 @@ pub async fn health() -> &'static str {
 
 // ── Verification handlers ──
 
+#[derive(serde::Deserialize)]
+pub struct ListNumbersQuery {
+    #[serde(default = "default_limit")]
+    pub limit: i64,
+    #[serde(default)]
+    pub offset: i64,
+}
+
+fn default_limit() -> i64 {
+    20
+}
+
+#[derive(serde::Serialize)]
+pub struct PaginatedResponse<T> {
+    pub items: Vec<T>,
+    pub total: i64,
+    pub limit: i64,
+    pub offset: i64,
+}
+
 pub async fn list_numbers(
     State(state): State<AppState>,
-) -> AppResult<Json<Vec<PhoneNumber>>> {
-    let numbers = state.db.get_all_numbers().await?;
-    Ok(Json(numbers))
+    Query(query): Query<ListNumbersQuery>,
+) -> AppResult<Json<PaginatedResponse<PhoneNumber>>> {
+    let limit = query.limit.clamp(1, 100);
+    let offset = query.offset.max(0);
+
+    let (numbers, total) = state.db.get_numbers_paginated(limit, offset).await?;
+    Ok(Json(PaginatedResponse {
+        items: numbers,
+        total,
+        limit,
+        offset,
+    }))
 }
 
 pub async fn get_number(
@@ -56,7 +87,32 @@ pub async fn register_number(
         ));
     }
 
-    if state.db.get_by_phone(phone).await?.is_some() {
+    // Basic phone format validation (digits, +, spaces, dashes, parentheses)
+    if !phone.chars().all(|c| c.is_ascii_digit() || c == '+' || c == ' ' || c == '-' || c == '(' || c == ')') {
+        return Err(AppError::Validation(
+            "Phone number contains invalid characters".into(),
+        ));
+    }
+
+    // Validate country code (ISO 3166-1 alpha-2)
+    let country = req.country.trim().to_uppercase();
+    if country.len() != 2 || !country.chars().all(|c| c.is_ascii_uppercase()) {
+        return Err(AppError::Validation(
+            "Country must be a valid 2-letter ISO code".into(),
+        ));
+    }
+
+    // Limit notes length
+    let notes = req.notes.as_deref().map(|n| n.trim()).filter(|n| !n.is_empty());
+    if let Some(n) = notes {
+        if n.len() > 500 {
+            return Err(AppError::Validation(
+                "Notes must be 500 characters or less".into(),
+            ));
+        }
+    }
+
+    if state.db.get_by_phone(&phone).await?.is_some() {
         return Err(AppError::Conflict(
             "Phone number already registered".into(),
         ));
@@ -64,7 +120,7 @@ pub async fn register_number(
 
     let number = state
         .db
-        .register_number(phone, &req.country, req.notes.as_deref())
+        .register_number(&phone, &country, notes)
         .await?;
 
     Ok((

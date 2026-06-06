@@ -9,6 +9,7 @@ import { initBackToTop } from "./modules/backToTop.js";
 import { initImageLoader } from "./modules/imageLoader.js";
 import { initGodsEye } from "./modules/godsEye.js";
 import { initCapacitorHooks } from "./modules/capacitor.js";
+import { initThemeToggle } from "./modules/theme.js";
 
 const scheduleNonCriticalWork = (callback) => {
     if ("requestIdleCallback" in window) {
@@ -24,6 +25,7 @@ const messages = getMessages(isRtl);
 const { setFormStatus, clearFormStatus } = createStatusHandlers(document.getElementById("form-status"));
 
 const navigation = initNavigation();
+initThemeToggle();
 initRevealSections();
 setCurrentYear();
 initImageLoader();

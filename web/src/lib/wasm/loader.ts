@@ -29,6 +29,16 @@ export interface SuragaWasmModule {
 }
 
 let cachedModule: SuragaWasmModule | null = null;
+const wasmBasePath = "/suraga-3d/wasm";
+
+async function wasmAssetExists(url: string): Promise<boolean> {
+  try {
+    const response = await fetch(url, { method: "HEAD", cache: "force-cache" });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Dynamically import the WASM glue. Falls back to a pure-JS implementation
@@ -40,9 +50,16 @@ export async function loadWasmModule(): Promise<SuragaWasmModule> {
 
   try {
     // Attempt to load Emscripten-generated module from the static export.
-    const wasmPath = "/suraga-3d/wasm/suraga.js";
+    const wasmPath = `${wasmBasePath}/suraga.js`;
+    if (!(await wasmAssetExists(wasmPath))) {
+      cachedModule = createFallbackModule();
+      return cachedModule;
+    }
+
     const wasmFactory = await import(/* webpackIgnore: true */ wasmPath);
-    const wasm = await wasmFactory.default();
+    const wasm = await wasmFactory.default({
+      locateFile: (fileName: string) => `${wasmBasePath}/${fileName}`,
+    });
 
     const physics: WasmPhysicsAPI = {
       initParticles: (count, seed) => {

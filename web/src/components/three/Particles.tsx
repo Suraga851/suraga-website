@@ -10,20 +10,13 @@ const PARTICLE_COUNT = 8000;
 function ParticlesMesh({ wasm }: { wasm: SuragaWasmModule }) {
   const meshRef = useRef<THREE.Points>(null);
   const posArray = useMemo(() => {
-    const positions = wasm.physics.initParticles(PARTICLE_COUNT, 42);
-    return new Float32Array(positions);
+    return wasm.physics.initParticles(PARTICLE_COUNT, 42);
   }, [wasm]);
 
   useFrame((_, delta) => {
     if (!meshRef.current) return;
     wasm.physics.stepParticles(Math.min(delta, 0.05));
-    const positions = wasm.physics.getPositions();
-    const geo = meshRef.current.geometry;
-    const posAttr = geo.attributes.position as THREE.BufferAttribute;
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      posAttr.setXYZ(i, positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
-    }
+    const posAttr = meshRef.current.geometry.attributes.position as THREE.BufferAttribute;
     posAttr.needsUpdate = true;
   });
 
@@ -33,6 +26,7 @@ function ParticlesMesh({ wasm }: { wasm: SuragaWasmModule }) {
         <bufferAttribute
           attach="attributes-position"
           args={[posArray, 3]}
+          onUpdate={(attribute) => attribute.setUsage(THREE.DynamicDrawUsage)}
         />
       </bufferGeometry>
       <pointsMaterial
