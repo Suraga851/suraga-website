@@ -1,0 +1,100 @@
+{
+  "invokeCaps": [
+    {
+      "id": "1001069",
+      "key": "com.android.launcher.open_launcher_bottom_search_switch",
+      "name": "打开在桌面下方显示搜索入口开关",
+      "version": "1.0.0",
+      "versionCode": "1000000",
+      "tags": [
+        "设置",
+        "在桌面下方显示搜索入口"
+      ],
+      "description": "在桌面下方显示搜索入口属于开关类设置项，主要功能是在桌面底部分页符的位置就可以显示全搜的按钮点击之后跳到全搜页面。打开在桌面下方显示搜索入口开关是在桌面下方显示搜索入口设置项的一个具体操作指令，主要用于打开该开关后可以帮助用户快速在桌面打开全搜去搜索应用。。",
+      "invoke": {
+        "protocol": {
+          "type": "ApiProxy",
+          "apiType": "ANDROID_CONTENT_PROVIDER",
+          "attributes": {
+            "authority": "com.android.launcher.LauncherBreenoProvider",
+            "type": "CALL",
+            "method": "launcher_search_entry_enable",
+            "extras": [
+              {
+                "key": "switch_action_value",
+                "type": "int32",
+                "value": "1"
+              }
+            ],
+            "permission": "com.oplus.permission.safe.ASSISTANT",
+            "response": [
+              {
+                "key": "apiproxy_biz_text",
+                "type": "string",
+                "value": "好的，已为你打开在桌面下方显示搜索入口的开关。"
+              },
+              {
+                "key": "apiproxy_biz_tts",
+                "type": "string",
+                "value": "好的，已为你打开在桌面下方显示搜索入口的开关。"
+              },
+              {
+                "key": "deep_link",
+                "type": "string",
+                "value": "launcher://LauncherSettings"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "1001072",
+      "key": "com.android.launcher.close_launcher_bottom_search_switch",
+      "name": "关闭在桌面下方显示搜索入口开关",
+      "version": "1.0.0",
+      "versionCode": "1000000",
+      "tags": [
+        "设置",
+        "在桌面下方显示搜索入口"
+      ],
+      "description": "在桌面下方显示搜索入口属于开关类设置项，主要功能是在桌面底部分页符的位置就可以显示全搜的按钮点击之后跳到全搜页面。关闭在桌面下方显示搜索入口开关是在桌面下方显示搜索入口设置项的一个具体操作指令，主要用于关闭该开关后，桌面会正常显示分页符，不会变成全搜的按钮。。",
+      "invoke": {
+        "protocol": {
+          "type": "ApiProxy",
+          "apiType": "ANDROID_CONTENT_PROVIDER",
+          "attributes": {
+            "authority": "com.android.launcher.LauncherBreenoProvider",
+            "type": "CALL",
+            "method": "launcher_search_entry_enable",
+            "extras": [
+              {
+                "key": "switch_action_value",
+                "type": "int32",
+                "value": "2"
+              }
+            ],
+            "permission": "com.oplus.permission.safe.ASSISTANT",
+            "response": [
+              {
+                "key": "apiproxy_biz_text",
+                "type": "string",
+                "value": "好的，已为你关闭在桌面下方显示搜索入口的开关。"
+              },
+              {
+                "key": "apiproxy_biz_tts",
+                "type": "string",
+                "value": "好的，已为你关闭在桌面下方显示搜索入口的开关。"
+              },
+              {
+                "key": "deep_link",
+                "type": "string",
+                "value": "launcher://LauncherSettings"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

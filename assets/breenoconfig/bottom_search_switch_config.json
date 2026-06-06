@@ -1,0 +1,18 @@
+{
+  "identifier": {
+    "url": "com.android.launcher.536877783",
+    "id": "536877783",
+    "type": "apk",
+    "name": "在桌面下方显示搜索入口",
+    "version": "1.0.0",
+    "versionCode": 1000000,
+    "description": "我是一个APK软件包，提供不可见的服务。包含在桌面下方显示搜索入口的能力，适用于语音类的入口。"
+  },
+  "intent": {},
+  "runtime": {
+    "type": "background"
+  },
+  "meta-data": {
+    "capabilities": "breenoconfig/bottom_search_switch_capabilities.json"
+  }
+}

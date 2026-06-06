@@ -1,0 +1,200 @@
+/* =============================================
+   SCROLL PROGRESS BAR
+   ============================================= */
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-teal), var(--primary-teal-light));
+    transform-origin: left;
+    transform: scaleX(0);
+    z-index: 1000;
+    will-change: transform;
+}
+
+/* =============================================
+   CLIPBOARD TOAST
+   ============================================= */
+
+.clipboard-toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 0.875rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 2000;
+    box-shadow: var(--shadow-lg);
+}
+
+.clipboard-toast--visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    visibility: visible;
+}
+
+.clipboard-toast--success {
+    background: var(--primary-teal);
+    color: var(--white);
+}
+
+.clipboard-toast--error {
+    background: var(--accent-coral);
+    color: var(--white);
+}
+
+[data-theme="dark"] .clipboard-toast--success {
+    background: var(--primary-teal-light);
+    color: var(--bg-light);
+}
+
+[data-theme="dark"] .clipboard-toast--error {
+    background: #f97316;
+    color: var(--bg-light);
+}
+
+/* =============================================
+   TYPING ANIMATION
+   ============================================= */
+
+.typing-cursor {
+    position: relative;
+}
+
+.typing-cursor::after {
+    content: '|';
+    position: absolute;
+    right: -2px;
+    animation: typing-blink 1s ease-in-out infinite;
+    color: var(--primary-teal);
+    font-weight: 400;
+}
+
+@keyframes typing-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* =============================================
+   ANIMATED COUNTERS
+   ============================================= */
+
+[data-counter] {
+    display: inline-block;
+    min-width: 2ch;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-progress {
+        transition: transform 0.01s linear;
+    }
+    
+    .clipboard-toast {
+        transition: none;
+    }
+    
+    .typing-cursor::after {
+        animation: none;
+    }
+}
+
+/* =============================================
+   HOVER TILT
+   ============================================= */
+
+.tilt-glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+[data-tilt]:hover .tilt-glare {
+    opacity: 1;
+}
+
+[data-tilt] {
+    transform-style: preserve-3d;
+}
+
+[data-tilt] > * {
+    transform: translateZ(20px);
+}
+
+/* =============================================
+   BENTO GRID
+   ============================================= */
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+    max-width: 1180px;
+}
+
+.bento-card {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}
+
+@media (max-width: 1199px) {
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .bento-card {
+        min-height: 180px;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .bento-card {
+        min-height: auto;
+        padding: 1.5rem;
+    }
+    
+    .bento-card[style*="span 2"] {
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
+    }
+}
+
+/* Bento featured card (large) */
+.bento-card[style*="span 2"][style*="span 2"] {
+    justify-content: flex-start;
+    padding: 2.5rem;
+}
+
+.bento-card[style*="span 2"][style*="span 2"] .service-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 1.75rem;
+}
+
+@media (max-width: 767px) {
+    .bento-card[style*="span 2"][style*="span 2"] {
+        padding: 2rem;
+    }
+}
+
+

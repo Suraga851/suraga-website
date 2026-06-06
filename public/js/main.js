@@ -10,6 +10,12 @@ import { initImageLoader } from "./modules/imageLoader.js";
 import { initGodsEye } from "./modules/godsEye.js";
 import { initCapacitorHooks } from "./modules/capacitor.js";
 import { initThemeToggle } from "./modules/theme.js";
+import { initClipboard } from "./modules/clipboard.js";
+import { initScrollProgress } from "./modules/scrollProgress.js";
+import { initAnimatedCounters } from "./modules/animatedCounter.js";
+import { initTypingAnimation } from "./modules/typingAnimation.js";
+import { initParallaxHero } from "./modules/parallax.js";
+import { initHoverTilt } from "./modules/hoverTilt.js";
 
 const scheduleNonCriticalWork = (callback) => {
     if ("requestIdleCallback" in window) {
@@ -30,6 +36,13 @@ initRevealSections();
 setCurrentYear();
 initImageLoader();
 initCapacitorHooks();
+initClipboard();
+initScrollProgress();
+initAnimatedCounters();
+initTypingAnimation();
+initParallaxHero();
+initHoverTilt();
+
 initPdfModal({
     messages,
     setFormStatus,

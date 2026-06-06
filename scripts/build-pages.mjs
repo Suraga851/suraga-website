@@ -105,10 +105,14 @@ const aboutParagraphs = (locale) =>
 const statsCards = (locale) =>
     locale.about.stats
         .map(
-            (stat) => `                        <div class="stat-card">
-                            <span class="stat-number">${escapeHtml(stat.value)}</span>
+            (stat) => {
+                const numericValue = parseFloat(stat.value.replace(/[^\d.]/g, '')) || 0;
+                const suffix = stat.value.replace(/[\d.]/g, '');
+                return `                        <div class="stat-card">
+                            <span class="stat-number" data-counter="${numericValue}" data-counter-suffix="${escapeHtml(suffix)}" data-counter-duration="1800">${escapeHtml(stat.value)}</span>
                             <span class="stat-label">${escapeHtml(stat.label)}</span>
-                        </div>`
+                        </div>`;
+            }
         )
         .join("\n");
 
@@ -122,18 +126,33 @@ const quickFactItems = (locale) =>
         )
         .join("\n");
 
-const services = (locale) =>
-    locale.services.items
-        .map(
-            (service) => `                <div class="service-card">
+const services = (locale) => {
+    // Bento grid layout: assign sizes based on index for visual variety
+    const sizes = [
+        { colSpan: 2, rowSpan: 2 }, // Featured - large
+        { colSpan: 1, rowSpan: 1 },
+        { colSpan: 1, rowSpan: 1 },
+        { colSpan: 1, rowSpan: 1 },
+        { colSpan: 1, rowSpan: 1 },
+        { colSpan: 1, rowSpan: 1 },
+        { colSpan: 2, rowSpan: 1 }, // Wide at bottom
+    ];
+    
+    return locale.services.items
+        .map((service, index) => {
+            const size = sizes[index] || { colSpan: 1, rowSpan: 1 };
+            const style = `grid-column: span ${size.colSpan}; grid-row: span ${size.rowSpan};`;
+            
+            return `            <div class="service-card bento-card" style="${style}" data-tilt data-tilt-max="6" data-tilt-scale="1.015" data-tilt-glare="true">
                     <div class="service-icon">
                         <i class="fas ${escapeHtml(service.icon)}"></i>
                     </div>
                     <h3 class="service-title">${escapeHtml(service.title)}</h3>
                     <p class="service-desc">${escapeHtml(service.description)}</p>
-                </div>`
-        )
+                </div>`;
+        })
         .join("\n");
+};
 
 const experienceItems = (locale) =>
     locale.experience.items
@@ -143,7 +162,7 @@ const experienceItems = (locale) =>
                 .join("\n");
 
             return `                <div class="timeline-item">
-                    <div class="timeline-content">
+                    <div class="timeline-content" data-tilt data-tilt-max="4" data-tilt-scale="1.005">
                         <div class="timeline-header">
                             <h3 class="timeline-title">${escapeHtml(item.role)}</h3>
                         </div>
@@ -163,7 +182,7 @@ const portfolioItems = (locale) =>
     locale.portfolio.items
         .map(
             (item) => `                <div class="portfolio-item" data-doc="${escapeHtml(item.doc)}">
-                    <div class="portfolio-card">
+                    <div class="portfolio-card" data-tilt data-tilt-max="5" data-tilt-scale="1.01" data-tilt-glare="true">
                         <div class="portfolio-icon ${escapeHtml(item.type)}">
                             <i class="fas ${item.type === "cert" ? "fa-certificate" : "fa-file-pdf"}"></i>
                         </div>
@@ -352,7 +371,7 @@ ${mobileNavLinks(locale)}
                 <p class="hero-kicker">${escapeHtml(locale.hero.kicker)}</p>
                 <h1 class="hero-title">
                     ${escapeHtml(locale.hero.titlePrefix)} <span class="text-accent">
-                        ${escapeHtml(locale.hero.titleAccent)}
+                        <span data-typing="${escapeHtml(locale.hero.titleAccent)}" data-typing-speed="60" data-typing-delay="800" data-typing-cursor="true"></span>
                         <svg class="underline-svg" viewBox="0 0 200 12" preserveAspectRatio="none">
                             <path d="M0,8 Q50,0 100,8 T200,8" stroke="#0d9488" stroke-width="3" fill="none"
                                 class="underline-path" />
@@ -437,7 +456,7 @@ ${quickFactItems(locale)}
     <section id="services" class="section-gradient reveal-section">
         <div class="container">
             <h2 class="section-title">${escapeHtml(locale.services.title)}</h2>
-            <div class="services-grid">
+            <div class="bento-grid">
 ${services(locale)}
             </div>
         </div>
@@ -472,13 +491,13 @@ ${portfolioItems(locale)}
                     <h3 class="subsection-title">${escapeHtml(locale.contact.subtitle)}</h3>
                     <p class="text-body contact-intro">${escapeHtml(locale.contact.description)}</p>
                     <div class="contact-list">
-                        <a href="tel:${escapeHtml(siteConfig.phoneRaw)}" class="contact-item">
+                        <a href="tel:${escapeHtml(siteConfig.phoneRaw)}" class="contact-item" data-clipboard="${escapeHtml(siteConfig.phoneRaw)}" data-clipboard-label="Phone number copied!">
                             <div class="contact-icon">
                                 <i class="fas fa-phone"></i>
                             </div>
                             <span>${escapeHtml(siteConfig.phoneDisplay)}</span>
                         </a>
-                        <a href="mailto:${escapeHtml(siteConfig.email)}" class="contact-item">
+                        <a href="mailto:${escapeHtml(siteConfig.email)}" class="contact-item" data-clipboard="${escapeHtml(siteConfig.email)}" data-clipboard-label="Email copied!">
                             <div class="contact-icon">
                                 <i class="fas fa-envelope"></i>
                             </div>
