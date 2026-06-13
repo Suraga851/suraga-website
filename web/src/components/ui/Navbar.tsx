@@ -32,12 +32,12 @@ export default function Navbar({
               <span className="text-brand-400">{logoText}</span>
             </a>
             <div className="absolute top-full left-0 mt-2 min-w-[150px] opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50 bg-black/90 backdrop-blur-md border border-white/10 rounded-lg shadow-xl p-2 rtl:left-auto rtl:right-0">
-              <Link
+              <a
                 href={isRtl ? "/ar.html" : "/"}
                 className="block px-4 py-2 text-sm font-medium text-gray-200 hover:text-brand-400 hover:bg-white/5 rounded-md transition-colors"
               >
                 {isRtl ? "الموقع الرئيسي" : "Main Website"}
-              </Link>
+              </a>
             </div>
           </div>
 
