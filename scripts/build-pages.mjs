@@ -312,9 +312,14 @@ ${structuredDataFor(locale, canonical)}
     <!-- Navigation${rtlComment} -->
     <nav class="navbar" id="navbar" aria-label="${escapeHtml(locale.aria.navPrimary)}">
         <div class="container nav-inner">
-            <a href="#home" class="logo" aria-label="${escapeHtml(locale.aria.goHome)}">
-                <span class="logo-text">${escapeHtml(locale.logoText)}</span>
-            </a>
+            <div class="logo-dropdown-container">
+                <a href="#home" class="logo" aria-label="${escapeHtml(locale.aria.goHome)}">
+                    <span class="logo-text">${escapeHtml(locale.logoText)}</span>
+                </a>
+                <div class="logo-dropdown-menu">
+                    <a href="/suraga-3d/" class="logo-dropdown-item">${locale.dir === "rtl" ? "الموقع ثلاثي الأبعاد" : "3D Website"}</a>
+                </div>
+            </div>
             <div class="theme-toggle-wrap">
                 <button id="theme-toggle" class="theme-toggle" role="switch" aria-checked="false" aria-label="Switch to light mode">
                     <span class="stars">
