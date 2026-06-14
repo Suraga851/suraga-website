@@ -46,11 +46,11 @@ test("portfolio modal opens and closes", async ({ page }) => {
 });
 
 test("contact form submits with success message", async ({ page }) => {
-    await page.route("https://formsubmit.co/**", async (route) => {
+    await page.route("**/api/contact", async (route) => {
         await route.fulfill({
             status: 200,
             contentType: "application/json",
-            body: JSON.stringify({ success: "true" })
+            body: JSON.stringify({ success: true, message: "Email sent successfully" })
         });
     });
 

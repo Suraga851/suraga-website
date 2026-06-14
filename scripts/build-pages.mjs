@@ -277,10 +277,6 @@ const renderPage = (localeKey, locale) => {
     <link rel="alternate" hreflang="x-default" href="${escapeHtml(enHref)}">
     <link rel="sitemap" type="application/xml" href="${escapeHtml(siteConfig.baseUrl)}/sitemap.xml">
 
-    <!-- Resource hints for third-party origins -->
-    <link rel="dns-prefetch" href="https://formsubmit.co">
-    <link rel="preconnect" href="https://formsubmit.co" crossorigin>
-
     <!-- Preload critical assets -->
     <link rel="preload" as="style" href="__ASSET_CSS__">
     <link rel="preload" as="image" href="${escapeHtml(headshotWebpPath)}" type="image/webp" fetchpriority="high">

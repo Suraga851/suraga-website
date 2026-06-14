@@ -25,7 +25,7 @@ services:
         value: max-age=31536000; includeSubDomains; preload
       - path: /*
         name: Content-Security-Policy
-        value: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://formsubmit.co; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co;
+        value: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';
       - path: /*
         name: X-Frame-Options
         value: SAMEORIGIN

@@ -14,7 +14,7 @@ const fetchRuntimeConfig = async () => {
 export const resolveContactEndpoint = async () => {
     const bodyDefault =
         document.body?.getAttribute("data-contact-endpoint") ||
-        "https://formsubmit.co/ajax/suragaelzibaer@gmail.com";
+        "/api/contact";
 
     const runtimeConfig = await fetchRuntimeConfig();
     if (typeof runtimeConfig.contactEndpoint === "string" && runtimeConfig.contactEndpoint.trim().length > 0) {

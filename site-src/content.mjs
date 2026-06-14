@@ -9,7 +9,7 @@ export const siteConfig = {
     phoneRaw: "+971557177083",
     phoneDisplay: "+971 55 7177 083",
     linkedinUrl: "https://linkedin.com/in/suraga-elzibaer",
-    contactEndpointDefault: "https://formsubmit.co/ajax/suragaelzibaer@gmail.com",
+    contactEndpointDefault: "/api/contact",
     headshotPath: "assets/images/suraga-headshot.jpg",
     socialImagePath: "assets/images/suraga-headshot.jpg",
     faviconPath: "assets/images/suraga-headshot.jpg",

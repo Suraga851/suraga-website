@@ -31,19 +31,20 @@ export const initContactForm = ({ messages, setFormStatus, clearFormStatus }) =>
         button.disabled = true;
 
         const selectedText = inquiryEl.options[inquiryEl.selectedIndex]?.text ?? inquiryEl.value;
-        const formData = new FormData();
-        formData.append("name", nameEl.value.trim());
-        formData.append("email", emailEl.value.trim());
-        formData.append("message", messageEl.value.trim());
-        formData.append("_subject", `${messages.subjectPrefix} ${selectedText} ${messages.from} ${nameEl.value.trim()}`);
-        formData.append("_captcha", "false");
-        formData.append("_template", "table");
 
         try {
             const endpoint = await endpointPromise;
             const response = await fetch(endpoint, {
                 method: "POST",
-                body: formData
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: nameEl.value.trim(),
+                    email: emailEl.value.trim(),
+                    message: messageEl.value.trim(),
+                    inquiryType: selectedText
+                })
             });
 
             if (!response.ok) {
