@@ -1,6 +1,9 @@
 import { attachDatabasePool } from "@vercel/functions";
+import { timingSafeEqual } from "node:crypto";
 import { Pool } from "pg";
 
+// Use the pooled connection string (Vercel Postgres ?-pooler / PgBouncer on port 6543)
+// to avoid exhausting Postgres connections across many serverless instances.
 const DATABASE_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 let pool = null;
@@ -9,34 +12,97 @@ let schemaReadyPromise = null;
 if (DATABASE_URL) {
     pool = new Pool({
         connectionString: DATABASE_URL,
-        max: 5
+        // Serverless = many short-lived instances. Keep per-instance max low so the
+        // shared PgBouncer pool never hits the Postgres connection ceiling.
+        max: 2,
+        idleTimeoutMillis: 10_000,
+        connectionTimeoutMillis: 8_000,
+        // Vercel Postgres requires SSL outside local dev.
+        ssl: process.env.PGSSL === "0" ? false : { rejectUnauthorized: true }
     });
     attachDatabasePool(pool);
 }
 
-// Simple in-memory rate limiter for serverless (10 req/min per IP)
+// Sliding-window in-memory rate limiter. Per-instance only (serverless cold starts
+// reset this), so it is a coarse backstop — see Redis path below for true limits.
 const rateLimiter = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_MAX_IPS = 10_000; // cap Map growth to prevent memory exhaustion
 
 function checkRateLimit(ip) {
     const now = Date.now();
     const windowStart = now - RATE_LIMIT_WINDOW;
-    
-    if (!rateLimiter.has(ip)) {
-        rateLimiter.set(ip, [now]);
-        return true;
+
+    if (rateLimiter.size > RATE_LIMIT_MAX_IPS) {
+        // Map has grown unbounded — evict everything and start fresh.
+        rateLimiter.clear();
     }
-    
-    const requests = rateLimiter.get(ip).filter(t => t > windowStart);
-    
-    if (requests.length >= RATE_LIMIT_MAX) {
+
+    const existing = rateLimiter.get(ip)?.filter(t => t > windowStart) ?? [];
+
+    if (existing.length >= RATE_LIMIT_MAX) {
         return false;
     }
-    
-    requests.push(now);
-    rateLimiter.set(ip, requests);
+
+    existing.push(now);
+    rateLimiter.set(ip, existing);
     return true;
+}
+
+/**
+ * Optional Redis/Upstash-backed limiter. When UPSTASH_REDIS_REST_URL is configured,
+ * the API uses a globally-shared sliding-window counter that survives cold starts
+ * and is consistent across regions. Otherwise we fall back to in-memory above.
+ */
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+async function checkRateLimitRedis(ip) {
+    if (!UPSTASH_URL || !UPSTASH_TOKEN) return null; // not configured → fall back
+
+    const key = `rl:${ip}`;
+    const now = Date.now();
+    const windowStart = now - RATE_LIMIT_WINDOW;
+
+    // Atomic sliding window via sorted set: prune + count + add in one pipeline call.
+    const pipeline = [
+        ["ZREMRANGEBYSCORE", key, 0, windowStart],
+        ["ZCARD", key],
+        ["ZADD", key, { score: now, member: `${now}` }],
+        ["EXPIRE", key, Math.ceil(RATE_LIMIT_WINDOW / 1000)]
+    ];
+
+    const response = await fetch(`${UPSTASH_URL}/pipeline`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${UPSTASH_TOKEN}`
+        },
+        body: JSON.stringify(pipeline)
+    });
+
+    if (!response.ok) return null; // Redis hiccup → fall back to in-memory
+
+    const results = await response.json();
+    const count = Array.isArray(results) ? Number(results[1]?.result ?? 0) : 0;
+    return count < RATE_LIMIT_MAX;
+}
+
+/**
+ * Unified rate-limit check: Redis if available, else in-memory.
+ * Callers receive true (allowed) / false (blocked).
+ */
+export async function isAllowed(ip) {
+    if (UPSTASH_URL && UPSTASH_TOKEN) {
+        try {
+            const result = await checkRateLimitRedis(ip);
+            if (result !== null) return result;
+        } catch {
+            // fall through to in-memory
+        }
+    }
+    return checkRateLimit(ip);
 }
 
 const TEXTNOW_GUIDE = {
@@ -112,9 +178,28 @@ export function requireApiKey(req) {
 
     const provided = req.headers["x-api-key"];
 
-    if (!provided || provided !== apiKey) {
+    if (!provided) {
+        // Constant-time "no" even when missing — avoid leaking whether the key exists.
+        timingSafeEqualSafe(Buffer.from("x"), Buffer.from(apiKey));
         throw new ApiError(401, "Invalid or missing API key");
     }
+
+    if (!timingSafeEqualSafe(Buffer.from(provided), Buffer.from(apiKey))) {
+        throw new ApiError(401, "Invalid or missing API key");
+    }
+}
+
+/**
+ * Constant-time string comparison. Returns false (without throwing) when lengths
+ * differ — but still runs the equal-length branch to avoid timing leaks.
+ */
+function timingSafeEqualSafe(a, b) {
+    if (a.length !== b.length) {
+        // Run a dummy compare of equal-length buffers to keep timing constant.
+        timingSafeEqual(a.length ? a : Buffer.from("0"), Buffer.alloc(a.length || 1, 0));
+        return false;
+    }
+    return timingSafeEqual(a, b);
 }
 
 export function getTextNowGuide() {

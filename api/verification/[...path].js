@@ -1,6 +1,6 @@
 import {
     ApiError,
-    checkRateLimit,
+    isAllowed,
     deleteNumber,
     getNumber,
     getRequestPathname,
@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
             if (req.method === "POST") {
                 requireApiKey(req);
-                if (!checkRateLimit(req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown")) {
+                if (!(await isAllowed(req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown"))) {
                     throw new ApiError(429, "Rate limit exceeded. Try again later.");
                 }
                 const payload = await readJsonBody(req);
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
 
             if (req.method === "DELETE") {
                 requireApiKey(req);
-                if (!checkRateLimit(req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown")) {
+                if (!(await isAllowed(req.headers["x-forwarded-for"] || req.headers["x-real-ip"] || "unknown"))) {
                     throw new ApiError(429, "Rate limit exceeded. Try again later.");
                 }
                 await deleteNumber(segments[1]);
