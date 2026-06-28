@@ -1,16 +1,47 @@
-import { readJsonBody, sendJson, sendErrorResponse, ApiError } from "./_lib/verification.js";
+import { readJsonBody, sendJson, sendErrorResponse, sendMethodNotAllowed, ApiError, isAllowed } from "./_lib/verification.js";
+
+// HTML-escape user input before interpolating into the email body to prevent
+// content injection (e.g. a malicious <script> in the message field).
+const escapeHtml = (value) =>
+    String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+
+// Strip CR/LF from header-bound fields to prevent SMTP header injection.
+const stripNewlines = (value) => String(value).replace(/[\r\n]/g, " ").trim();
+
+const MAX_FIELD_LENGTHS = { name: 120, email: 254, message: 5000, inquiryType: 100 };
+
+const truncateField = (value, max) =>
+    typeof value === "string" && value.length > max ? value.slice(0, max) : value;
 
 export default async function handler(req, res) {
     if (req.method !== "POST") {
-        res.setHeader("Allow", "POST");
-        res.statusCode = 405;
-        res.end("Method Not Allowed");
+        sendMethodNotAllowed(res, ["POST"]);
         return;
     }
 
     try {
+        // Rate limit by client IP. Falls back gracefully to in-memory when Redis is unset.
+        const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim()
+            || req.headers["x-real-ip"]
+            || "unknown";
+        if (!(await isAllowed(`contact:${ip}`))) {
+            throw new ApiError(429, "Too many submissions. Please try again later.");
+        }
+
         const body = await readJsonBody(req);
         const { name, email, message, inquiryType } = body;
+
+        // Honeypot: bots fill hidden fields. Real users never send "website".
+        // Accept the request silently (200) so bots don't learn to drop the field.
+        if (body.website && String(body.website).trim()) {
+            sendJson(res, 200, { success: true, message: "Email sent successfully" });
+            return;
+        }
 
         // Validation
         if (!name || typeof name !== "string" || !name.trim()) {
@@ -28,25 +59,35 @@ export default async function handler(req, res) {
             throw new ApiError(400, "Invalid email address");
         }
 
+        // Sanitize: cap lengths, strip newlines from header-bound values, then
+        // HTML-escape everything that goes into the email body.
+        const cleanName = truncateField(stripNewlines(name), MAX_FIELD_LENGTHS.name);
+        const cleanEmail = truncateField(stripNewlines(email), MAX_FIELD_LENGTHS.email);
+        const cleanInquiry = truncateField(
+            typeof inquiryType === "string" ? stripNewlines(inquiryType) : "",
+            MAX_FIELD_LENGTHS.inquiryType
+        );
+        const cleanMessage = truncateField(message.trim(), MAX_FIELD_LENGTHS.message);
+
         const toEmail = process.env.CONTACT_EMAIL || "suragaelzibaer@gmail.com";
-        const subject = `[Contact Form] ${inquiryType || "General Inquiry"} from ${name.trim()}`;
-        
+        const subject = `[Contact Form] ${cleanInquiry || "General Inquiry"} from ${cleanName}`;
+
         const htmlContent = `
             <h3>New Contact Form Submission</h3>
-            <p><strong>Name:</strong> ${name.trim()}</p>
-            <p><strong>Email:</strong> <a href="mailto:${email.trim()}">${email.trim()}</a></p>
-            <p><strong>Inquiry Type:</strong> ${inquiryType || "General Inquiry"}</p>
+            <p><strong>Name:</strong> ${escapeHtml(cleanName)}</p>
+            <p><strong>Email:</strong> <a href="mailto:${escapeHtml(cleanEmail)}">${escapeHtml(cleanEmail)}</a></p>
+            <p><strong>Inquiry Type:</strong> ${escapeHtml(cleanInquiry || "General Inquiry")}</p>
             <p><strong>Message:</strong></p>
-            <p style="white-space: pre-wrap;">${message.trim()}</p>
+            <p style="white-space: pre-wrap;">${escapeHtml(cleanMessage)}</p>
         `;
 
         const textContent = `
 New Contact Form Submission
-Name: ${name.trim()}
-Email: ${email.trim()}
-Inquiry Type: ${inquiryType || "General Inquiry"}
+Name: ${cleanName}
+Email: ${cleanEmail}
+Inquiry Type: ${cleanInquiry || "General Inquiry"}
 Message:
-${message.trim()}
+${cleanMessage}
         `.trim();
 
         // Email dispatch

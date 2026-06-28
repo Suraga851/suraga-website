@@ -23,6 +23,26 @@ const convertImage = async ({ source, destination, operation }) => {
     await operation(sharp(source)).toFile(destination);
 };
 
+// Responsive widths for the hero headshot. The original is high-res; these
+// smaller variants let the browser pick the right bytes per device via <picture srcset>.
+// Sizes chosen to cover ~1x/2x at typical hero display widths (480–960 css px).
+const HEADSHOT_RESPONSIVE_WIDTHS = [480, 960];
+
+async function generateResponsiveHeadshot(source, imagesDir) {
+    for (const width of HEADSHOT_RESPONSIVE_WIDTHS) {
+        await convertImage({
+            source,
+            destination: path.join(imagesDir, `suraga-headshot-${width}.avif`),
+            operation: (image) => image.resize(width).avif({ quality: 50, effort: 5 })
+        });
+        await convertImage({
+            source,
+            destination: path.join(imagesDir, `suraga-headshot-${width}.webp`),
+            operation: (image) => image.resize(width).webp({ quality: 80, effort: 4 })
+        });
+    }
+}
+
 const run = async () => {
     const headshotJpg = path.join(imagesDir, "suraga-headshot.jpg");
     const bgTextureJpg = path.join(imagesDir, "bg-texture.jpg");
@@ -64,7 +84,10 @@ const run = async () => {
         operation: (image) => image.avif({ quality: 42, effort: 5 })
     });
 
-    console.log("Generated modern image variants and favicon assets.");
+    // Responsive srcset variants for the hero (multi-width AVIF + WebP).
+    await generateResponsiveHeadshot(headshotJpg, imagesDir);
+
+    console.log("Generated modern image variants, responsive hero, and favicon assets.");
 };
 
 run().catch((error) => {

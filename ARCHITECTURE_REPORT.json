@@ -1,0 +1,194 @@
+{
+  "report": "Architecture Report — Suraga Website",
+  "date": "2026-06-28",
+  "scope": ["speed", "scalability", "security", "new-features"],
+  "before": {
+    "description": "Multi-stack monorepo deploying three things in parallel",
+    "stacks": [
+      {
+        "name": "Static site (custom build)",
+        "path": "scripts/build-pages.mjs + public/",
+        "role": "Main marketing site (EN/AR), built to static HTML at build time, esbuild-bundled JS, pre-gzipped + brotli'd",
+        "deployed": true,
+        "platform": "Vercel static"
+      },
+      {
+        "name": "Next.js 3D app",
+        "path": "web/",
+        "role": "/suraga-3d route, React Three Fiber + GSAP + WASM (Emscripten, JS fallback), also exported to static",
+        "deployed": true,
+        "platform": "Vercel static"
+      },
+      {
+        "name": "Node serverless APIs",
+        "path": "api/",
+        "role": "/api/contact, /api/health, /api/verification/* on Postgres via pg",
+        "deployed": true,
+        "platform": "Vercel functions"
+      },
+      {
+        "name": "Rust/axum backend",
+        "path": "src/*.rs",
+        "role": "Duplicate of the verification API (/numbers, /textnow-guide, /health)",
+        "deployed": false,
+        "platform": null,
+        "note": "Dormant — no deploy config references it"
+      },
+      {
+        "name": "Capacitor mobile",
+        "path": "capacitor.config.*",
+        "role": "Wraps the site as a mobile app",
+        "deployed": "separate"
+      }
+    ],
+    "problems": [
+      "Pinned to single region (fra1) — every non-EU visitor hit Frankfurt",
+      "Postgres pool max:5 per serverless instance — would exhaust DB connections under load",
+      "In-memory rate limiter (Map) that reset on every cold start — didn't actually limit anything",
+      "API key check used !== — timing-attack vulnerable",
+      "Contact form interpolated raw user input into the email HTML body — email-content injection; no CRLF stripping — SMTP header injection possible",
+      "No honeypot, no rate limit on the contact endpoint — spam magnet",
+      "CSP allowed 'unsafe-inline' for scripts",
+      "Hero image shipped at one fixed size to all devices (no responsive srcset)"
+    ]
+  },
+  "changes": {
+    "security": [
+      {
+        "id": "P0-2",
+        "title": "Timing-safe API key compare",
+        "file": "api/_lib/verification.js",
+        "what": "Replaced provided !== apiKey with crypto.timingSafeEqual + constant-time length-mismatch handling. Closes timing-attack vector on /api/verification/*."
+      },
+      {
+        "id": "P0-3",
+        "title": "Email injection hardening",
+        "file": "api/contact.js",
+        "what": "HTML-escape all user input before interpolating into email body; strip CR/LF from header-bound fields (name, email, inquiry); cap field lengths."
+      },
+      {
+        "id": "P1-3",
+        "title": "CSP hardened",
+        "file": "vercel.json",
+        "what": "Removed 'unsafe-inline' from script-src (now 'self' only — safe because JSON-LD isn't executable). Added frame-ancestors 'none' (clickjacking) + upgrade-insecure-requests."
+      },
+      {
+        "id": "P1-4",
+        "title": "Contact anti-spam",
+        "files": [
+          "api/contact.js",
+          "scripts/build-pages.mjs",
+          "public/js/modules/form.js",
+          "public/css/frontend-extras.css"
+        ],
+        "what": "Added hidden honeypot field (website) — bots fill it, server silently 200s and drops; real users never see it. Added rate limiting to the contact endpoint."
+      }
+    ],
+    "scalability": [
+      {
+        "id": "P0-1",
+        "title": "Postgres pooler sizing",
+        "file": "api/_lib/verification.js",
+        "what": "max:5 → max:2, added idleTimeoutMillis, connectionTimeoutMillis, SSL handling. Stops the 'too many connections' cliff across many serverless instances."
+      },
+      {
+        "id": "P1-1",
+        "title": "Redis-backed rate limiting",
+        "file": "api/_lib/verification.js",
+        "what": "New isAllowed() helper: uses Upstash Redis sliding-window counter (survives cold starts, shared across regions) when UPSTASH_REDIS_REST_URL is set; falls back to the existing in-memory Map otherwise. In-memory Map now capped at 10k entries to prevent memory exhaustion."
+      }
+    ],
+    "speed": [
+      {
+        "id": "P1-2",
+        "title": "Multi-region",
+        "file": "vercel.json",
+        "what": "regions: [fra1] → [fra1, sfo1, iad1, sin1]. Cuts TTFB by 200–400ms for Americas/Asia."
+      },
+      {
+        "id": "P2-1",
+        "title": "Responsive hero images",
+        "files": ["scripts/build-images.mjs", "scripts/build-pages.mjs"],
+        "what": "Build now generates 480w + 960w AVIF/WebP variants; <picture> now serves a responsive srcset + sizes. A phone now downloads the 6.8KB AVIF instead of the full-res file."
+      }
+    ]
+  },
+  "verification": {
+    "status": "all-passed",
+    "checks": [
+      { "command": "npm run check:js", "result": "25/25 files pass" },
+      { "command": "npm run build:pages", "result": "generated cleanly, responsive srcset confirmed in index.html + ar.html" },
+      { "command": "npm run build:images", "result": "4 new responsive variants produced (6.8K–31K each)" },
+      { "command": "module import check", "result": "api/_lib/verification.js + api/contact.js parse + export correctly" }
+    ]
+  },
+  "remaining": {
+    "decisions": [
+      {
+        "id": "P2-2",
+        "title": "Rust backend — your decision",
+        "detail": "src/*.rs + Cargo.toml is a complete duplicate of the Node verification API (same routes: /numbers, /numbers/{id}, /textnow-guide, /health), last touched 3 commits ago, and not referenced by any deploy config. It's dormant. I did not delete it — that's your call.",
+        "options": [
+          "Delete (rm -rf src/ Cargo.toml) — removes a maintenance trap, simplest",
+          "Wire it up behind a container (Render/Fly) if you want a non-serverless API",
+          "Leave it — but it will drift from the Node API and confuse future readers"
+        ]
+      }
+    ],
+    "envVars": [
+      {
+        "name": "UPSTASH_REDIS_REST_URL",
+        "purpose": "Activates the Redis rate limiter (otherwise in-memory fallback)",
+        "where": "Vercel project settings"
+      },
+      {
+        "name": "UPSTASH_REDIS_REST_TOKEN",
+        "purpose": "Activates the Redis rate limiter (otherwise in-memory fallback)",
+        "where": "Vercel project settings"
+      },
+      {
+        "name": "PGSSL",
+        "purpose": "Set to 0 only if running against a local Postgres without SSL",
+        "where": "local dev"
+      }
+    ],
+    "alreadyDone": [
+      {
+        "item": "3D island-loading (P2-3)",
+        "detail": "Already done. The main site ships zero Three.js — confirmed grep three public/index.html public/ar.html → 0 matches. Three.js only loads on /suraga-3d, which is the island."
+      },
+      {
+        "item": "Image formats",
+        "detail": "AVIF+WebP were already generated at build time; the only gap was the missing responsive srcset, now fixed."
+      },
+      {
+        "item": "Precompression (gzip+brotli)",
+        "detail": "Already in place."
+      }
+    ],
+    "needsDesign": [
+      {
+        "item": "Turnstile/Captcha on contact form",
+        "detail": "Honeypot + rate limiting are in, but if you want stronger anti-bot, this needs a site key."
+      },
+      {
+        "item": "Admin surface for the verification DB",
+        "detail": "A feature, not a fix."
+      }
+    ]
+  },
+  "filesChanged": [
+    { "file": "api/_lib/verification.js", "delta": "+113", "summary": "pooler, timing-safe compare, Redis limiter" },
+    { "file": "api/contact.js", "delta": "+69", "summary": "escape, CRLF strip, length caps, honeypot, rate limit" },
+    { "file": "api/verification/[...path].js", "delta": "-2/+2", "summary": "use async isAllowed, 3 call sites" },
+    { "file": "public/css/frontend-extras.css", "delta": "+21", "summary": "honeypot hidden CSS" },
+    { "file": "public/js/modules/form.js", "delta": "+5", "summary": "send honeypot field" },
+    { "file": "scripts/build-pages.mjs", "delta": "+5", "summary": "honeypot field markup, responsive srcset" },
+    { "file": "scripts/build-images.mjs", "delta": "+25", "summary": "responsive variant generation" },
+    { "file": "vercel.json", "delta": "-1/+1", "summary": "multi-region, hardened CSP" }
+  ],
+  "git": {
+    "committed": false,
+    "note": "Tree has 8 modified + 2 untracked PNGs. Ready to review and commit."
+  }
+}

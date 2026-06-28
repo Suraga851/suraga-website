@@ -408,8 +408,8 @@ ${heroBadges(locale)}
                         <span class="god-eye-glint"></span>
                     </div>
                     <picture class="hero-image-picture">
-                        <source srcset="${escapeHtml(headshotAvifPath)}" type="image/avif">
-                        <source srcset="${escapeHtml(headshotWebpPath)}" type="image/webp">
+                        <source type="image/avif" srcset="assets/images/suraga-headshot-480.avif 480w, assets/images/suraga-headshot-960.avif 960w, ${escapeHtml(headshotAvifPath)} 1440w" sizes="(max-width: 600px) 90vw, 480px">
+                        <source type="image/webp" srcset="assets/images/suraga-headshot-480.webp 480w, assets/images/suraga-headshot-960.webp 960w, ${escapeHtml(headshotWebpPath)} 1440w" sizes="(max-width: 600px) 90vw, 480px">
                         <img src="${escapeHtml(siteConfig.headshotPath)}" alt="${escapeHtml(locale.meta.ogTitle)}"
                             class="hero-image" loading="eager" fetchpriority="high" decoding="async">
                     </picture>
@@ -527,6 +527,11 @@ ${portfolioItems(locale)}
                 </div>
                 <div>
                     <form id="contact-form" class="contact-form">
+                        <!-- Honeypot: visually hidden, real users never fill this. Bots do. -->
+                        <div class="hp-field" aria-hidden="true">
+                            <label for="website">Website (leave empty)</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-group">
                             <input type="text" id="name" name="name" autocomplete="name" aria-label="${escapeHtml(
                                 nameAriaLabel

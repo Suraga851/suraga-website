@@ -9,6 +9,7 @@ export const initContactForm = ({ messages, setFormStatus, clearFormStatus }) =>
     const emailEl = document.getElementById("email");
     const messageEl = document.getElementById("message");
     const inquiryEl = document.getElementById("inquiry-type");
+    const websiteEl = document.getElementById("website"); // honeypot
 
     if (
         !(button instanceof HTMLButtonElement) ||
@@ -43,7 +44,9 @@ export const initContactForm = ({ messages, setFormStatus, clearFormStatus }) =>
                     name: nameEl.value.trim(),
                     email: emailEl.value.trim(),
                     message: messageEl.value.trim(),
-                    inquiryType: selectedText
+                    inquiryType: selectedText,
+                    // Honeypot — empty for real users, filled by bots.
+                    website: websiteEl?.value ?? ""
                 })
             });
 
