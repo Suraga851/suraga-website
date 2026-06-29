@@ -90,8 +90,17 @@ Message:
 ${cleanMessage}
         `.trim();
 
-        // Email dispatch
-        if (process.env.RESEND_API_KEY) {
+        // Email dispatch — Resend only (free tier: 3,000/mo, no credit card).
+        // SendGrid was intentionally removed because its signup requires a card.
+        if (!process.env.RESEND_API_KEY) {
+            console.warn("Contact form submitted, but RESEND_API_KEY is not set.");
+            console.log("Form payload:", body);
+
+            if (process.env.VERCEL_ENV === "production" || process.env.VERCEL_ENV === "preview") {
+                throw new ApiError(500, "Server email configuration is missing. Please set RESEND_API_KEY in Vercel.");
+            }
+            // In local dev without a key, succeed silently so the form still works for testing.
+        } else {
             const response = await fetch("https://api.resend.com/emails", {
                 method: "POST",
                 headers: {
@@ -101,7 +110,7 @@ ${cleanMessage}
                 body: JSON.stringify({
                     from: "Suraga Website <onboarding@resend.dev>",
                     to: toEmail,
-                    reply_to: email.trim(),
+                    reply_to: cleanEmail,
                     subject: subject,
                     html: htmlContent,
                     text: textContent
@@ -111,46 +120,7 @@ ${cleanMessage}
             if (!response.ok) {
                 const errBody = await response.text();
                 console.error("Resend API error:", errBody);
-                throw new Error(`Resend API failed: ${response.status}`);
-            }
-        } else if (process.env.SENDGRID_API_KEY) {
-            const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${process.env.SENDGRID_API_KEY}`
-                },
-                body: JSON.stringify({
-                    personalizations: [{
-                        to: [{ email: toEmail }]
-                    }],
-                    from: { email: "no-reply@suraga-website.vercel.app" },
-                    reply_to: { email: email.trim() },
-                    subject: subject,
-                    content: [
-                        {
-                            type: "text/plain",
-                            value: textContent
-                        },
-                        {
-                            type: "text/html",
-                            value: htmlContent
-                        }
-                    ]
-                })
-            });
-
-            if (!response.ok) {
-                const errBody = await response.text();
-                console.error("SendGrid API error:", errBody);
-                throw new Error(`SendGrid API failed: ${response.status}`);
-            }
-        } else {
-            console.warn("Contact form submitted, but no email provider is configured (RESEND_API_KEY or SENDGRID_API_KEY).");
-            console.log("Form payload:", body);
-            
-            if (process.env.VERCEL_ENV === "production" || process.env.VERCEL_ENV === "preview") {
-                throw new ApiError(500, "Server email configuration is missing. Please set RESEND_API_KEY in Vercel.");
+                throw new ApiError(502, `Email provider failed (${response.status}).`);
             }
         }
 

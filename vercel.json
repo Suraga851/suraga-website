@@ -4,7 +4,7 @@
   "outputDirectory": "public",
   "cleanUrls": false,
   "trailingSlash": false,
-  "regions": ["fra1", "sfo1", "iad1", "sin1"],
+  "regions": ["fra1"],
   "redirects": [
     {
       "source": "/index.html",
