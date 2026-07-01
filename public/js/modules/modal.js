@@ -4,10 +4,13 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
     const closeModal = document.getElementById("close-modal");
     const pdfViewer = document.getElementById("pdf-viewer");
     const pdfTitle = document.getElementById("pdf-title");
+    const pdfOpenExternal = document.getElementById("pdf-open-external");
 
     if (!modal || !closeModal || !pdfViewer || !pdfTitle) return;
 
     let lastFocusedElement = null;
+    let loadFallbackTimer = null;
+
     const shouldOpenDocDirectly = () =>
         window.matchMedia("(max-width: 767px)").matches ||
         window.matchMedia("(pointer: coarse)").matches;
@@ -25,7 +28,7 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
         anchor.style.display = "none";
         document.body.appendChild(anchor);
         anchor.click();
-        
+
         // Use setTimeout to ensure the navigation/download has time to start
         // before removing the element from the DOM, which fixes issues in some browsers
         setTimeout(() => {
@@ -35,15 +38,42 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
         }, 500);
     };
 
+    const clearFallbackTimer = () => {
+        if (loadFallbackTimer) {
+            clearTimeout(loadFallbackTimer);
+            loadFallbackTimer = null;
+        }
+    };
+
     const hideModal = () => {
+        clearFallbackTimer();
         modal.classList.add("hidden");
         modal.setAttribute("aria-hidden", "true");
-        pdfViewer.src = "";
+        pdfViewer.removeAttribute("src");
+        pdfViewer.removeAttribute("data-loaded");
+        if (pdfOpenExternal) pdfOpenExternal.removeAttribute("href");
         document.body.style.overflow = isMenuOpen() ? "hidden" : "auto";
         if (lastFocusedElement instanceof HTMLElement) {
             lastFocusedElement.focus();
         }
         lastFocusedElement = null;
+    };
+
+    /**
+     * Some browsers (Mobile Safari, many in-app webviews) refuse to render a PDF
+     * inside an <iframe> and show a blank panel. If the iframe hasn't fired `load`
+     * within ~2.5s, fall back to opening the document in a new tab — and keep the
+     * modal open with the "Open" button visible so the user always has an escape.
+     */
+    const armLoadFallback = (docPath, titleText) => {
+        clearFallbackTimer();
+        loadFallbackTimer = setTimeout(() => {
+            const loaded = pdfViewer.getAttribute("data-loaded");
+            if (!loaded && document.body.contains(pdfViewer)) {
+                console.warn("PDF iframe did not report load in time — opening in new tab.");
+                openDocumentDirectly(docPath);
+            }
+        }, 2500);
     };
 
     const openModalForItem = (item) => {
@@ -64,12 +94,28 @@ export const initPdfModal = ({ messages, clearFormStatus, isMenuOpen }) => {
 
         clearFormStatus();
         pdfTitle.innerText = modalTitle;
+        if (pdfOpenExternal) {
+            pdfOpenExternal.href = new URL(docPath, window.location.href).toString();
+        }
+
+        // Mark not-loaded, set src, arm the fallback. The `load` handler below
+        // flips data-loaded when the browser actually renders the PDF.
+        pdfViewer.removeAttribute("data-loaded");
         pdfViewer.src = docPath;
+        armLoadFallback(docPath, modalTitle);
+
         modal.classList.remove("hidden");
         modal.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
         closeModal.focus();
     };
+
+    // Mark the iframe loaded so the timed fallback doesn't fire unnecessarily.
+    // (Browsers that can't render PDFs in iframes simply never fire `load`.)
+    pdfViewer.addEventListener("load", () => {
+        pdfViewer.setAttribute("data-loaded", "true");
+        clearFallbackTimer();
+    });
 
     modalItems.forEach((item) => {
         if (!(item instanceof HTMLElement)) return;

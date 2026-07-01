@@ -11,9 +11,9 @@
     --secondary-sand: #fef9ef;
     --accent-coral: #ff5a30;
     --text-charcoal: #0c1929;
-    --text-gray: #5f6e7e;
-    --text-gray-400: #8895a4;
-    --text-gray-500: #5f6e7e;
+    --text-gray: #51616f;       /* WCAG AA: ~4.8:1 on #f4f9fb (was #5f6e7e ~3.9:1) */
+    --text-gray-400: #5d6b7a;   /* WCAG AA: ~5.4:1 on #ffffff (was #8895a4 ~2.9:1 — FAIL) */
+    --text-gray-500: #51616f;   /* WCAG AA: ~4.8:1 on #f4f9fb (was #5f6e7e ~3.9:1) */
     --text-gray-600: #3d4b59;
     --text-gray-700: #233140;
     --bg-light: #f4f9fb;
@@ -37,6 +37,23 @@
     --transition-fast: 0.2s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.45s ease;
+
+    /* ===== Fluid Type Scale =====
+       Single coordinated scale (clamp-based). Maps to a 1.250 (major third)
+       ratio. Used by h1–h4 + section-title so hierarchy is consistent
+       across viewports instead of three uncoordinated systems. */
+    --font-step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);   /* body / subtitle */
+    --font-step-1: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); /* h4 / subsection */
+    --font-step-2: clamp(1.35rem, 1.2rem + 0.75vw, 1.75rem); /* h3 */
+    --font-step-3: clamp(1.7rem, 1.4rem + 1.5vw, 2.5rem);   /* h2 / section-title */
+    --font-step-4: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);     /* h1 (non-hero) */
+    --font-step-5: clamp(2.25rem, 1.4rem + 4.2vw, 4.25rem); /* hero h1 */
+
+    /* Shared reading-measure for long-form text. */
+    --measure: 68ch;
+
+    /* Shared button padding so primary/secondary stay metric-identical. */
+    --btn-pad: 12px 24px;
 }
 
 /* ===== Global Styles ===== */
@@ -666,7 +683,7 @@ select:focus-visible,
 }
 
 .hero-title {
-    font-size: clamp(2rem, 4.2vw, 4.15rem);
+    font-size: var(--font-step-5);
     font-weight: 800;
     margin-bottom: 1.1rem;
     line-height: 1.08;
@@ -714,7 +731,7 @@ select:focus-visible,
 }
 
 .hero-desc {
-    max-width: 60ch;
+    max-width: var(--measure);
     font-size: 1.04rem;
     margin-bottom: 1.85rem;
     color: var(--text-gray-700);
@@ -923,9 +940,40 @@ section {
     background: transparent; border: none; box-shadow: none;
 }
 
+/* ===== Section Wave Dividers =====
+   Static SVG waves between alternating sections for a flowing transition
+   instead of a hard cut. aria-hidden + decorative; no motion impact. */
+.section-divider {
+    display: block;
+    width: 100%;
+    height: 48px;
+    margin-top: -1px;
+    color: var(--bg-light);
+    pointer-events: none;
+}
+
+.section-divider svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+/* The wave "fills" with the NEXT section's background so it visually melts
+   into it. On dark theme the bg-light token already flips, so it adapts. */
+.section-divider.flip {
+    transform: scaleY(-1);
+}
+
+@media (max-width: 767px) {
+    .section-divider {
+        height: 32px;
+    }
+}
+
 /* ===== Section Titles ===== */
 .section-title {
-    font-size: clamp(1.8rem, 3.6vw, 2.75rem);
+    font-size: var(--font-step-3);
     font-weight: 800;
     text-align: center;
     margin-bottom: 2.25rem;
@@ -946,7 +994,7 @@ section {
 }
 
 .subsection-title {
-    font-size: 1.35rem;
+    font-size: var(--font-step-1);
     font-weight: 700;
     margin-bottom: 0.95rem;
     color: var(--primary-teal-dark);
@@ -955,7 +1003,7 @@ section {
 /* ===== Buttons ===== */
 .btn-primary,
 .btn-secondary {
-    padding: 12px 24px;
+    padding: var(--btn-pad);
     border-radius: 50px;
     font-weight: 700;
     transition: all var(--transition-normal);
@@ -967,6 +1015,9 @@ section {
     cursor: pointer;
     font-size: 0.96rem;
     letter-spacing: 0.02em;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
 }
 
 .btn-primary {
@@ -974,6 +1025,28 @@ section {
     background: linear-gradient(135deg, var(--primary-teal-dark), var(--primary-teal-light));
     color: var(--white);
     box-shadow: 0 12px 25px rgba(15, 118, 110, 0.26);
+}
+
+/* Shimmer sweep on hover. Sits above the gradient (z-index: 1, below text
+   which is z-index: 2 via the button's own content stacking). Disabled under
+   prefers-reduced-motion (see frontend-extras.css). */
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+    z-index: 0;
+}
+
+.btn-primary:hover::after {
+    transform: translateX(120%);
+}
+
+.btn-primary > * {
+    position: relative;
+    z-index: 1;
 }
 
 .btn-primary:hover {
@@ -991,6 +1064,13 @@ section {
     background: rgba(20, 184, 166, 0.14);
     transform: translateY(-2px);
     box-shadow: 0 12px 24px rgba(15, 118, 110, 0.2);
+}
+
+/* Inset focus glow in addition to the global coral outline ring, so focus
+   state is unmistakable on the gradient surface. */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6), 0 0 0 6px var(--primary-teal);
 }
 
 .btn-full {
@@ -1031,7 +1111,7 @@ section {
 
 .text-body {
     margin-bottom: 1rem;
-    max-width: 68ch;
+    max-width: var(--measure);
     color: var(--text-gray-700);
     line-height: 1.8;
 }
@@ -1717,6 +1797,40 @@ section {
     color: var(--primary-teal-dark);
 }
 
+/* Container for the Open-in-new-tab + close buttons in the modal header. */
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* "Open" escape-hatch link — always visible so users on browsers that can't
+   render PDFs in iframes (Mobile Safari, in-app webviews) can still reach the doc. */
+.modal-open-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-teal);
+    background: rgba(20, 184, 166, 0.1);
+    border: 1px solid rgba(20, 184, 166, 0.25);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all var(--transition-normal);
+}
+
+.modal-open-btn:hover {
+    background: rgba(20, 184, 166, 0.2);
+    color: var(--primary-teal-dark);
+    transform: translateY(-1px);
+}
+
+.modal-open-btn i {
+    font-size: 0.75rem;
+}
+
 .modal-body {
     width: 100%;
     height: calc(100% - 60px);
@@ -2051,8 +2165,8 @@ section {
     --accent-coral: #f97316;
     --text-charcoal: #f1f5f9;
     --text-gray: #94a3b8;
-    --text-gray-400: #64748b;
-    --text-gray-500: #475569;
+    --text-gray-400: #94a3b8;   /* was #64748b (~3.5:1 FAIL on dark) → ~6.5:1 PASS AA */
+    --text-gray-500: #94a3b8;   /* was #475569 (~2.2:1 FAIL on dark) → ~6.5:1 PASS AA */
     --text-gray-600: #64748b;
     --text-gray-700: #94a3b8;
     --bg-light: #0f172a;
