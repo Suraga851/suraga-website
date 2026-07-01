@@ -219,3 +219,53 @@
     width: 1px;
     height: 1px;
 }
+
+/* =============================================
+   PREFERS-REDUCED-MOTION (consolidated, complete)
+   Disables all infinite loops + slow continuous motion while keeping
+   one-shot reveals functional (just instant). WCAG 2.3.3 compliance.
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    /* Kill every infinite / looping animation on the page. Targets by keyframe
+       name so we catch the offending loops without touching layout transitions. */
+    .animated-bg,
+    .hero-image-glow,
+    .floating-shape,
+    .hero-image-container .ring,
+    .hero-image-container .pupil,
+    .hero-image-container .glint,
+    .scroll-indicator a,
+    .scroll-indicator,
+    .btn-primary::after,
+    .modal-open-btn::after {
+        animation: none !important;
+    }
+
+    /* Universal safety net: any element still trying to animate infinitely. */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Re-enable the one-shot reveal so content is still visible (just instant).
+       reveal-section starts opacity:0 — without this it would stay hidden. */
+    .reveal-section,
+    .reveal-section.revealed,
+    .animate-fade-in,
+    .animate-fade-in-up,
+    .reveal-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}

@@ -178,6 +178,22 @@ ${bullets}
         })
         .join("\n\n");
 
+const testimonialCards = (locale) =>
+    locale.testimonials.items
+        .map(
+            (item) => `                <figure class="testimonial-card" data-tilt data-tilt-max="3" data-tilt-scale="1.01">
+                    <blockquote class="testimonial-quote">${escapeHtml(item.quote)}</blockquote>
+                    <figcaption class="testimonial-author">
+                        <span class="testimonial-avatar" aria-hidden="true">${escapeHtml(item.avatar)}</span>
+                        <span class="testimonial-info">
+                            <span class="testimonial-name">${escapeHtml(item.author)}</span>
+                            <span class="testimonial-role">${escapeHtml(item.role)}</span>
+                        </span>
+                    </figcaption>
+                </figure>`
+        )
+        .join("\n\n");
+
 const portfolioItems = (locale) =>
     locale.portfolio.items
         .map(
@@ -195,6 +211,17 @@ const portfolioItems = (locale) =>
                 </div>`
         )
         .join("\n");
+
+// Decorative SVG wave divider, rendered at the seam between two sections.
+// Fill is driven by CSS `color: var(--bg-light)` + `fill: currentColor`, so it
+// adapts to light/dark theme automatically. aria-hidden (decorative); static
+// (no motion) so reduced-motion users are unaffected.
+const sectionDivider = () => `
+            <div class="section-divider" aria-hidden="true">
+                <svg viewBox="0 0 1440 60" preserveAspectRatio="none" focusable="false">
+                    <path d="M0,30 C240,60 480,0 720,18 C960,36 1200,60 1440,24 L1440,60 L0,60 Z"></path>
+                </svg>
+            </div>`;
 
 const inquiryOptions = (locale) =>
     shared.inquiryOptions
@@ -451,7 +478,7 @@ ${quickFactItems(locale)}
                 </div>
             </div>
         </div>
-    </section>
+    </section>${sectionDivider()}
 
     <!-- Services Section -->
     <section id="services" class="section-gradient reveal-section">
@@ -461,7 +488,7 @@ ${quickFactItems(locale)}
 ${services(locale)}
             </div>
         </div>
-    </section>
+    </section>${sectionDivider()}
 
     <!-- Experience Section -->
     <section id="experience" class="section-white reveal-section">
@@ -471,7 +498,17 @@ ${services(locale)}
 ${experienceItems(locale)}
             </div>
         </div>
-    </section>
+    </section>${sectionDivider()}
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section-gradient reveal-section">
+        <div class="container">
+            <h2 class="section-title">${escapeHtml(locale.testimonials.title)}</h2>
+            <div class="testimonials-grid">
+${testimonialCards(locale)}
+            </div>
+        </div>
+    </section>${sectionDivider()}
 
     <!-- Portfolio Section -->
     <section id="portfolio" class="section-gradient reveal-section">
@@ -481,7 +518,7 @@ ${experienceItems(locale)}
 ${portfolioItems(locale)}
             </div>
         </div>
-    </section>
+    </section>${sectionDivider()}
 
     <!-- Contact Section -->
     <section id="contact" class="section-white reveal-section">
@@ -617,13 +654,23 @@ ${footerLinks(locale)}
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="pdf-title" class="modal-title"></h3>
-                <button id="close-modal" class="modal-close" aria-label="${escapeHtml(
-                    locale.aria.closeDocument
-                )}">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="modal-header-actions">
+                    <a id="pdf-open-external" class="modal-open-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(
+                        locale.aria.openInNewTab || "Open in new tab"
+                    )}">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>${escapeHtml(locale.contact.openInNewTab || "Open")}</span>
+                    </a>
+                    <button id="close-modal" class="modal-close" aria-label="${escapeHtml(
+                        locale.aria.closeDocument
+                    )}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
-            <iframe id="pdf-viewer" class="modal-body" frameborder="0"></iframe>
+            <iframe id="pdf-viewer" class="modal-body" frameborder="0" title="${escapeHtml(
+                locale.aria.documentViewer || "Document viewer"
+            )}"></iframe>
         </div>
     </div>
 

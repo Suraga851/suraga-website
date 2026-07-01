@@ -23,7 +23,7 @@ export const siteConfig = {
 };
 
 const shared = {
-    navIds: ["home", "about", "services", "experience", "portfolio", "contact"],
+    navIds: ["home", "about", "services", "experience", "testimonials", "portfolio", "contact"],
     inquiryOptions: [
         { value: "job", key: "job" },
         { value: "collaboration", key: "collaboration" },
@@ -78,6 +78,7 @@ export const locales = {
             about: "About",
             services: "Services",
             experience: "Experience",
+            testimonials: "Testimonials",
             portfolio: "Portfolio",
             contact: "Contact"
         },
@@ -321,6 +322,7 @@ export const locales = {
             about: "نبذة عني",
             services: "خدماتي",
             experience: "خبراتي",
+            testimonials: "آراء",
             portfolio: "ملفي",
             contact: "تواصل معي"
         },
